@@ -1,0 +1,29 @@
+{% include 'header.html.twig' %}
+
+<main>
+	<h2>{{title}}</h2><!-- 会員仮登録 -->
+	
+	{% for key, msg in msg_arr %}
+		{% if 'red__' in key %}
+			<p class="red">{{msg}}</p>
+		{% elseif 'green__' in key %}
+			<p class="green">{{msg}}</p>
+		{% endif %}
+	{% endfor %}
+	
+	{% for key, error in err_arr %}
+		<p class="error">{{error}}</p>
+	{% endfor %}
+	
+	<form action="" method="post">
+		<input type="hidden" name="token" value="{{token}}">
+		<dl>
+			<dt>メールアドレス</dt><dd><input type="text" name="email"></dd>
+		</dl>
+		<button name="submit" value="send_mail">
+			仮登録メール送信
+		</button>
+	</form>
+</main>
+
+{% include 'footer.html.twig' %}

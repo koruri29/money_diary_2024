@@ -1,0 +1,23 @@
+<div class="event-list">
+	<table>
+		<tr class="item-row">
+			<td></td>
+			<td>収支</td>
+			<td></td>
+			<td>-1,000</td>
+		</tr>
+		{% for key, item in items %}
+			<tr class="item-row">
+				<td>{{item.c_html | raw}}{{item.categiry_name}} {{item.date | format_datetime('short', 'none')}}</td>
+				<td>{{item.other}}</td>
+				{% if item.option == 0 %}
+					<td class="plus"></td>
+					<td class="minus">-{{item.amount}}</td>
+				{% else %}
+					<td class="plus">+{{item.amount}}</td>
+					<td class="minus"></td>
+				{% endif %}
+			</tr>
+		{% endfor %}
+	</table>
+</div>

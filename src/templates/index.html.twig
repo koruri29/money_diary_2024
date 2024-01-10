@@ -1,0 +1,22 @@
+{% include 'header.html.twig' %}
+
+<main>
+	<h2>{{title}}</h2>
+
+		{% for key, error in err_arr %}
+			<p class="error">{{error}}</p>
+		{% endfor %}
+
+	<form action="" method="post">
+		<dl>
+			<dt>メールアドレス</dt><dd><input type="text" name="email" value="{{email}}"></dd>
+			<dt>パスワード</dt><dd><input type="password" name="password"></dd>
+		</dl>
+		<button name="submit" value="login">
+			ログイン
+		</button>
+	</form>
+</main>
+
+{% include 'footer.html.twig' %}
+

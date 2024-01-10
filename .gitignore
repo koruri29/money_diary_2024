@@ -1,0 +1,4 @@
+/vendor
+/.vscode
+/src/lib/common/Bootstrap.class.php
+/documents

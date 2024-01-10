@@ -1,0 +1,15 @@
+{% include 'header.html.twig' %}
+
+<main>
+	<h2>{{title}}</h2><!-- 仮登録メール送信 or 本登録完了 -->
+	{% if title == '仮登録メール送信' %}
+		<p>入力されたメールアドレス宛に仮登録メールを送信しました。</p>
+		<p>24時間以内にメールに記載のリンクをクリックし、本登録を完了させてください。</p>
+	{% elseif title == '本登録完了' %}
+		<p>本登録が完了しました。</p>
+		<a href="index.php">ログイン画面へ</a>
+	{% endif %}
+</main>
+
+{% include 'footer.html.twig' %}
+

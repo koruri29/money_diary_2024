@@ -1,0 +1,20 @@
+{% include 'header.html.twig' %}
+
+<main>
+	<h2>{{title}}</h2><!-- 会員本登録 -->
+	
+	<form  method="post">
+		<input type="hidden" name="token" value="{{token}}">
+		<input type="hidden" name="email" value="{{email}}">
+		<dl>
+			<dt>ユーザー名</dt><dd><input type="text" name="user_name"></dd>
+			<dt>パスワード</dt><dd><input type="password" name="password"></dd>
+			<!-- <dt>アイコン画像</dt><dd><input type="file" name="image"></dd> -->
+		</dl>
+		<button name="submit" value="register">
+			登録
+		</button>
+	</form>
+</main>
+
+{% include 'footer.html.twig' %}

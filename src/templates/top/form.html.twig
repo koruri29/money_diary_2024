@@ -1,0 +1,52 @@
+<form action="" method="post" class="event_form">
+	<div class="event_inputs">
+		<label for="date">日付</label>
+		<input type="date" id="date" name="date">
+
+		<br>
+
+		<label for="amount">金額</label>
+		<input id="amount" type="number" min="0" name="amount">
+
+		<br>
+
+		<label for="outgo">支出</label>
+		<input type="radio" name="option" value="outgo" id="outgo" checked>
+		<label for="income">収入</label>
+		<input type="radio" name="option" value="income" id="income">
+		<label for="exchange">振替</label>
+		<input type="radio" name="option" value="exchange" id="exchange">
+
+		<br>
+
+		<table class="categories">
+			{% for key, category in categories %}
+				{% if (loop.index % 4 == 1) %}<tr>{% endif %}
+				{% if loop.first %}
+				<td>
+					<input id="{{category.category_id}}" class="category_radio"  type="radio" name="category_id" value="{{category.category_id}}" checked>
+					<label for="{{category.category_id}}">{{category.html_tag | raw}}{{category.category_name}}</label>
+				</td>
+				{% endif %}
+				{% if loop.first == false %}
+					<td>
+						<input class="category_radio"  type="radio" name="category_id" id="{{category.category_id}}" value="{{category.category_id}}">
+						<label for="{{category.category_id}}">{{category.html_tag | raw}}{{category.category_name}}</label>
+					</td>
+				{% endif %}
+				{% if (loop.index % 4 == 0) %}</tr>{% endif %}
+			{% endfor %}
+			
+			<input type="hidden" name="wallet_id" value="1">
+	
+		</table>
+
+		<br>
+
+		<label for="other">備考</label>
+		<textarea name="other" id="other" cols="40" rows="4"></textarea>
+	</div>
+
+	<button name="submit" value="event_register">登録</button>
+
+</form>
