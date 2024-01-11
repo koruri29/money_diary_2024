@@ -32,18 +32,18 @@ class Category
 
         $table = ' categories c ';
         $column = <<<COL
-            c.category_id,
+            c.id AS category_id,
             c.category_name,
             c.item_order,
             c.icon_id,
             c.icon_color,
-            i.html_tag 
+            i.html_tag AS i_html 
         COL;
-        $where = ' user_id = ? ';
+        $where = ' c.user_id = ? ';
         $arr_val = [$user_id];
 
         $join_table = ' icons i';
-        $join_on = 'i.icon_id = c.icon_id ';
+        $join_on = 'i.id = c.icon_id ';
 
         $this->db->pushJoin($join_table, $join_on);
         

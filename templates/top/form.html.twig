@@ -1,3 +1,9 @@
+{# main variables #}
+{# msg_arr #}
+{# err_arr #}
+{# preset #}
+{# category #}
+
 
 {# メッセージ表示 #}
 {% for key, msg in msg_arr %}
@@ -8,29 +14,34 @@
 	{% endif %}
 {% endfor %}
 
-	{% for key, error in err_arr %}
-		<p class="error">{{error}}</p>
-	{% endfor %}
-	
+
+<h2>{{title}}</h2><!-- 入出金登録or検索 -->
+
+
+{% for key, error in err_arr %}
+	<p class="error">{{error}}</p>
+{% endfor %}
+
 
 <form action="" method="post" class="event_form">
 	<div class="event_inputs">
 		<label for="date">日付</label>
-		<input type="date" id="date" name="date">
+		<input type="date" id="date" name="date" value="{{preset.date}}">
 
 		<br>
 
 		<label for="amount">金額</label>
-		<input id="amount" type="number" min="0" name="amount">
+		<input id="amount" type="number" min="0" name="amount"
+		value="{% if preset.amount > 0 %}{{preset.amount}}{% else %}0{% endif %}">
 
 		<br>
 
 		<label for="outgo">支出</label>
-		<input type="radio" name="option" value="outgo" id="outgo" checked>
+		<input type="radio" name="option" value="outgo" id="outgo" {% if preset.option == 0 %}checked{% endif %}>
 		<label for="income">収入</label>
-		<input type="radio" name="option" value="income" id="income">
-		<label for="exchange">振替</label>
-		<input type="radio" name="option" value="exchange" id="exchange">
+		<input type="radio" name="option" value="income" id="income" {% if preset.option == 1 %}checked{% endif %}>
+		{# <label for="exchange">振替</label>
+		<input type="radio" name="option" value="exchange" id="exchange"> #}
 
 		<br>
 
@@ -39,14 +50,17 @@
 				{% if (loop.index % 4 == 1) %}<tr>{% endif %}
 				{% if loop.first %}
 				<td>
-					<input id="{{category.category_id}}" class="category_radio"  type="radio" name="category_id" value="{{category.category_id}}" checked>
-					<label for="{{category.category_id}}">{{category.html_tag | raw}}{{category.category_name}}</label>
+					<input id="{{category.category_id}}" class="category_radio" type="radio" name="category_id"
+					value="{{category.category_id}}" {% if preset.category_id == category.category_id %}checked{% endif %}
+					{% if preset.category_id is not defined %}checked{% endif %}>
+					<label for="{{category.category_id}}">{{category.i_html | raw}}{{category.category_name}}</label>
 				</td>
 				{% endif %}
 				{% if loop.first == false %}
 					<td>
-						<input class="category_radio"  type="radio" name="category_id" id="{{category.category_id}}" value="{{category.category_id}}">
-						<label for="{{category.category_id}}">{{category.html_tag | raw}}{{category.category_name}}</label>
+						<input class="category_radio"  type="radio" name="category_id" id="{{category.category_id}}"
+						value="{{category.category_id}}" {% if preset.category_id == category.category_id %}checked{% endif %}>
+						<label for="{{category.category_id}}">{{category.i_html | raw}}{{category.category_name}}</label>
 					</td>
 				{% endif %}
 				{% if (loop.index % 4 == 0) %}</tr>{% endif %}
@@ -59,9 +73,9 @@
 		<br>
 
 		<label for="other">備考</label>
-		<textarea name="other" id="other" cols="40" rows="4"></textarea>
+		<textarea name="other" id="other" cols="40" rows="4">{{preset.other}}</textarea>
 	</div>
 
-	<button name="submit" value="event_register">登録</button>
+	<button class="btn" name="submit" value="event_register">登録</button>
 
 </form>

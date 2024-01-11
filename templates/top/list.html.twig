@@ -8,7 +8,7 @@
 				{% if  sum >= 0 %}+{{sum | number_format(0, '.', ',')}}{% endif %}
 			</td>
 			<td>
-				{% if  sum < 0 %}-{{sum | number_format(0, '.', ',')}}{% endif %}
+				{% if  sum < 0 %}{{sum | number_format(0, '.', ',')}}{% endif %}
 						</td>
 		</tr>
 		{% for key, item in items %}
@@ -23,7 +23,15 @@
 					<td class="plus">+{{item.amount | number_format(0, '.', ',')}}</td>
 					<td class="minus"></td>
 				{% endif %}
+				<td><a href="edit.php?id={{item.event_id}}"><button class="btn">編集</button></a></td>
+				<td>
+					<form action="" method="post">
+						<input type="hidden" name="event_id" value="{{item.event_id}}">
+						<button class="btn" name="submit" value="delete">削除</button>
+					</form>
+				</td>
 			</tr>
 		{% endfor %}
 	</table>
 </div>
+	

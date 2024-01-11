@@ -18,6 +18,7 @@ class ManageMoneyEvent
 
     public function registerEvent() : bool
     {
+        //バリデーション
         if (! $this->event->validateEvent()) return false;
 
         $table = ' money_events ';
@@ -46,13 +47,13 @@ class ManageMoneyEvent
             e.amount,
             e.date,
             e.other,
-            c.category_id,
+            c.id AS category_id,
             c.category_name 
         COL;
         $join_table1 = ' categories c ';
-        $join_on1 = ' c.category_id = e.category_id ';
+        $join_on1 = ' c.id = e.category_id ';
         $join_table2 = ' icons i ';
-        $join_on2 = ' c.icon_id = i.icon_id ';
+        $join_on2 = ' c.icon_id = i.id ';
         
         $db->pushJoin($join_table1, $join_on1);
         $db->pushJoin($join_table2, $join_on2);
@@ -68,13 +69,14 @@ class ManageMoneyEvent
         $table = 'money_events ';
         $insertData = [
             'user_id' => $this->event->getUserId(),
+            'category_id' => $this->event->getCategoryId(),
             'wallet_id' => $this->event->getWalletId(),
             'option' => $this->event->getOption(),
             'amount' => $this->event->getAmount(),
             'date' => $this->event->getDate(),
             'other' => $this->event->getOther(),
         ];
-        $where = ' event_id = ? ';
+        $where = ' id = ? ';
         $arrWhereVal = [$this->event->getEventId()];
 
         $res = $this->db->update($table, $insertData, $where, $arrWhereVal);
@@ -82,12 +84,10 @@ class ManageMoneyEvent
         return $res;
     }
 
-    public function deleteEvent($event_id) : bool
+    public static function deleteEvent(PDODatabase $db, int $event_id) : bool
     {
         $table = 'money_events ';
-        $column = ' event_id ';
-
-        $res = $this->db->delete($table, $column, $event_id);
+        $res = $db->delete($table, $event_id);
 
         return $res;
     }
@@ -107,7 +107,7 @@ class ManageMoneyEvent
 
         $table = 'money_events e';
         $column = <<<COL
-            e.event_id, 
+            e.id AS event_id, 
             e.category_id, 
             c.category_name,
             c.icon_id AS c_icon_id,
@@ -128,13 +128,13 @@ class ManageMoneyEvent
 
         //INNER JOIN
         $join_table1 = ' categories c ';
-        $join_on1 = ' e.category_id = c.category_id ';
+        $join_on1 = ' e.category_id = c.id ';
         $join_table2 = ' wallets w ';
-        $join_on2 = ' e.wallet_id = w.wallet_id ';
+        $join_on2 = ' e.wallet_id = w.id ';
         $join_table3 = ' icons i1 ';
-        $join_on3 = ' COALESCE(c.icon_id, 0) = COALESCE(i1.icon_id, 0) ';
+        $join_on3 = ' COALESCE(c.icon_id, 0) = COALESCE(i1.id, 0) ';
         $join_table4 = ' icons i2 ';
-        $join_on4 = ' COALESCE(w.icon_id, 0) = COALESCE(i2.icon_id, 0) ';
+        $join_on4 = ' COALESCE(w.icon_id, 0) = COALESCE(i2.id, 0) ';
 
         $this->db->pushJoin($join_table1, $join_on1);
         $this->db->pushJoin($join_table2, $join_on2);
@@ -151,7 +151,7 @@ class ManageMoneyEvent
         }
 
         //ORDER BY
-        $this->db->setOrder('date ASC');
+        $this->db->setOrder('e.date, e.created_at ASC');
 
         $events = $this->db->select($table, $column, $where, $arr_val);
 

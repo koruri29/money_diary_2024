@@ -96,39 +96,39 @@ class MoneyEvent
 
     public static function getEventById(PDODatabase $db, int $event_id) : ?MoneyEvent
     {
-        $table = ' money_event ';
+        $table = ' money_events ';
         $column = <<<COL
-            event_id,
+            id,
             user_id,
             category_id,
             wallet_id,
             option,
             amount,
             date,
-            other
+            other 
         COL;
-        $where = 'event_id = ? ';
+        $where = 'id = ? ';
         $arr_val = [$event_id];
 
-        $event = $db->select($table, $column, $where, $arr_val);
+        $event_info = $db->select($table, $column, $where, $arr_val);
 
         if (empty($event_info)) return null;
 
         $event = new MoneyEvent(
-            $event[0]['user_id'],
-            $event[0]['category_id'],
-            $event[0]['wallet_id'],
-            $event[0]['option'],
-            $event[0]['amount'],
-            $event[0]['date'],
-            $event[0]['other'],    
+            $event_info[0]['user_id'],
+            $event_info[0]['category_id'],
+            $event_info[0]['wallet_id'],
+            $event_info[0]['option'],
+            $event_info[0]['amount'],
+            $event_info[0]['date'],
+            $event_info[0]['other'],    
         );
-        $event->setEventId($event[0]['event_id']);
+        $event->setEventId($event_info[0]['id']);
 
         return $event;
     }
 
-    private function setEventId(int $event_id) : void
+    public function setEventId(int $event_id) : void
     {
         if (! is_int($event_id) || $event_id < 1) {
             $this->err_arr['event_id_not_int'] = 'イベントIDは正の整数で入力してください。';

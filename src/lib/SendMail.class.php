@@ -113,7 +113,7 @@ class SendMail
 
     private function setMessage($token) : void
     {
-        $url = 'http://localhost/DT_2024/money_diary_2024/src/register.php';
+        $url = 'http://localhost/DT_2024/money_diary/src/register.php';
         $message = <<<MAIL
             家計簿アプリへの登録ありがとうございます。
             仮登録を受付いたしました。

@@ -21,6 +21,9 @@ class ManageUser
     
     public function registerUser(): bool
     {
+        //バリデーション
+        if (! $this->user->validateUser()) return false;
+
         $password = $this->user->getPassword();
         $password = password_hash($password, PASSWORD_DEFAULT);
 
@@ -39,10 +42,7 @@ class ManageUser
 
     public function updateUser(int $userId) : bool
     {
-        $this->user->validateUser();
-        if (count($this->user->getErrArr()) > 0) {
-            return false;
-        }
+        if ($this->user->validateUser())  return false;
         
         $table = 'users';
         $insertData = [
@@ -50,16 +50,12 @@ class ManageUser
             'email' => $this->user->getEmail(),
             'user_image' => $this->user->getUserImage(),
         ];
-        $where = ' user_id = ? ';
+        $where = ' id = ? ';
         $arrWhereVal = [$userId];
 
         $res = $this->db->update($table, $insertData, $where, $arrWhereVal);
 
-       if ($res) {
-        return true;
-       } else {
-        return false;
-       }
+        return $res;
     }
 
     public function deleteUser(int $userId) : bool
@@ -70,23 +66,19 @@ class ManageUser
             'email' => $this->user->getEmail(),
             'user_image' => $this->user->getUserImage(),
         ];
-        $where = ' user_id = ? ';
+        $where = ' id = ? ';
         $arrWhereVal = [$userId];
 
         $res = $this->db->update($table, $insertData, $where, $arrWhereVal);
 
-       if ($res) {
-        return true;
-       } else {
-        return false;
-       }
+        return $res;
     }
 
 
     public static function getAllUsers(PDODatabase $db) : array
     {
         $table = ' users ';
-        $column = ' user_id, user_name, email, password, user_image ';
+        $column = ' id, user_name, email, password, user_image ';
         $users = $db->select($table, $column);
 
         return $users;

@@ -222,10 +222,10 @@ class PDODatabase
             return $res;
     }
 
-    public function delete(string $table, string $column, int $id) : bool
+    public function delete(string $table, int $id) : bool
     {
-        $sql = 'DELETE FROM ? WHERE ? = ?';
-        $arrVal = [$table, $column, $id];
+        $sql = 'DELETE FROM ' . $table . ' WHERE id = ?';
+        $arrVal = [$id];
 
         $stmt = $this->dbh->prepare($sql);
         $res = $stmt->execute($arrVal);

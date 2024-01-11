@@ -2,10 +2,17 @@ main {
 	width: 600px;
 	margin: 0 auto;
 }
+.msg {
+	height: 40px;
+	padding-left: 16px;
+	line-height: 40px;
+}
 .red {
+	background-color: #eda6a6;
 	color: red;
 }
 .green {
+	background-color: #a6eda6;
 	color: green;
 }
 i {

@@ -11,85 +11,100 @@ use lib\common\Token;
 
 class TmpUser
 {
-    private $db;
+    // private $db;
 
-    private int $tmp_user_id;
+    // private int $tmp_user_id;
 
-    private string $email;
+    // private string $email;
 
-    private string $token;
+    // private string $token;
 
-    private string $expires;
+    // private string $expires;
 
-    private array $err_arr = [];
+    private static array $err_arr = [];
 
-    private array $msg_arr = [];
+    // private array $msg_arr = [];
 
 
-    public function __construct(PDODatabase $db)
+    // public function __construct(PDODatabase $db)
+    // {
+    //     $this->db = $db;
+    // }
+
+    public static function registerTmpUser(PDODatabase $db, string $email, string $token) : bool
     {
-        $this->db = $db;
-    }
+        if (! self::validateEmail($email)) return false;
 
-    public function registerTmpUser(string $email, string $token) : bool
-    {
-        $this->validateEmail($email);
-        if (count($this->err_arr) > 0) return false;
-
-        $this->setProperties($email, $token);
+        $expiration_time = 60 * 15;
+        $expires = date('Y-m-d H:i:s', time() + $expiration_time);
 
         $table = 'tmp_users';
         $insertData = [
-            'email' => $this->email,
-            'token' => $this->token,
-            'expires' => $this->expires,
+            'email' => $email,
+            'token' => $token,
+            'expires' => $expires,
         ];
-        $res = $this->db->insert($table, $insertData);
+        $res = $db->insert($table, $insertData);
 
-        if ($res) {
-            return $res;
-        } else {
-            $this->msg_arr['red_insert_failed'] = '仮登録に失敗しました。';
-            return $res;
-        }
+        return $res;
     }
 
-    private function setProperties(string $email, string $token) : void
-    {
-        $expiration_time = 60 * 15;
 
-        $this->email = $email;
-        $this->token = $token;
-        $this->expires = date('Y-m-d H:i:s', time() + $expiration_time);
-    }
-
-    public function validateEmail(string $email) : void
+    private static function validateEmail(string $email) : bool
     {
+        $flg = true;
         $pattern = Common::EMAIL_PATTERN;
 
         if (empty($email)) {
-            $this->err_arr['email_empty'] = 'メールアドレスを入力してください。';
+            self::$err_arr['email_empty'] = 'メールアドレスを入力してください。';
+            $flg = false;
         } elseif (! preg_match($pattern, $email)) {
-            $this->err_arr['email_invalid'] = '有効なメールアドレスを入力してください。';
+            self::$err_arr['email_invalid'] = '有効なメールアドレスを入力してください。';
+            $flg = false;
         } elseif (mb_strlen($email) > 100) {
-            $this->err_arr['email_too_long'] = 'メールアドレスは100文字以内で入力してください。';
+            self::$err_arr['email_too_long'] = 'メールアドレスは100文字以内で入力してください。';
+            $flg = false;
         }
+
+        return $flg;
     }
 
-    public function getTmpUser(string $token) : array
+    public static function getTmpUser(PDODatabase $db, string $token) : array
     {
         $table = ' tmp_users ';
-        $column = ' tmp_user_id, email, token, expires ';
+        $column = ' id, email, token, expires ';
         $where = ' token = ? ';
         $arrVal = [$token];
 
-        $res = $this->db->select($table, $column, $where, $arrVal);
+        $res = $db->select($table, $column, $where, $arrVal);
+
         return $res[0];
 
     }
 
-    public function getErrArr()
+    public static function deleteTmpUser(PDODatabase $db, int $id) : bool
     {
-        return $this->err_arr;
+        $table = 'tmp_users';
+
+        $res = $db->delete($table, $id);
+
+        return $res;
+    }
+
+    public static function getTmpUserIdByEmail(PDODatabase $db, string $email) : int
+    {
+        $table = ' tmp_users ';
+        $column = ' id ';
+        $where = ' email = ? ';
+        $arr_val = [$email];
+
+        $res =  $db->select($table, $column, $where, $arr_val);
+
+        return $res[0]['id'];
+    }
+
+    public static function getErrArr()
+    {
+        return self::$err_arr;
     }
 }

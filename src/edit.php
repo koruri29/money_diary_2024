@@ -11,7 +11,6 @@ use lib\common\Token;
 use lib\Category;
 use lib\MoneyEvent;
 use lib\ManageMoneyEvent;
-use lib\User;
 
 
 $db = new PDODatabase(
@@ -22,10 +21,26 @@ $db = new PDODatabase(
 );
 $session = new Session($db);
 
+
 if (empty($_SESSION['user_id'])) {
     header('Location: index.php');
     exit();
 }
+
+if (! isset($_GET['id']) || intval($_GET['id']) < 1) {
+    header('Location: top.php');
+    exit();
+} else {
+    $event_id = intval($_GET['id']);
+}
+
+$event = MoneyEvent::getEventById($db, $event_id);
+
+if ($event === null) {
+    header('Location: top.php');
+    exit(); 
+}
+
 
 $category = new Category();
 $category->setDb($db);
@@ -38,9 +53,9 @@ $loader = new \Twig\Loader\FilesystemLoader(Bootstrap::TEMPLATE_DIR);
 $twig = new \Twig\Environment($loader, ['cache' => Bootstrap::CACHE_DIR]);
 $twig->addExtension(new \Twig\Extra\Intl\IntlExtension());//twigの追加機能(date_format用)
 
-$template = 'top.html.twig';
+$template = 'edit.html.twig';
 $context = [];
-$context['title'] = '入出金登録';
+$context['title'] = 'アイテム編集';
 
 
 
@@ -57,21 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
 }
 
 
-//入出金削除
-if (isset($_POST['submit']) && $_POST['submit'] === 'delete') {
-    if (! isset($_POST['event_id']) || intval($_POST['event_id']) < 1) {
-        $err_arr['red__delete_id_invalid'] = '入出金の削除に失敗しました。';
-    } else {
-        $event_id = intval($_POST['event_id']);
-        if (ManageMoneyEvent::deleteEvent($db, intval($_POST['event_id']))) {
-            $msg_arr['green__delete_success'] = '入出金を削除しました。';
-        }
-    }
-
-
-}
-
-//入出金登録時
+//入出金編集
 if (isset($_POST['submit']) && $_POST['submit'] === 'event_register') {
     switch ($_POST['option']) {
         case 'exchange':
@@ -94,53 +95,40 @@ if (isset($_POST['submit']) && $_POST['submit'] === 'event_register') {
         $_POST['date'],
         $_POST['other'],
     );
+    $event->setEventId($event_id);
 
     $event_manager->setEvent($event);
 
-    if ($event_manager->registerEvent()) {
-        $msg_arr['green__register_success'] = '入出金を登録しました。';
+    if ($event_manager->updateEvent()) {
+        header('Location: top.php?edit=true');
+        exit();
     } else {
         $msg_arr['red__register_failed'] = '入出金の登録に失敗しました。';
         $err_arr = array_merge ($err_arr, $event->getErrArr());
     }
 }
 
-
-//edit.phpからの遷移の場合
-if (isset($_SERVER['HTTP_REFERER'])) {
-    $where_from = basename(substr($_SERVER['HTTP_REFERER'], 0, strcspn($_SERVER['HTTP_REFERER'],'?')));
-    if ($where_from === 'edit.php' &&$_GET['edit'] === 'true') {
-        $msg_arr['green__edit_success'] = '入出金を編集しました。';
-    }
-}
-
-
-
-//入出金の一覧表示用
-$is_get_by_month = true;
-// $categories = $category->getCategoriesByUserId($_SESSION['user_id']);
-$categories = $category->getCategoriesByUserId(1);
-// $items = $event_manager->getEvents($_SESSION['user_id'], true);
-$items = $event_manager->getEvents(1, $is_get_by_month);
-$sum = $event_manager->getSum(1, $is_get_by_month);
-
 //CSRF対策用トークン
 $token = Token::generateToken();
 $_SESSION['token'] = $token;
 
-//初期値
+//初期値セット
 $preset = [];
-$preset['date'] = date('Y-m-j');
-$preset['option'] = 0;
+$preset['date'] = date('Y-m-d', strtotime($event->getDate()));
+$preset['amount'] = $event->getAmount();
+$preset['option'] = $event->getOption();
+$preset['category_id'] = $event->getCategoryId();
+$preset['other'] = $event->getOther();
 
 
+
+// $categories = $category->getCategoriesByUserId($_SESSION['user_id']);
+$categories = $category->getCategoriesByUserId(1);
 
 $context['msg_arr'] = $msg_arr;
 $context['err_arr'] = $err_arr;
 $context['token'] = $token;
 $context['preset'] = $preset;
 $context['categories'] = Common::wh($categories);
-$context['items'] = Common::wh($items);
-$context['sum'] = Common::h($sum);
 
 echo $twig->render($template, $context);

@@ -3,6 +3,18 @@
 <main>
 	<h2>{{title}}</h2><!-- 会員本登録 -->
 	
+	{% for key, msg in msg_arr %}
+		{% if 'red__' in key %}
+			<p class="red">{{msg}}</p>
+		{% elseif 'green__' in key %}
+			<p class="green">{{msg}}</p>
+		{% endif %}
+	{% endfor %}
+	
+	{% for key, error in err_arr %}
+		<p class="error">{{error}}</p>
+	{% endfor %}
+
 	<form  method="post">
 		<input type="hidden" name="token" value="{{token}}">
 		<input type="hidden" name="email" value="{{email}}">

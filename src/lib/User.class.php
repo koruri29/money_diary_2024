@@ -33,25 +33,31 @@ class User
 
     }
 
-    public function validateUser() : void
+    public function validateUser() : bool
     {
+        $flg = true;
 
         if (empty($this->user_name)) {
             $this->errArr['username_empty'] = 'ユーザー名を入力してください。';
+            $flg = false;
         } elseif (mb_strlen($this->user_name) > 50) {
             $this->errArr['username_too_long'] = 'ユーザー名は50文字以内で入力してください。';
+            $flg = false;
         }
 
 
         if (empty($this->password)) {
             $this->errArr['password_empty'] = 'パスワードを入力してください。';
+            $flg = false;
         }
+
+        return $flg;
     }
 
     public static function getUserByEmail(PDODatabase $db, string $email) : ?User
     {
         $table = ' users ';
-        $column = ' user_id, user_name, email, password, user_image ';
+        $column = ' id, user_name, email, password, user_image ';
         $where = ' email = ?';
         $arr_val = [$email];
 
@@ -66,9 +72,25 @@ class User
             $user_info[0]['password'],
             $user_info[0]['user_image'],
         );
-        $user->setUserId($user_info[0]['user_id']);
+        $user->setUserId($user_info[0]['id']);
 
         return $user;
+    }
+
+    public static function doesEmailExist(PDODatabase $db, string $email) : bool
+    {
+        $table = 'users';
+        $column = ' id ';
+        $where = ' email = ? ';
+        $arr_val = [$email];
+
+        $user_info = $db->select($table, $column, $where, $arr_val);
+
+        if (count($user_info) === 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public function setUserId($user_id) : void
