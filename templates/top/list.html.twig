@@ -1,0 +1,29 @@
+<div class="event-list">
+	<table>
+		<tr class="item-row">
+			<td></td>
+			<td></td>
+			<td>収支</td>
+			<td>
+				{% if  sum >= 0 %}+{{sum | number_format(0, '.', ',')}}{% endif %}
+			</td>
+			<td>
+				{% if  sum < 0 %}-{{sum | number_format(0, '.', ',')}}{% endif %}
+						</td>
+		</tr>
+		{% for key, item in items %}
+			<tr class="item-row">
+				<td>{{item.date | format_datetime('short', 'none')}}</td>
+				<td>{{item.other}}</td>
+				<td>{{item.c_html | raw}}{{item.category_name}}</td>
+				{% if item.option == 0 %}
+					<td class="plus"></td>
+					<td class="minus">-{{item.amount | number_format(0, '.', ',')}}</td>
+				{% else %}
+					<td class="plus">+{{item.amount | number_format(0, '.', ',')}}</td>
+					<td class="minus"></td>
+				{% endif %}
+			</tr>
+		{% endfor %}
+	</table>
+</div>

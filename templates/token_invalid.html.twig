@@ -1,0 +1,14 @@
+{% include 'header.html.twig' %}
+
+<main>
+
+	{% for error in err_arr %}
+		<p>{{error}}</p>
+	{% endfor %}
+
+	<a href="{{link}}">{{page}}へ</a>
+
+</main>
+
+{% include 'footer.html.twig' %}
+

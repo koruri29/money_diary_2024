@@ -29,10 +29,13 @@ $context['title'] = 'ログイン';
 
 //トークンチェック
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] !== $_SESSION['token']) {
+    $template = 'token_invalid.html.twig';
     $err_arr['token_invalid'] = '不正なリクエストです。';
     $context['err_arr'] = $err_arr;
+    $context['link'] = 'index.php';
+    $context['link_to'] = 'ログインページ';
+
     echo $twig->render($template, $context);
-    
     exit();
 }
 
@@ -40,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
 if (isset($_POST['submit']) && $_POST['submit'] === 'login') {
     if ($user = $session->checkLogin($_POST['email'], $_POST['password'])) {//ログイン認証
         $session->setUserInfo($user);
-        
+
         header('Location: top.php');
         exit();
     } else {

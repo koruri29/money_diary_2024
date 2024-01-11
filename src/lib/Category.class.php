@@ -28,6 +28,8 @@ class Category
 
     public function getCategoriesByUserId(int $user_id) : array
     {
+        $this->db->resetClause();
+
         $table = ' categories c ';
         $column = <<<COL
             c.category_id,

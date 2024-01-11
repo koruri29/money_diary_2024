@@ -32,10 +32,13 @@ $context['title'] = '会員仮登録';
 
 //トークンチェック
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] !== $_SESSION['token']) {
+    $template = 'token_invalid.html.twig';
     $err_arr['token_invalid'] = '不正なリクエストです。';
     $context['err_arr'] = $err_arr;
-    echo $twig->render($template, $context);
+    $context['link'] = 'register.php';
+    $context['link_to'] = '登録ページ';
     
+    echo $twig->render($template, $context);
     exit();
 }
 

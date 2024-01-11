@@ -107,6 +107,11 @@ class PDODatabase
         return $sql;
     }
 
+    /**
+     * 前のSQLの句を削除
+     * 
+     * @return void
+     */
     public function resetClause() : void
     {
         $this->order = '';

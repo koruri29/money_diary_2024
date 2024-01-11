@@ -77,10 +77,17 @@ class MoneyEvent
         }
         
         if (! is_int($this->amount)) {
-            $this->err_arr['amount_not_int'] = '財産IDは正の整数で入力してください。';
+            $this->err_arr['amount_not_int'] = '金額は正の整数で入力してください。';
             $flg = false;
-        } elseif($this->wallet_id < 1) {
-            $this->err_arr['amount_minus'] = '財産IDは正の整数で入力してください。';
+        } elseif($this->amount < 1) {
+            $this->err_arr['amount_minus'] = '金額は正の整数で入力してください。';
+            $flg = false;
+        }
+
+        $date_start = strtotime('1900-01-01');
+        $date_end = strtotime('2100-12-31');
+        if (strtotime($this->date) < $date_start || strtotime($this->date) > $date_end) {
+            $this->err_arr['date_invalid'] = '有効な日付を指定してください。';
             $flg = false;
         }
 

@@ -13,12 +13,6 @@ use lib\ManageMoneyEvent;
 use lib\User;
 
 
-if (empty($_SESSION['user_id'])) {
-    header('Location: index.php');
-    exit();
-}
-
-
 $db = new PDODatabase(
     Bootstrap::DB_HOST,
     Bootstrap::DB_USER,
@@ -26,12 +20,18 @@ $db = new PDODatabase(
     Bootstrap::DB_NAME,
 );
 $session = new Session($db);
+
+if (empty($_SESSION['user_id'])) {
+    header('Location: index.php');
+    exit();
+}
+
 $category = new Category();
 $category->setDb($db);
 $event_manager = new ManageMoneyEvent($db);
 
 $err_arr = [];
-$msg_arr = [];//トップメッセージ
+$msg_arr = [];
 
 $loader = new \Twig\Loader\FilesystemLoader(Bootstrap::TEMPLATE_DIR);
 $twig = new \Twig\Environment($loader, ['cache' => Bootstrap::CACHE_DIR]);
@@ -43,13 +43,15 @@ $context['title'] = '入出金登録';
 
 
 
-
 //トークンチェック
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] !== $_SESSION['token']) {
+    $template = 'token_invalid.html.twig';
     $err_arr['token_invalid'] = '不正なリクエストです。';
     $context['err_arr'] = $err_arr;
-    echo $twig->render($template, $context);
+    $context['link'] = 'top.php';
+    $context['link_to'] = 'トップページ';
     
+    echo $twig->render($template, $context);
     exit();
 }
 
@@ -89,8 +91,10 @@ if (isset($_POST['submit']) && $_POST['submit'] === 'event_register') {
 
 
 //入出金の一覧表示用
+$is_get_by_month = true;
 // $items = $event_manager->getEvents($_SESSION['user_id'], true);
-$items = $event_manager->getEvents(1, true);
+$items = $event_manager->getEvents(1, $is_get_by_month);
+$context['sum'] = $event_manager->getSum(1, $is_get_by_month);
 
 
 //CSRF対策用トークン
@@ -101,7 +105,6 @@ $_SESSION['token'] = $token;
 $context['msg_arr'] = $msg_arr;
 $context['err_arr'] = $err_arr;
 $context['token'] = $token;
-$db->resetClause();
 // $context['categories'] = $category->getCategoriesByUserId($_SESSION['user_id']);
 $context['categories'] = $category->getCategoriesByUserId(1);
 $context['items'] = $items;

@@ -96,13 +96,15 @@ class ManageMoneyEvent
      * 入出金イベントの取得
      * 
      * @param int $user_id
-     * @param bool $isGetByMonth トップ画面の月ごとの表示(not検索画面)か否か
+     * @param bool $is_get_by_month トップ画面の月ごとの表示(not検索画面)か否か
      * @param int $year
      * @param int $month
      * @return array
      */
-    public function getEvents(int $user_id, bool $isGetByMonth, int $year = 0, int $month = 0) : array
+    public function getEvents(int $user_id, bool $is_get_by_month, int $year = 0, int $month = 0) : array
     {
+        $this->db->resetClause();
+
         $table = 'money_events e';
         $column = <<<COL
             e.event_id, 
@@ -124,12 +126,13 @@ class ManageMoneyEvent
         $where = ' e.user_id = ? ';
         $arr_val = [$user_id];
 
+        //INNER JOIN
         $join_table1 = ' categories c ';
         $join_on1 = ' e.category_id = c.category_id ';
         $join_table2 = ' wallets w ';
         $join_on2 = ' e.wallet_id = w.wallet_id ';
         $join_table3 = ' icons i1 ';
-        $join_on3 = ' COALESCE(w.icon_id, 0) = COALESCE(i1.icon_id, 0) ';
+        $join_on3 = ' COALESCE(c.icon_id, 0) = COALESCE(i1.icon_id, 0) ';
         $join_table4 = ' icons i2 ';
         $join_on4 = ' COALESCE(w.icon_id, 0) = COALESCE(i2.icon_id, 0) ';
 
@@ -138,7 +141,8 @@ class ManageMoneyEvent
         $this->db->pushJoin($join_table3, $join_on3);
         $this->db->pushJoin($join_table4, $join_on4);
 
-        if ($isGetByMonth) {
+        //WHERE句(日付)
+        if ($is_get_by_month) {
             if ($year === 0) $year = date('Y');
             if ($month < 1 || $month > 12 || ! is_int($month)) $month = date('m');
 
@@ -146,9 +150,38 @@ class ManageMoneyEvent
             $where .= 'AND date BETWEEN ' . $datetime . ' AND LAST_DAY(' . $datetime . ') ';
         }
 
+        //ORDER BY
+        $this->db->setOrder('date ASC');
+
         $events = $this->db->select($table, $column, $where, $arr_val);
 
         return $events;
+    }
+
+    public function getSum(int $user_id, bool $is_get_by_month, int $year = 0, int $month = 0) : int
+    {
+        $this->db->resetClause();
+
+        $table = 'money_events';
+        $column = <<<COL
+            SUM(CASE WHEN option = 1 THEN amount END) AS income,
+            SUM(CASE WHEN option = 0 THEN amount END) AS outgo 
+        COL;
+        $where = ' user_id = ? ';
+        $arr_val = [$user_id];
+
+        //WHERE句(日付)
+        if ($is_get_by_month) {
+            if ($year === 0) $year = date('Y');
+            if ($month < 1 || $month > 12 || ! is_int($month)) $month = date('m');
+
+            $datetime ='"' . $year . '-' . $month . '-01 00:00:00"';
+            $where .= 'AND date BETWEEN ' . $datetime . ' AND LAST_DAY(' . $datetime . ') ';
+        }
+
+        $sums = $this->db->select($table, $column, $where, $arr_val);
+
+        return $sums[0]['income'] - $sums[0]['outgo'];
     }
 
     public function setEvent(MoneyEvent $event) : void
