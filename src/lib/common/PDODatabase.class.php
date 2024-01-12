@@ -58,7 +58,7 @@ class PDODatabase
     public function select(string $table, string $column = '', string $where = '', array $arrVal = []): array
     {
         $sql = $this->getSql('select', $table, $where, $column);
-// echo $sql . '<BR>';
+// echo '___' . $sql . '<BR>'   ;
         $this->sqlLogInfo($sql, $arrVal);
 
         $stmt = $this->dbh->prepare($sql);

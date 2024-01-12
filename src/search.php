@@ -11,6 +11,8 @@ use lib\common\Token;
 use lib\Category;
 use lib\MoneyEvent;
 use lib\ManageMoneyEvent;
+use lib\SearchedEvent;
+use lib\User;
 
 
 $db = new PDODatabase(
@@ -21,26 +23,10 @@ $db = new PDODatabase(
 );
 $session = new Session($db);
 
-
 if (empty($_SESSION['user_id'])) {
     header('Location: index.php');
     exit();
 }
-
-if (! isset($_GET['id']) || intval($_GET['id']) < 1) {
-    header('Location: top.php');
-    exit();
-} else {
-    $event_id = intval($_GET['id']);
-}
-
-$event = MoneyEvent::getEventById($db, $event_id);
-
-if ($event === null) {
-    header('Location: top.php');
-    exit(); 
-}
-
 
 $category = new Category();
 $category->setDb($db);
@@ -48,14 +34,15 @@ $event_manager = new ManageMoneyEvent($db);
 
 $err_arr = [];
 $msg_arr = [];
+$is_get_by_month = false;
 
 $loader = new \Twig\Loader\FilesystemLoader(Bootstrap::TEMPLATE_DIR);
 $twig = new \Twig\Environment($loader, ['cache' => Bootstrap::CACHE_DIR]);
 $twig->addExtension(new \Twig\Extra\Intl\IntlExtension());//twigの追加機能(date_format用)
 
-$template = 'edit.html.twig';
+$template = 'search.html.twig';
 $context = [];
-$context['title'] = 'アイテム編集';
+$context['title'] = '入出金検索';
 
 
 
@@ -71,9 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
     exit();
 }
 
-
-//入出金編集
-if (isset($_POST['submit']) && $_POST['submit'] === 'event_register') {
+//検索
+if (isset($_POST['submit']) && $_POST['submit'] === 'search') {
     switch ($_POST['option']) {
         case 'exchange':
             $option = 2;
@@ -86,44 +72,43 @@ if (isset($_POST['submit']) && $_POST['submit'] === 'event_register') {
             break;
     }
 
-    $event = new MoneyEvent(
+    $s_event = new SearchedEvent(
         $_SESSION['user_id'],
         intval($_POST['category_id']),
         intval($_POST['wallet_id']),
         $option,
-        intval($_POST['amount']),
-        $_POST['date'],
+        intval($_POST['min_amount']),
+        intval($_POST['max_amount']),
+        $_POST['min_date'],
+        $_POST['max_date'],
         $_POST['other'],
     );
-    $event->setEventId($event_id);
 
-    $event_manager->setEvent($event);
+$items = $event_manager->searchEvents($s_event);
+$context['items'] = Common::wh($items);
 
-    if ($event_manager->updateEvent()) {
-        header('Location: top.php?edit=true');
-        exit();
-    } else {
-        $msg_arr['red__register_failed'] = '入出金の登録に失敗しました。';
-        $err_arr = array_merge ($err_arr, $event->getErrArr());
-    }
+$sum = $event_manager->getSearchedSum($s_event);
+$context['sum'] = Common::h($sum);
 }
+
+
 
 //CSRF対策用トークン
 $token = Token::generateToken();
 $_SESSION['token'] = $token;
 
-//初期値セット
-$preset = [];
-$preset['date'] = date('Y-m-d', strtotime($event->getDate()));
-$preset['amount'] = $event->getAmount();
-$preset['option'] = $event->getOption();
-$preset['category_id'] = $event->getCategoryId();
-$preset['other'] = $event->getOther();
 
-
-
+//入出金の一覧表示用
+$is_get_by_month = false;
 // $categories = Category::getCategoriesByUserId($db, $_SESSION['user_id']);
 $categories = Category::getCategoriesByUserId($db, 1);
+
+//初期値
+$preset = [];
+$preset['date'] = date('Y-m-j');
+$preset['option'] = 0;
+
+
 
 $context['msg_arr'] = $msg_arr;
 $context['err_arr'] = $err_arr;

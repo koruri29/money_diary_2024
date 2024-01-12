@@ -2,9 +2,8 @@
 
 <main>
 
-	{% for error in err_arr %}
-		<p>{{error}}</p>
-	{% endfor %}
+	{% include 'component/error.html.twig' %}
+
 
 	<a href="{{link}}">{{page}}へ</a>
 

@@ -26,9 +26,9 @@ class Category
     //     $this->$db = $db;
     // }
 
-    public function getCategoriesByUserId(int $user_id) : array
+    public static function getCategoriesByUserId (PDODatabase $db, int $user_id) : array
     {
-        $this->db->resetClause();
+        $db->resetClause();
 
         $table = ' categories c ';
         $column = <<<COL
@@ -45,9 +45,9 @@ class Category
         $join_table = ' icons i';
         $join_on = 'i.id = c.icon_id ';
 
-        $this->db->pushJoin($join_table, $join_on);
+        $db->pushJoin($join_table, $join_on);
         
-        $categories = $this->db->select($table, $column, $where, $arr_val);
+        $categories = $db->select($table, $column, $where, $arr_val);
 
         return $categories;
     }

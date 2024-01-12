@@ -1,0 +1,91 @@
+{# main variables #}
+{# msg_arr #}
+{# err_arr #}
+{# preset #}
+{# category #}
+
+<div class="event_form_wrapper">
+	
+	{# メッセージ表示 #}
+	{% include 'component/message.html.twig' %}
+	
+	
+	<h2>{{title}}</h2><!-- 入出金登録or検索 -->
+	
+	
+	{% include 'component/error.html.twig' %}
+	
+	
+	
+	<form action="" method="post" class="event_form">
+		<div class="event_inputs">
+			<dl>
+				<dt><label class="input-label" for="date">日付</label></dt>
+				<dd><input type="date" id="date" name="date" value="{{preset.date}}"></dd>
+				<dd><button class="btn yesterday" id="yesterday" disabled>昨日</dd>
+			</dl>
+
+			<dl>
+				<dt class="input-label">振分</dt>
+				<dd>
+					<label for="outgo">支出</label>
+					<input type="radio" name="option" value="outgo" id="outgo"{% if preset.option == 0 %} checked{% endif %}>
+					<label for="income">収入</label>
+					<input type="radio" name="option" value="income" id="income"{% if preset.option == 1 %} checked{% endif %}>
+					{# <label for="exchange">振替</label>
+					<input type="radio" name="option" value="exchange" id="exchange"> #}
+				</dd>
+			</dl>
+
+			<dl>
+				<dt class="required"><label for="amount" class="input-label">金額</label></dt>
+				<dd>
+					<input class="input-amount" id="amount" type="number" min="0" name="amount"
+					value="{% if preset.amount > 0 %}{{preset.amount}}{% else %}0{% endif %}">
+				</dd>
+			</dl>
+	
+	
+			<button class="btn event-register-btn" name="submit" value="event_register">登録</button>
+	
+	
+			<p style="color: green;">- オプション - </p>
+			<table class="categories">
+				{% for key, category in categories %}
+					{% if (loop.index % 4 == 1) %}<tr>{% endif %}
+					{% if loop.first %}
+					<td class="item-category">
+						<input id="{{category.category_id}}" class="category-radio" type="radio" name="category_id"
+						value="{{category.category_id}}" {% if preset.category_id == category.category_id %}checked{% endif %}
+						{% if preset.category_id is not defined %}checked{% endif %}>
+						<label for="{{category.category_id}}" class="category-label">{{category.i_html | raw}}{{category.category_name}}</label>
+					</td>
+					{% endif %}
+					{% if loop.first == false %}
+						<td class="item-category">
+							<input class="category-radio"  type="radio" name="category_id" id="{{category.category_id}}"
+							value="{{category.category_id}}" {% if preset.category_id == category.category_id %}checked{% endif %}>
+							<label for="{{category.category_id}}" class="category-label">{{category.i_html | raw}}{{category.category_name}}</label>
+						</td>
+					{% endif %}
+					{% if (loop.index % 4 == 0) %}</tr>{% endif %}
+				{% endfor %}
+				
+				<input type="hidden" name="wallet_id" value="1">
+		
+			</table>
+	
+			<br>
+	
+			<dl>
+				<dt><labe class="input-label"l for="other">備考</label></dt>
+				<dd><textarea name="other" id="other" cols="40" rows="4">{{preset.other}}</textarea></dd>
+			</dl>
+			
+			
+		</div>
+	
+	
+	</form>
+</div>
+	

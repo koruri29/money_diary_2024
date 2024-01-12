@@ -1,0 +1,7 @@
+{% for key, msg in msg_arr %}
+	{% if 'red__' in key %}
+		<p class="msg red">{{msg}}</p>
+	{% elseif 'green__' in key %}
+		<p class=msg "green">{{msg}}</p>
+	{% endif %}
+{% endfor %}

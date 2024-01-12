@@ -49,4 +49,25 @@ class Common
 
         return $w_array;
     }
+
+    /**
+     * 検索ワードをSQL用に整形する
+     * 
+     * @param string $words $_POST['searched_words']
+     * @return array $words_arr
+     */
+    public static function adjustSearchWords(string $words): array {
+        if (empty($words)) {
+            $words_arr = array();
+        } else {
+            $hankaku = mb_convert_kana($words, 's', 'utf-8');
+            $words = preg_split('/[\s]/', $hankaku);
+        }
+
+        $words_arr = [];
+        foreach ($words as $word) {
+            $words_arr[] = '%' . $word . '%';
+        }
+        return $words_arr;
+    }
 }

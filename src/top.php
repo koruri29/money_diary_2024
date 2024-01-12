@@ -11,7 +11,6 @@ use lib\common\Token;
 use lib\Category;
 use lib\MoneyEvent;
 use lib\ManageMoneyEvent;
-use lib\User;
 
 
 $db = new PDODatabase(
@@ -41,6 +40,11 @@ $twig->addExtension(new \Twig\Extra\Intl\IntlExtension());//twigの追加機能(
 $template = 'top.html.twig';
 $context = [];
 $context['title'] = '入出金登録';
+
+//入力フォーム初期値
+$preset = [];
+$preset['date'] = date('Y-m-j');
+$preset['option'] = 0;
 
 
 
@@ -103,13 +107,19 @@ if (isset($_POST['submit']) && $_POST['submit'] === 'event_register') {
         $msg_arr['red__register_failed'] = '入出金の登録に失敗しました。';
         $err_arr = array_merge ($err_arr, $event->getErrArr());
     }
+
+
+    $preset['date'] = Common::h($_POST['date']);
+    $preset['option'] = $option;
+    $preset['category_id'] = Common::h($_POST['category_id']);
+    $preset['other'] = Common::h($_POST['other']);
 }
 
 
 //edit.phpからの遷移の場合
 if (isset($_SERVER['HTTP_REFERER'])) {
     $where_from = basename(substr($_SERVER['HTTP_REFERER'], 0, strcspn($_SERVER['HTTP_REFERER'],'?')));
-    if ($where_from === 'edit.php' &&$_GET['edit'] === 'true') {
+    if ($where_from === 'edit.php' && $_GET['edit'] === 'true') {
         $msg_arr['green__edit_success'] = '入出金を編集しました。';
     }
 }
@@ -118,8 +128,8 @@ if (isset($_SERVER['HTTP_REFERER'])) {
 
 //入出金の一覧表示用
 $is_get_by_month = true;
-// $categories = $category->getCategoriesByUserId($_SESSION['user_id']);
-$categories = $category->getCategoriesByUserId(1);
+// $categories = Category::getCategoriesByUserId($db, $_SESSION['user_id']);
+$categories = Category::getCategoriesByUserId($db, 1);
 // $items = $event_manager->getEvents($_SESSION['user_id'], true);
 $items = $event_manager->getEvents(1, $is_get_by_month);
 $sum = $event_manager->getSum(1, $is_get_by_month);
@@ -127,11 +137,6 @@ $sum = $event_manager->getSum(1, $is_get_by_month);
 //CSRF対策用トークン
 $token = Token::generateToken();
 $_SESSION['token'] = $token;
-
-//初期値
-$preset = [];
-$preset['date'] = date('Y-m-j');
-$preset['option'] = 0;
 
 
 

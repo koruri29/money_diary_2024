@@ -2,8 +2,10 @@
 
 namespace lib;
 
+use lib\common\Common;
 use lib\common\PDODatabase;
 use lib\MoneyEvent;
+use lib\SearchMoneyEvent;
 
 class ManageMoneyEvent
 {
@@ -151,7 +153,7 @@ class ManageMoneyEvent
         }
 
         //ORDER BY
-        $this->db->setOrder('e.date, e.created_at ASC');
+        $this->db->setOrder('e.date DESC, e.created_at  DESC ');
 
         $events = $this->db->select($table, $column, $where, $arr_val);
 
@@ -177,6 +179,159 @@ class ManageMoneyEvent
 
             $datetime ='"' . $year . '-' . $month . '-01 00:00:00"';
             $where .= 'AND date BETWEEN ' . $datetime . ' AND LAST_DAY(' . $datetime . ') ';
+        }
+
+        $sums = $this->db->select($table, $column, $where, $arr_val);
+
+        return $sums[0]['income'] - $sums[0]['outgo'];
+    }
+
+    public function searchEvents(SearchedEvent $s_event) : array
+    {
+        $this->db->resetClause();
+
+        $table = 'money_events e';
+        $column = <<<COL
+            e.id AS event_id, 
+            e.category_id, 
+            c.category_name,
+            c.icon_id AS c_icon_id,
+            i1.html_tag AS c_html,
+            c.icon_color AS c_icon_color,
+            e.wallet_id, 
+            w.wallet_name, 
+            w.icon_id AS w_icon_id, 
+            i2.html_tag AS w_html, 
+            w.icon_color AS w_icon_color,
+            e.option,
+            e.amount, 
+            e.date, 
+            e.other 
+        COL;
+        $where = ' e.user_id = ? ';
+        $arr_val = [$s_event->getUserId()];
+
+
+
+        //INNER JOIN
+        $join_table1 = ' categories c ';
+        $join_on1 = ' e.category_id = c.id ';
+        $join_table2 = ' wallets w ';
+        $join_on2 = ' e.wallet_id = w.id ';
+        $join_table3 = ' icons i1 ';
+        $join_on3 = ' COALESCE(c.icon_id, 0) = COALESCE(i1.id, 0) ';
+        $join_table4 = ' icons i2 ';
+        $join_on4 = ' COALESCE(w.icon_id, 0) = COALESCE(i2.id, 0) ';
+
+        $this->db->pushJoin($join_table1, $join_on1);
+        $this->db->pushJoin($join_table2, $join_on2);
+        $this->db->pushJoin($join_table3, $join_on3);
+        $this->db->pushJoin($join_table4, $join_on4);
+
+        //WHERE句
+        //日付
+        if (! empty($s_event->getMinDate() && $s_event->getMaxDate())) {
+            $where .= ' AND date BETWEEN ? AND ? ';
+            $arr_val = array_merge($arr_val, [$s_event->getMinDate(), $s_event->getMaxDate()]);
+        } elseif (! empty($s_event->getMinDate())) {
+            $where .= ' AND date >= ? ';
+            $arr_val = array_merge($arr_val, [$s_event->getMinDate()]);
+        } elseif (! empty( $s_event->getMaxDate())) {
+            $where .= ' AND date <= ?';
+            $arr_val = array_merge($arr_val, [$s_event->getMaxDate()]);
+        }
+        //金額
+        if (! empty($s_event->getMinAmount() && $s_event->getMaxAmount())) {
+            $where .= ' AND amount BETWEEN ? AND ? ';
+            $arr_val = array_merge($arr_val, [$s_event->getMinAmount(), $s_event->getMaxAmount()]);
+        } elseif (! empty($s_event->getMinAmount())) {
+            $where .= ' AND amount >= ? ';
+            $arr_val = array_merge($arr_val, [$s_event->getMinAmount()]);
+        } elseif (! empty( $s_event->getMaxAmount())) {
+            $where .= ' AND amount <= ?';
+            $arr_val = array_merge($arr_val, [$s_event->getMaxAmount()]);
+        }
+        //カテゴリー
+        if (! empty($s_event->getCategoryId())) {
+            $where .= ' AND e.category_id = ? ';
+            $arr_val = array_merge($arr_val, [$s_event->getCategoryId()]);
+        }
+        //検索ワード
+        if (! empty($s_event->getOther())) {
+            $words_arr = Common::adjustSearchWords($s_event->getOther());
+            foreach ($words_arr as $word) {
+                $where .= ' AND other LIKE ? ';
+            }
+            $arr_val = array_merge($arr_val, $words_arr);
+        }
+        //収入or支出
+        if ($s_event->getOption() === 0) {
+            $where .= ' AND option = 0 ';
+        } else {
+            $where .= ' AND option = 1 ';
+        }
+
+        //ORDER BY
+        $this->db->setOrder('e.date DESC, e.created_at DESC ');
+
+        $events = $this->db->select($table, $column, $where, $arr_val);
+
+        return $events;
+    }
+
+    public function getSearchedSum(SearchedEvent $s_event) : int
+    {
+        $this->db->resetClause();
+
+        $table = 'money_events';
+        $column = <<<COL
+            SUM(CASE WHEN option = 1 THEN amount END) AS income,
+            SUM(CASE WHEN option = 0 THEN amount END) AS outgo 
+        COL;
+        $where = ' user_id = ? ';
+        $arr_val = [$s_event->getUserId()];
+
+        //WHERE句
+        //日付
+        if (! empty($s_event->getMinDate() && $s_event->getMaxDate())) {
+            $where .= ' AND date BETWEEN ? AND ? ';
+            $arr_val = array_merge($arr_val, [$s_event->getMinDate(), $s_event->getMaxDate()]);
+        } elseif (! empty($s_event->getMinDate())) {
+            $where .= ' AND date >= ? ';
+            $arr_val = array_merge($arr_val, [$s_event->getMinDate()]);
+        } elseif (! empty( $s_event->getMaxDate())) {
+            $where .= ' AND date <= ?';
+            $arr_val = array_merge($arr_val, [$s_event->getMaxDate()]);
+        }
+        //金額
+        if (! empty($s_event->getMinAmount() && $s_event->getMaxAmount())) {
+            $where .= ' AND amount BETWEEN ? AND ? ';
+            $arr_val = array_merge($arr_val, [$s_event->getMinAmount(), $s_event->getMaxAmount()]);
+        } elseif (! empty($s_event->getMinAmount())) {
+            $where .= ' AND amount >= ? ';
+            $arr_val = array_merge($arr_val, [$s_event->getMinAmount()]);
+        } elseif (! empty( $s_event->getMaxAmount())) {
+            $where .= ' AND amount <= ?';
+            $arr_val = array_merge($arr_val, [$s_event->getMaxAmount()]);
+        }
+        //カテゴリー
+        if (! empty($s_event->getCategoryId())) {
+            $where .= ' AND category_id = ? ';
+            $arr_val = array_merge($arr_val, [$s_event->getCategoryId()]);
+        }
+        //検索ワード
+        if (! empty($s_event->getOther())) {
+            $words_arr = Common::adjustSearchWords($s_event->getOther());
+            foreach ($words_arr as $word) {
+                $where .= ' AND other LIKE ? ';
+            }
+            $arr_val = array_merge($arr_val, $words_arr);
+        }
+        //収入or支出
+        if ($s_event->getOption() === 0) {
+            $where .= ' AND option = 0 ';
+        } else {
+            $where .= ' AND option = 1 ';
         }
 
         $sums = $this->db->select($table, $column, $where, $arr_val);

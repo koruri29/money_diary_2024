@@ -14,7 +14,7 @@
 		{% for key, item in items %}
 			<tr class="item-row">
 				<td>{{item.date | format_datetime('short', 'none')}}</td>
-				<td>{{item.other}}</td>
+				<td class="list_other">{{item.other}}</td>
 				<td>{{item.c_html | raw}}{{item.category_name}}</td>
 				{% if item.option == 0 %}
 					<td class="plus"></td>

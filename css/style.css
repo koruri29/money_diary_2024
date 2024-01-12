@@ -1,19 +1,146 @@
+@charset "utf-8";
+
+html {
+	font-size: 12px;
+}
+body {
+	margin: 0 auto;
+	color: #000;
+	font-size: 100%;
+	font-family: "Noto Sans JP";
+	letter-spacing: 0.05em;
+}
+* {
+	margin: 0;
+}
+a {
+ text-decoration: none;
+}
+h1, h2, h3, h4, p, ul {
+	margin-block-start: 0;
+	margin-block-end: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	padding-inline-start: 0;
+}
+
+header {
+	height: 10vh;
+	padding-left: 16px;
+	background-color: #e6f3ff;
+	font-size: 28px;
+	line-height: 10vh;
+	color: #2f4f4f;
+}
+
+
+
 main {
-	width: 600px;
 	margin: 0 auto;
 }
+h2 {
+	font-size: 16px;
+}
 .msg {
-	height: 40px;
-	padding-left: 16px;
-	line-height: 40px;
+	margin: 20px auto;
+	padding: 8px 16px;
 }
 .red {
-	background-color: #eda6a6;
+	background-color: #ffbeb3;
 	color: red;
 }
 .green {
 	background-color: #a6eda6;
 	color: green;
+}
+.error {
+	color: red;
+}
+dl {
+	margin: 8px auto;
+}
+dt {
+	display: inline-block;
+}
+dd {
+	display: inline-block;
+	margin: 0;
+}
+.top_main {
+	display: flex;
+	justify-content: space-evenly;
+}
+.event_form_wrapper {
+	margin: 40px 0;
+}
+.event_form {
+	margin: 0 auto;
+	width: 480px;
+}
+.btn {
+	padding: 8px 16px;
+	border-radius: 4px;
+	background-color: #4682b4;
+	color: #fff;
+	border: none;
+	cursor: pointer;
+}
+.input-label {
+	padding: 4px 8px;
+	background-color:#87b6e6;
+	color: #fff;
+	border-radius: 2px;
+}
+.required::after {
+	content: '*';
+	color: red;
+}
+.yesterday {
+	padding: 4px 8px;
+}
+.input-amount:focus {
+	border: 2px solid red;
+	border-radius: 2px;
+	outline: 0;
+}
+.event-register-btn {
+	display: block;
+	margin: 16px auto;
+	width: 280px;
+	height: 80px;
+	font-size: 40px;
+	line-height: calc(80px - 16px * 2);
+	border-radius: 16px;
+}
+.categories > tr {
+	width: 400px;
+}
+.item-category {
+	width: 100px;
+}
+.category-radio {
+	display: none;
+}
+.category-radio + label:hover {
+	background-color: #cce6ff;
+	cursor: pointer;
+}
+.category-radio:checked,
+.category-radio:checked + label,
+.category-radio:checked + label > i {
+	background-color: #78a2cc;
+	color: #fff;
+	border: 1px solid #fff;
+}
+.category-label {
+	display: inline-block;
+  padding: 4px 8px;
+	height: 28px;
+	line-height: 28px;
+	border-radius: 4px;
 }
 i {
 	width: 16px;
@@ -24,4 +151,15 @@ i {
 	font-weight: 400;
 	border: 1px solid gray;
 	border-radius: 50%;
+}
+.event-list {
+	width: 520px;
+}
+
+
+footer {
+	height: 15vh;
+	background-color: #e6f3ff;
+	line-height: 15vh;
+	text-align: center;
 }
