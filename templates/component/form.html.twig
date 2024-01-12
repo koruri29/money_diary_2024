@@ -22,7 +22,8 @@
 			<dl>
 				<dt><label class="input-label" for="date">日付</label></dt>
 				<dd><input type="date" id="date" name="date" value="{{preset.date}}"></dd>
-				<dd><button class="btn yesterday" id="yesterday" disabled>昨日</dd>
+				<dd><button class="btn yesterday" id="yesterday">昨日</dd>
+				<dd><button class="btn today" id="today">今日</dd>
 			</dl>
 
 			<dl>
@@ -55,7 +56,7 @@
 					{% if (loop.index % 4 == 1) %}<tr>{% endif %}
 					{% if loop.first %}
 					<td class="item-category">
-						<input id="{{category.category_id}}" class="category-radio" type="radio" name="category_id"
+						<input class="category-radio {{category.icon_name}}" type="radio" name="category_id" id="{{category.category_id}}"
 						value="{{category.category_id}}" {% if preset.category_id == category.category_id %}checked{% endif %}
 						{% if preset.category_id is not defined %}checked{% endif %}>
 						<label for="{{category.category_id}}" class="category-label">{{category.i_html | raw}}{{category.category_name}}</label>
@@ -63,7 +64,7 @@
 					{% endif %}
 					{% if loop.first == false %}
 						<td class="item-category">
-							<input class="category-radio"  type="radio" name="category_id" id="{{category.category_id}}"
+							<input class="category-radio {{category.icon_name}}"  type="radio" name="category_id" id="{{category.category_id}}"
 							value="{{category.category_id}}" {% if preset.category_id == category.category_id %}checked{% endif %}>
 							<label for="{{category.category_id}}" class="category-label">{{category.i_html | raw}}{{category.category_name}}</label>
 						</td>
@@ -78,8 +79,8 @@
 			<br>
 	
 			<dl>
-				<dt><labe class="input-label"l for="other">備考</label></dt>
-				<dd><textarea name="other" id="other" cols="40" rows="4">{{preset.other}}</textarea></dd>
+				<dt><label class="input-label" for="other">備考</label></dt>
+				<dd><textarea class="other-textarea" name="other" id="other" cols="40" rows="4">{{preset.other}}</textarea></dd>
 			</dl>
 			
 			

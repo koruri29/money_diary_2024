@@ -37,7 +37,8 @@ class Category
             c.item_order,
             c.icon_id,
             c.icon_color,
-            i.html_tag AS i_html 
+            i.html_tag AS i_html,
+            i.icon_name 
         COL;
         $where = ' c.user_id = ? ';
         $arr_val = [$user_id];

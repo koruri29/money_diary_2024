@@ -26,6 +26,9 @@ h1, h2, h3, h4, p, ul {
 	vertical-align: baseline;
 	padding-inline-start: 0;
 }
+*, *::before, *::after {
+	box-sizing: border-box;
+}
 
 header {
 	height: 10vh;
@@ -45,7 +48,6 @@ h2 {
 	font-size: 16px;
 }
 .msg {
-	margin: 20px auto;
 	padding: 8px 16px;
 }
 .red {
@@ -73,15 +75,20 @@ dd {
 	display: flex;
 	justify-content: space-evenly;
 }
+
+/*-------------------------
+ * form.html.twig
+ *-------------------------*/
 .event_form_wrapper {
+	width: 380px;
 	margin: 40px 0;
 }
 .event_form {
 	margin: 0 auto;
-	width: 480px;
 }
 .btn {
-	padding: 8px 16px;
+	margin: 2px;
+	padding: 4px 8px;
 	border-radius: 4px;
 	background-color: #4682b4;
 	color: #fff;
@@ -98,7 +105,7 @@ dd {
 	content: '*';
 	color: red;
 }
-.yesterday {
+.yesterday, .today {
 	padding: 4px 8px;
 }
 .input-amount:focus {
@@ -124,6 +131,11 @@ dd {
 .category-radio {
 	display: none;
 }
+.category-radio + label {
+	width: 88px;
+	height: 40px;
+	line-height: 40px;
+}
 .category-radio + label:hover {
 	background-color: #cce6ff;
 	cursor: pointer;
@@ -142,24 +154,61 @@ dd {
 	line-height: 28px;
 	border-radius: 4px;
 }
-i {
-	width: 16px;
-	height: 16px;
-	padding: 5px;
-	background-color: #fff;
-	font-size: 16px;
-	font-weight: 400;
-	border: 1px solid gray;
-	border-radius: 50%;
+.other-textarea {
+	vertical-align: top;
 }
+
+/*-------------------------
+ * list.html.twig
+ *-------------------------*/
 .event-list {
-	width: 520px;
+	margin: 20px auto;
+}
+.minus-red {
+	font-weight: bold;
+	color: red;
+}
+.plus-green {
+	font-weight: bold;
+	color: green;
+}
+.list-other {
+	width: 200px;
+}
+.list-plus, .list-minus {
+	width: 72px;
+}
+.edit, .delete {
+	width: 48px;
 }
 
-
+/*-------------------------
+ * footer
+ *-------------------------*/
 footer {
 	height: 15vh;
 	background-color: #e6f3ff;
 	line-height: 15vh;
 	text-align: center;
+}
+
+/*-------------------------
+ * icon
+ *-------------------------*/
+i {
+	width: 30px;
+	height: 30px;
+	margin-right: 4px;
+	padding: 5px;
+	background-color: #fff;
+	font-size: 20px;
+	font-weight: 400;
+	border: 1px solid gray;
+	border-radius: 50%;
+}
+.fa-minus::before {
+	padding-left: 1px;
+}
+.fa-plus::before {
+	padding-left: 2px;
 }

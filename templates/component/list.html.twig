@@ -4,30 +4,30 @@
 			<td></td>
 			<td></td>
 			<td>収支</td>
-			<td>
+			<td class="plus-green">
 				{% if  sum >= 0 %}+{{sum | number_format(0, '.', ',')}}{% endif %}
 			</td>
-			<td>
+			<td class="minus-red">
 				{% if  sum < 0 %}{{sum | number_format(0, '.', ',')}}{% endif %}
-						</td>
+			</td>
 		</tr>
 		{% for key, item in items %}
 			<tr class="item-row">
 				<td>{{item.date | format_datetime('short', 'none')}}</td>
-				<td class="list_other">{{item.other}}</td>
+				<td class="list-other">{{item.other}}</td>
 				<td>{{item.c_html | raw}}{{item.category_name}}</td>
 				{% if item.option == 0 %}
-					<td class="plus"></td>
-					<td class="minus">-{{item.amount | number_format(0, '.', ',')}}</td>
+					<td class="list-plus"></td>
+					<td class="list-minus">-{{item.amount | number_format(0, '.', ',')}}</td>
 				{% else %}
-					<td class="plus">+{{item.amount | number_format(0, '.', ',')}}</td>
-					<td class="minus"></td>
+					<td class="list-plus">+{{item.amount | number_format(0, '.', ',')}}</td>
+					<td class="list-minus"></td>
 				{% endif %}
-				<td><a href="edit.php?id={{item.event_id}}"><button class="btn">編集</button></a></td>
+				<td><a href="edit.php?id={{item.event_id}}"><button class="btn edit">編集</button></a></td>
 				<td>
 					<form action="" method="post">
 						<input type="hidden" name="event_id" value="{{item.event_id}}">
-						<button class="btn" name="submit" value="delete">削除</button>
+						<button class="btn delete" name="submit" value="delete">削除</button>
 					</form>
 				</td>
 			</tr>
