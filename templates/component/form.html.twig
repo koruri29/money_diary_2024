@@ -22,8 +22,8 @@
 			<dl>
 				<dt><label class="input-label" for="date">日付</label></dt>
 				<dd><input type="date" id="date" name="date" value="{{preset.date}}"></dd>
-				<dd><button class="btn yesterday" id="yesterday">昨日</dd>
-				<dd><button class="btn today" id="today">今日</dd>
+				<dd><p class="btn yesterday" id="yesterday">昨日</p></dd>
+				<dd><p class="btn today" id="today">今日</p></dd>
 			</dl>
 
 			<dl>
@@ -42,12 +42,13 @@
 				<dt class="required"><label for="amount" class="input-label">金額</label></dt>
 				<dd>
 					<input class="input-amount" id="amount" type="number" min="0" name="amount"
-					value="{% if preset.amount > 0 %}{{preset.amount}}{% else %}0{% endif %}">
+					value="{% if preset.amount > 0 %}{{preset.amount}}{% endif %}">
 				</dd>
 			</dl>
-	
+
 	
 			<button class="btn event-register-btn" name="submit" value="event_register">登録</button>
+			{# <input class="btn event-register-btn" type="submit" name="submit" value="登録"> #}
 	
 	
 			<p style="color: green;">- オプション - </p>
