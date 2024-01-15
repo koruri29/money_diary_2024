@@ -1,6 +1,7 @@
-{% include 'header.html.twig' %}
+{% include 'component/header.html.twig' %}
 
-<main>
+<div class="wrapper">
+
 	<h2>{{title}}</h2><!-- 会員本登録 -->
 
 	{% include 'component/message.html.twig' %}
@@ -19,6 +20,7 @@
 			登録
 		</button>
 	</form>
-</main>
 
-{% include 'footer.html.twig' %}
+</div>
+
+{% include 'component/footer.html.twig' %}

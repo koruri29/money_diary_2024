@@ -1,9 +1,12 @@
 @charset "utf-8";
 
 html {
+	height: 100%;
+	margin: 0;
 	font-size: 12px;
 }
 body {
+	height: 100%;
 	margin: 0 auto;
 	color: #000;
 	font-size: 100%;
@@ -42,7 +45,14 @@ header {
 
 
 main {
-	margin: 0 auto;
+	height: calc(100% - 100px);
+	margin: 0 auto -100px;
+
+}
+.wrapper {
+	width: 600px;
+	min-height: 100%;
+	margin: 40px auto 0;
 }
 h2 {
 	font-size: 16px;
@@ -71,7 +81,7 @@ dd {
 	display: inline-block;
 	margin: 0;
 }
-.top_main {
+.main-wrapper {
 	display: flex;
 	justify-content: space-evenly;
 }
@@ -79,9 +89,9 @@ dd {
 /*-------------------------
  * form.html.twig
  *-------------------------*/
-.event_form_wrapper {
+.event_form_container {
 	width: 380px;
-	margin: 40px 0;
+	margin: 40px auto;
 }
 .event_form {
 	margin: 0 auto;
@@ -162,6 +172,7 @@ dd {
  * list.html.twig
  *-------------------------*/
 .event-list {
+	width: 600px;
 	margin: 20px auto;
 }
 .minus-red {
@@ -173,7 +184,7 @@ dd {
 	color: green;
 }
 .list-other {
-	width: 200px;
+	width: 150px;
 }
 .list-plus, .list-minus {
 	width: 72px;
@@ -185,11 +196,18 @@ dd {
 /*-------------------------
  * footer
  *-------------------------*/
-footer {
+/* .footer-pusher {
 	height: 15vh;
+} */
+footer {
+	height: 100px;
+	margin-top: -100px;
 	background-color: #e6f3ff;
 	line-height: 15vh;
 	text-align: center;
+}
+.copyright {
+	line-height: 100px;
 }
 
 /*-------------------------

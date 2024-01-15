@@ -1,6 +1,7 @@
-{% include 'header.html.twig' %}
+{% include 'component/header.html.twig' %}
 
-<main>
+<div class="wrapper">
+
 	<h2>{{title}}</h2>
 
 	{% include 'component/message.html.twig' %}
@@ -16,7 +17,9 @@
 			ログイン
 		</button>
 	</form>
-</main>
 
-{% include 'footer.html.twig' %}
+</div>
+
+
+{% include 'component/footer.html.twig' %}
 

@@ -112,7 +112,7 @@ if (isset($_POST['submit']) && $_POST['submit'] === 'event_register') {
     $preset['date'] = Common::h($_POST['date']);
     $preset['option'] = $option;
     $preset['category_id'] = Common::h($_POST['category_id']);
-    $preset['other'] = Common::h($_POST['other']);
+    // $preset['other'] = Common::h($_POST['other']);
 }
 
 
