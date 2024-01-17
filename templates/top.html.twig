@@ -2,13 +2,21 @@
 
 
 <div class="wrapper" style="width: auto;">
-<div class="top-wrapper">
-
-	{% include 'component/form.html.twig' %}
-
-	{% include 'component/list.html.twig' %}
-
-</div>
+	<div class="top-wrapper">
+	
+		{% include 'component/form.html.twig' %}
+	
+	
+		<div class="container">
+			<h2 id="month">{{disp_year}}年{{disp_month}}月の収支</h2>
+			<a href="top.php{{query_prev_month}}">&laquo;前月</a> | 
+			<a href="top.php{{query_this_month}}">今月</a> | 
+			<a href="top.php{{query_next_month}}">来月&raquo;</a>
+		
+			{% include 'component/list.html.twig' %}
+		</div>
+	
+	</div>
 </div>
 
 {% include 'component/footer.html.twig' %}

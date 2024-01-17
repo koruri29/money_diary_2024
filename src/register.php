@@ -19,8 +19,9 @@ $db = new PDODatabase(
     Bootstrap::DB_PASS,
     Bootstrap::DB_NAME,
 );
-$session = new Session($db);
+$session = new Session($db);// セッション開始
 
+//ログイン判定
 if (! empty($_SESSION['user_id'])) {
     header('Location: top.php');
     exit();
@@ -28,16 +29,13 @@ if (! empty($_SESSION['user_id'])) {
 
 $err_arr = [];
 $msg_arr = [];
+$sql_err_arr = [];
 
 $loader = new \Twig\Loader\FilesystemLoader(Bootstrap::TEMPLATE_DIR);
 $twig = new \Twig\Environment($loader, ['cache' => Bootstrap::CACHE_DIR]);
 $template = 'tmp_register.html.twig';//仮登録画面
 $context = [];
 $context['title'] = '会員仮登録';
-
-//CSRF対策・二重投稿防止用トークン
-$token = Token::generateToken();
-$_SESSION['token'] = $token;
 
 //トークンチェック
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] !== $_SESSION['token']) {
@@ -51,7 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
     exit();
 }
 
-if (isset($_POST['submit']) && $_POST['submit'] === 'send_mail' && $session->checkToken()) {//仮登録押下後
+
+var_dump($_POST);
+if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkToken()) {//仮登録押下後
     $token = Token::generateToken();
 
     if (TmpUser::registerTmpUser($db, $_POST['email'], $token)) {//ユーザー仮登録
@@ -72,27 +72,37 @@ if (isset($_POST['submit']) && $_POST['submit'] === 'send_mail' && $session->che
     }
 
 
-} elseif (isset($_POST['submit']) && $_POST['submit'] === 'register') {//本登録押下後
+} elseif (isset($_POST['send']) && $_POST['send'] === 'register') {//本登録押下後
     //登録済みメールアドレスかどうか
     // if (! User::doesEmailExist($db, $_POST['email'])) {
         $user = new User($_POST['user_name'], $_POST['email'], $_POST['password']);
         $manage_user = new ManageUser($db, $user);
     
-        //登録が完了したか
-        if ($manage_user->registerUser()) {
+        //ユーザー登録・関連処理
+        try {
+            $db->dbh->beginTransaction();
+
+            $manage_user->registerUser();
+
             $user_id = $db->getLastId();
             Category::initCategories($db, $user_id);
 
             $tmp_user_id = TmpUser::getTmpUserIdByEmail($db, $_POST['email']);
             TmpUser::deleteTmpUser($db, $tmp_user_id);
 
-            $template = 'complete.html.twig';//完了画面
-            $context['title'] = '本登録完了';
-        } else {
+            $db->dbh->commit();
+        } catch(PDOException $e) {
+            $db->dbh->rollBack();
+            $sql_err_arr = array_merge($sql_err_arr, $db->getSqlErrors());
+
             $template = 'main_register.html.twig';//本登録フォームに戻る
             $context['title'] = '会員本登録';
             $context['email'] = Common::h($_POST['email']);
         }
+
+        $template = 'complete.html.twig';//完了画面
+        $context['title'] = '本登録完了';
+
     // } else {
     //     $err_arr['red__email_exists'] = 'すでに登録済みのメールアドレスです。';
     //     $template = 'main_register.html.twig';//本登録フォームに戻る
@@ -116,6 +126,11 @@ if (isset($_POST['submit']) && $_POST['submit'] === 'send_mail' && $session->che
     }
     
 }
+
+
+//CSRF対策・二重投稿防止用トークン
+$token = Token::generateToken();
+$_SESSION['token'] = $token;
 
 
 $context['msg_arr'] = $msg_arr;

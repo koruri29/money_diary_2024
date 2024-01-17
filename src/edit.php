@@ -19,13 +19,14 @@ $db = new PDODatabase(
     Bootstrap::DB_PASS,
     Bootstrap::DB_NAME,
 );
-$session = new Session($db);
+$session = new Session($db);// セッション開始
 
 
 if (empty($_SESSION['user_id'])) {
     header('Location: index.php');
     exit();
 }
+
 
 if (! isset($_GET['id']) || intval($_GET['id']) < 1) {
     header('Location: top.php');
@@ -71,9 +72,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
     exit();
 }
 
+//CSRF対策・二重投稿防止用トークン
+$token = Token::generateToken();
+$_SESSION['token'] = $token;
+
+
 
 //入出金編集
-if (isset($_POST['submit']) && $_POST['submit'] === 'event_register') {
+if (isset($_POST['send']) && $_POST['send'] === 'event_register') {
     switch ($_POST['option']) {
         case 'exchange':
             $option = 2;
@@ -99,18 +105,22 @@ if (isset($_POST['submit']) && $_POST['submit'] === 'event_register') {
 
     $event_manager->setEvent($event);
 
-    if ($event_manager->updateEvent()) {
+    try {
+        $db->dbh->beginTransaction();
+
+        $event_manager->updateEvent();
+
+        $db->dbh->commit();
+
         header('Location: top.php?edit=true');
         exit();
-    } else {
-        $msg_arr['red__register_failed'] = '入出金の登録に失敗しました。';
+    } catch (PDOException $e) {
+        $db->dbh->rollBack();
+        $sql_err_arr = array_merge($sql_err_arr, $db->getSqlErrors());
         $err_arr = array_merge ($err_arr, $event->getErrArr());
+        $msg_arr['red__register_failed'] = '入出金の登録に失敗しました。';
     }
 }
-
-//CSRF対策用トークン
-$token = Token::generateToken();
-$_SESSION['token'] = $token;
 
 //初期値セット
 $preset = [];

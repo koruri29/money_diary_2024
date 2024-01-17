@@ -284,7 +284,7 @@ class PDODatabase
     private function catchError(array $errArr = []): void
     {
         $errMsg = (!empty($errArr[2])) ? $errArr[2] : '';
-        exit('SQLエラーが発生しました。 ' . $errMsg);
+        return $errMsg;
     }
 
     private function makeLogFile(): string

@@ -1,42 +1,52 @@
+<div class="search-form-container">
 <h2>{{title}}</h2>
 
-<form action="" method="post" class="event_form">
-	<div class="event_inputs">
-		<label for="min_date">日付</label>
-		<input type="date" id="min_date" name="min_date">
-		 ～ 
-		<input type="date" id="max_date" name="max_date">
+<form name="form" action="" method="post" class="event-form">
 
-		<br>
+	<input type="hidden" name="token" value="{{token}}">
+		<input type="hidden" name="send" value="search">
 
-		<label for="min_amount">金額</label>
-		<input id="min_amount" type="number" min="0" name="min_amount">
-		 ～ 
-		<input id="max_amount" type="number" min="0" name="max_amount">
+	<div class="event-inputs">
+		<dl>
+			<dt><label class="input-label" for="min_date">日付</label></dt>
+			<dd><input type="date" id="min_date" name="min_date"> ～ </dd>
+			<dd><input type="date" id="max_date" name="max_date"></dd>
+		</dl>
 
-		<br>
+		<dl>
+			<label class="input-label" for="min_amount">金額</label>
+			<input id="min_amount" type="number" min="0" name="min_amount">
+			～ 
+			<input id="max_amount" type="number" min="0" name="max_amount">
+		</dl>
 
-		<label for="outgo">支出</label>
-		<input type="radio" name="option" value="outgo" id="outgo" checked>
-		<label for="income">収入</label>
-		<input type="radio" name="option" value="income" id="income">
-		{# <label for="exchange">振替</label>
-		<input type="radio" name="option" value="exchange" id="exchange"> #}
+		<dl>
+			<dd>
+				<dt class="input-label">振分</dt>
+				<label for="all_events">すべて</label>
+				<input type="radio" name="option" value="all_events" id="all_events" checked>
+				<label for="outgo">支出</label>
+				<input type="radio" name="option" value="outgo" id="outgo">
+				<label for="income">収入</label>
+				<input type="radio" name="option" value="income" id="income">
+				{# <label for="exchange">振替</label>
+				<input type="radio" name="option" value="exchange" id="exchange"> #}
+			</dd>
+		</dl>
 
-		<br>
 
 		<table class="categories">
 			<tr>
-					<td>
-						<input class="category_radio"  type="radio" name="category_id" id="unselected" checked>
-						<label for="unselected"><i class="fa-solid fa-question"></i>未選択</label>
+				<td class="item-category">
+					<input class="category-radio"  type="radio" name="category_id" id="unselected" checked>
+					<label class="category-label" for="unselected"><i class="fa-solid fa-question"></i>未選択</label>
 				</td>
 			{% for key, category in categories %}
 				{% if (loop.index % 4) == 0 %}<tr>{% endif %}
-					<td>
-						<input class="category_radio"  type="radio" name="category_id" id="{{category.category_id}}"
+					<td class="item-category">
+						<input class="category-radio"  type="radio" name="category_id" id="{{category.category_id}}"
 						value="{{category.category_id}}" {% if preset.category_id == category.category_id %}checked{% endif %}>
-						<label for="{{category.category_id}}">{{category.i_html | raw}}{{category.category_name}}</label>
+						<label class="category-label" for="{{category.category_id}}">{{category.i_html | raw}}{{category.category_name}}</label>
 					</td>
 				{% if (loop.index % 4) == 3 %}</tr>{% endif %}
 			{% endfor %}
@@ -47,10 +57,11 @@
 
 		<br>
 
-		<label for="other">備考</label>
-		<textarea name="other" id="other" cols="40" rows="4"></textarea>
+		<label class="input-label" for="other">備考</label>
+		<textarea class="other-textarea" name="other" id="other" cols="40" rows="4"></textarea>
 	</div>
 
-	<button class="btn" name="submit" value="search">検索</button>
+	<button class="btn send_btn search-btn" name="send" value="search">検索</button>
 
 </form>
+</div>

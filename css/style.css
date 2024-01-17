@@ -50,6 +50,12 @@ header {
 	line-height: 72px;
 	color: #2f4f4f;
 }
+.logo {
+	color: #2f4f4f;
+}
+.logo:visited {
+	color: #2f4f4f;
+}
 .header-right ul {
 	position: absolute;
 	top: 0;
@@ -73,7 +79,7 @@ main {
 	margin: 0 auto;
 }
 .wrapper {
-	width: 600px;
+	width: fit-content;
 	min-height: calc(100vh - 72px - 100px);
 	margin: 40px auto 0;
 }
@@ -95,7 +101,7 @@ h2 {
 	color: red;
 }
 dl {
-	margin: 8px auto;
+	margin: 8px;
 }
 dt {
 	display: inline-block;
@@ -116,7 +122,7 @@ dd {
 	width: 380px;
 	margin: 40px auto;
 }
-.event_form {
+.event-form {
 	margin: 0 auto;
 }
 .btn {
@@ -165,7 +171,7 @@ dd {
 	display: none;
 }
 .category-radio + label {
-	width: 88px;
+	width: 96px;
 	height: 40px;
 	line-height: 40px;
 }
@@ -185,6 +191,7 @@ dd {
   padding: 4px 8px;
 	height: 28px;
 	line-height: 28px;
+	font-size: 12px;
 	border-radius: 4px;
 }
 .other-textarea {
@@ -224,12 +231,22 @@ dd {
 }
 
 /*-------------------------
+ * search_form.html.twig
+ *-------------------------*/
+.search-form-container {
+	margin: 0 auto;
+	width: fit-content;
+}
+.search-btn {
+	display: block;
+	margin: 16px auto;
+	width: 120px;
+	height: 40px;
+}
+
+/*-------------------------
  * footer
  *-------------------------*/
-.pusher {
-	display: block;
-	width: 100%;
-}
 footer {
 	height: 100px;
 	/* margin-top: -100px; */

@@ -15,12 +15,16 @@ $db = new PDODatabase(
     Bootstrap::DB_PASS,
     Bootstrap::DB_NAME,
 );
-$session = new Session($db);
+$session = new Session($db);// セッション開始
 
 if (! empty($_SESSION['user_id'])) {
     header('Location: top.php');
     exit();
 }
+
+//CSRF対策・二重投稿防止用トークン
+$token = Token::generateToken();
+$_SESSION['token'] = $token;
 
 $err_arr = [];
 $msg_arr = [];
@@ -44,8 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
     exit();
 }
 
+//CSRF対策・二重投稿防止用トークン
+$token = Token::generateToken();
+$_SESSION['token'] = $token;
 
-if (isset($_POST['submit']) && $_POST['submit'] === 'login') {
+
+
+if (isset($_POST['send']) && $_POST['send'] === 'login') {
     if ($user = $session->checkLogin($_POST['email'], $_POST['password'])) {//ログイン認証
         $session->setUserInfo($user);
 
@@ -56,10 +65,6 @@ if (isset($_POST['submit']) && $_POST['submit'] === 'login') {
         $context['email'] = Common::h($_POST['email']);
     }
 }
-
-
-$token = Token::generateToken();//CSRF対策用トークン
-$_SESSION['token'] = $token;
 
 
 $context['msg_arr'] = $msg_arr;
