@@ -26,6 +26,7 @@ if (empty($_SESSION['user_id'])) {
     exit();
 }
 
+
 $category = new Category();
 $category->setDb($db);
 $event_manager = new ManageMoneyEvent($db);
@@ -36,6 +37,10 @@ $msg_arr = [];
 $loader = new \Twig\Loader\FilesystemLoader(Bootstrap::TEMPLATE_DIR);
 $twig = new \Twig\Environment($loader, ['cache' => Bootstrap::CACHE_DIR]);
 $twig->addExtension(new \Twig\Extra\Intl\IntlExtension());//twigの追加機能(date_format用)
+
+//CSRF対策・二重投稿防止用トークン
+$token = Token::generateToken();
+$_SESSION['token'] = $token;
 
 $template = 'top.html.twig';
 $context = [];
@@ -128,18 +133,39 @@ if (isset($_SERVER['HTTP_REFERER'])) {
 
 //入出金の一覧表示用
 $is_get_by_month = true;
-// $categories = Category::getCategoriesByUserId($db, $_SESSION['user_id']);
-$categories = Category::getCategoriesByUserId($db, 1);
-// $items = $event_manager->getEvents($_SESSION['user_id'], true);
-$items = $event_manager->getEvents(1, $is_get_by_month);
-$sum = $event_manager->getSum(1, $is_get_by_month);
+// $items = $event_manager->getEvents(1, $is_get_by_month);
+// $sum = $event_manager->getSum(1, $is_get_by_month);
+if (isset($_GET['year']) && is_int($_GET['year']) && 1950 <= $_GET['year'] && $_GET['year'] <= 2050 &&
+isset($_GET['month']) && is_int($_GET['month']) && 1 <= $_GET['month'] && $_GET['month'] <= 12) {
+    $year = Common::h(intval($_GET['year']));
+    $month = Common::h(intval($_GET['month']));
+    $context['disp_year'] = $year;
+    $context['disp_month'] = $month;
+    $context['query_prev_month'] = '?year=' . date('Y', mktime(0, 0, 0, $month - 1, 1, $year)) . '&month=' . date('n', mktime(0, 0, 0, $month - 1, 1, $year));
+    $context['query_month'] = date('Y-m-1');
+    $context['query_prev_month'] = '?year=' . date('Y', mktime(0, 0, 0, $month + 1, 1, $year)) . '&month=' . date('n', mktime(0, 0, 0, $month + 1, 1, $year));
 
-//CSRF対策用トークン
-$token = Token::generateToken();
-$_SESSION['token'] = $token;
+} else {
+    $context['disp_year'] = date('Y');
+    $context['disp_month'] = date('n');
+    $context['query_prev_month'] = '?year=' . date('Y', mktime(0, 0, 0, date('m') - 1, 1, date('Y'))) . '&month=' . date('n', mktime(0, 0, 0, date('m') - 1, 1, date('Y')));
+    $context['query_month'] = date('Y-m-1');
+    $context['query_prev_month'] = '?year=' . date('Y', mktime(0, 0, 0, date('m') + 1, 1, date('Y'))) . '&month=' . date('n', mktime(0, 0, 0, date('m') + 1, 1, date('Y')));
+}
+$date =
 
 
 
+$items = $event_manager->getEvents($_SESSION['user_id'], true);
+$sum = $event_manager->getSum($_SESSION['user_id'], $is_get_by_month);
+
+
+//カテゴリ一覧取得
+// $categories = Category::getCategoriesByUserId($db, 1);
+$categories = Category::getCategoriesByUserId($db, $_SESSION['user_id']);
+
+
+$context['session_user_name'] = Common::h($_SESSION['user_name']);
 $context['msg_arr'] = $msg_arr;
 $context['err_arr'] = $err_arr;
 $context['token'] = $token;

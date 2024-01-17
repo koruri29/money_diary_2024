@@ -193,6 +193,39 @@ class PDODatabase
         return $res;
     }
 
+    public function repeatInsert(string $table, array $insertDataCol, array $insertDataValArr) :bool
+    {
+        foreach ($insertDataCol as $val) {
+            $preCnt[] = '?';
+        }
+
+        $columns = implode(',', $insertDataCol);
+        $preSt = implode(',', $preCnt);
+
+        $sql = 'INSERT INTO '
+        . $table
+        . ' ('
+        . $columns
+        . ') VALUES ('
+        . $preSt
+        . ')';
+
+        $flg = true;
+        foreach ($insertDataValArr as $insertDataVal) {
+            $this->sqlLogInfo($sql, $insertDataVal);
+            // echo $sql;
+            $stmt = $this->dbh->prepare($sql);
+            $res = $stmt->execute($insertDataVal);
+            if (! $res) $flg = false;
+        }
+
+        if ($res === false) {
+            $this->catchError($stmt->errorInfo());
+        }
+
+        return $flg;
+    }
+
     public function update(string $table, array $insertData = [], string $where = '', array $arrWhereVal = []): bool
     {
         $arrPreSt = [];//プリペアードステートメントを配列で準備
@@ -233,6 +266,15 @@ class PDODatabase
         return $res;
     }
 
+    /**
+     * 最後にテーブルに挿入した行のIDを取得する
+     * 
+     * @return int
+     */
+    public function getLastId()
+    {
+        return $this->dbh->lastInsertId();
+    }
 
     /**
      * クエリが失敗したときにエラー表示をし、処理を終了させる

@@ -53,6 +53,33 @@ class Category
         return $categories;
     }
 
+    public static function initCategories(PDODatabase $db, int $user_id) : bool {
+        $table = ' categories ';
+        $insertDataCol = [
+            'user_id',
+            'category_name',
+            'item_order',
+            'icon_id',
+            'icon_color',
+        ];
+        $insertDataValArr = [
+            [$user_id, '支出', 999, 2, '#dc143c'],
+            [$user_id, '収入', 998, 1, '#4682b4'],
+            [$user_id, '食費', 3, 3, '#ffa500'],
+            [$user_id, '日用品', 4, 19, '#ff6347'],
+            [$user_id, '交通費', 5, 9, '#00008b'],
+            [$user_id, '趣味', 6, 17, '#008000'],
+            [$user_id, '交際費', 7, 48, '#d2b48c'],
+            [$user_id, '車', 8, 10, '#40e0d0'],
+            [$user_id, '住居', 9, 27, '#8fbc8f'],
+            [$user_id, 'その他', 10, 77, '#b0c4de'],
+        ];
+
+        $res = $db->repeatInsert($table, $insertDataCol, $insertDataValArr);
+
+        return $res;
+    }
+
     public function setDb(PDODatabase $db)
     {
         $this->db = $db;

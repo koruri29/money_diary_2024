@@ -26,7 +26,7 @@ class Session
         $_SESSION['user_name'] = $user->getUserName();
     }
 
-    private function deleteSession() : void
+    public static function deleteSession() : void
     {
         $_SESSION = [];
         session_destroy();

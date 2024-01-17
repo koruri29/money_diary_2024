@@ -13,6 +13,19 @@
 			<div class="header-left">
 				<h1>家計簿アプリ</h1>
 			</div>
+			<div class="header-right">
+				{% if session_user_name is defined %}
+					<ul>
+						<li>{{session_user_name}}さん ログイン中</li>
+						<li><a href="logout.php">ログアウト</a></li>
+					</ul>
+				{% else %}
+					<ul>
+						<li><a href="index.php">ログイン</a></li>
+						<li><a href="register.php">会員登録</a></li>
+					</ul>
+				{% endif %}
+			</div>
 		</div>
 	</header>
 

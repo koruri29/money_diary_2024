@@ -7,6 +7,7 @@ use lib\common\Common;
 use lib\common\PDODatabase;
 use lib\common\Session;
 use lib\common\Token;
+use lib\Category;
 use lib\ManageUser;
 use lib\SendMail;
 use lib\TmpUser;
@@ -19,6 +20,12 @@ $db = new PDODatabase(
     Bootstrap::DB_NAME,
 );
 $session = new Session($db);
+
+if (! empty($_SESSION['user_id'])) {
+    header('Location: top.php');
+    exit();
+}
+
 $err_arr = [];
 $msg_arr = [];
 
@@ -27,6 +34,10 @@ $twig = new \Twig\Environment($loader, ['cache' => Bootstrap::CACHE_DIR]);
 $template = 'tmp_register.html.twig';//仮登録画面
 $context = [];
 $context['title'] = '会員仮登録';
+
+//CSRF対策・二重投稿防止用トークン
+$token = Token::generateToken();
+$_SESSION['token'] = $token;
 
 //トークンチェック
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] !== $_SESSION['token']) {
@@ -69,6 +80,9 @@ if (isset($_POST['submit']) && $_POST['submit'] === 'send_mail' && $session->che
     
         //登録が完了したか
         if ($manage_user->registerUser()) {
+            $user_id = $db->getLastId();
+            Category::initCategories($db, $user_id);
+
             $tmp_user_id = TmpUser::getTmpUserIdByEmail($db, $_POST['email']);
             TmpUser::deleteTmpUser($db, $tmp_user_id);
 
@@ -102,9 +116,6 @@ if (isset($_POST['submit']) && $_POST['submit'] === 'send_mail' && $session->che
     }
     
 }
-
-$token = Token::generateToken();//CSRF対策用トークン
-$_SESSION['token'] = $token;
 
 
 $context['msg_arr'] = $msg_arr;

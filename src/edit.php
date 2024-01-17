@@ -122,9 +122,10 @@ $preset['other'] = $event->getOther();
 
 
 
-// $categories = Category::getCategoriesByUserId($db, $_SESSION['user_id']);
-$categories = Category::getCategoriesByUserId($db, 1);
+$categories = Category::getCategoriesByUserId($db, $_SESSION['user_id']);
+// $categories = Category::getCategoriesByUserId($db, 1);
 
+$context['session_user_name'] = Common::h($_SESSION['user_name']);
 $context['msg_arr'] = $msg_arr;
 $context['err_arr'] = $err_arr;
 $context['token'] = $token;

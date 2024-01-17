@@ -100,8 +100,8 @@ $_SESSION['token'] = $token;
 
 //入出金の一覧表示用
 $is_get_by_month = false;
-// $categories = Category::getCategoriesByUserId($db, $_SESSION['user_id']);
-$categories = Category::getCategoriesByUserId($db, 1);
+$categories = Category::getCategoriesByUserId($db, $_SESSION['user_id']);
+// $categories = Category::getCategoriesByUserId($db, 1);
 
 //初期値
 $preset = [];
@@ -110,6 +110,7 @@ $preset['option'] = 0;
 
 
 
+$context['session_user_name'] = Common::h($_SESSION['user_name']);
 $context['msg_arr'] = $msg_arr;
 $context['err_arr'] = $err_arr;
 $context['token'] = $token;

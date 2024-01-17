@@ -17,6 +17,11 @@ $db = new PDODatabase(
 );
 $session = new Session($db);
 
+if (! empty($_SESSION['user_id'])) {
+    header('Location: top.php');
+    exit();
+}
+
 $err_arr = [];
 $msg_arr = [];
 
