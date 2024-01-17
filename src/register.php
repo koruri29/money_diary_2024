@@ -35,10 +35,6 @@ $template = 'tmp_register.html.twig';//仮登録画面
 $context = [];
 $context['title'] = '会員仮登録';
 
-//CSRF対策・二重投稿防止用トークン
-$token = Token::generateToken();
-$_SESSION['token'] = $token;
-
 //トークンチェック
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] !== $_SESSION['token']) {
     $template = 'token_invalid.html.twig';
@@ -51,7 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
     exit();
 }
 
-if (isset($_POST['submit']) && $_POST['submit'] === 'send_mail' && $session->checkToken()) {//仮登録押下後
+
+var_dump($_POST);
+if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkToken()) {//仮登録押下後
     $token = Token::generateToken();
 
     if (TmpUser::registerTmpUser($db, $_POST['email'], $token)) {//ユーザー仮登録
@@ -72,7 +70,7 @@ if (isset($_POST['submit']) && $_POST['submit'] === 'send_mail' && $session->che
     }
 
 
-} elseif (isset($_POST['submit']) && $_POST['submit'] === 'register') {//本登録押下後
+} elseif (isset($_POST['send']) && $_POST['send'] === 'register') {//本登録押下後
     //登録済みメールアドレスかどうか
     // if (! User::doesEmailExist($db, $_POST['email'])) {
         $user = new User($_POST['user_name'], $_POST['email'], $_POST['password']);
@@ -116,6 +114,11 @@ if (isset($_POST['submit']) && $_POST['submit'] === 'send_mail' && $session->che
     }
     
 }
+
+
+//CSRF対策・二重投稿防止用トークン
+$token = Token::generateToken();
+$_SESSION['token'] = $token;
 
 
 $context['msg_arr'] = $msg_arr;

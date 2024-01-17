@@ -267,8 +267,12 @@ class ManageMoneyEvent
         //収入or支出
         if ($s_event->getOption() === 0) {
             $where .= ' AND option = 0 ';
-        } else {
+        } elseif ($s_event->getOption() === 1) {
             $where .= ' AND option = 1 ';
+        } elseif ($s_event->getOption() === 2) {
+            $where .= ' AND option = 2 ';
+        } else {
+            // do nothing
         }
 
         //ORDER BY
@@ -330,8 +334,12 @@ class ManageMoneyEvent
         //収入or支出
         if ($s_event->getOption() === 0) {
             $where .= ' AND option = 0 ';
-        } else {
+        } elseif ($s_event->getOption() === 1) {
             $where .= ' AND option = 1 ';
+        } elseif ($s_event->getOption() === 2) {
+            $where .= ' AND option = 2 ';
+        } else {
+            // do nothing
         }
 
         $sums = $this->db->select($table, $column, $where, $arr_val);

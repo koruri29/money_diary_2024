@@ -17,8 +17,12 @@
 	
 	
 	
-	<form action="" method="post" class="event_form">
-		<div class="event_inputs">
+	<form name="form" action="" method="post" class="event-form">
+
+		<input type="hidden" name="token" value="{{token}}">
+		<input type="hidden" name="send" value="event_register">
+
+		<div class="event-inputs">
 			<dl>
 				<dt><label class="input-label" for="date">日付</label></dt>
 				<dd><input type="date" id="date" name="date" value="{{preset.date}}"></dd>
@@ -39,7 +43,7 @@
 			</dl>
 
 			<dl>
-				<dt class="required"><label for="amount" class="input-label">金額</label></dt>
+				<dt class="required input-label"><label for="amount">金額</label></dt>
 				<dd>
 					<input class="input-amount" id="amount" type="number" min="0" name="amount"
 					value="{% if preset.amount > 0 %}{{preset.amount}}{% endif %}">
@@ -47,8 +51,8 @@
 			</dl>
 
 	
-			<button class="btn event-register-btn" name="submit" value="event_register">登録</button>
-			{# <input class="btn event-register-btn" type="submit" name="submit" value="登録"> #}
+			<button id="event-register-btn" class="btn send_btn event-register-btn" name="send" value="event_register">登録</button>
+			{# <input class="btn event-register-btn" type="send" name="send" value="登録"> #}
 	
 	
 			<p style="color: green;">- オプション - </p>
@@ -60,14 +64,14 @@
 						<input class="category-radio {{category.icon_name}}" type="radio" name="category_id" id="{{category.category_id}}"
 						value="{{category.category_id}}" {% if preset.category_id == category.category_id %}checked{% endif %}
 						{% if preset.category_id is not defined %}checked{% endif %}>
-						<label for="{{category.category_id}}" class="category-label">{{category.i_html | raw}}{{category.category_name}}</label>
+						<label class="category-label" for="{{category.category_id}}">{{category.i_html | raw}}{{category.category_name}}</label>
 					</td>
 					{% endif %}
 					{% if loop.first == false %}
 						<td class="item-category">
 							<input class="category-radio {{category.icon_name}}"  type="radio" name="category_id" id="{{category.category_id}}"
 							value="{{category.category_id}}" {% if preset.category_id == category.category_id %}checked{% endif %}>
-							<label for="{{category.category_id}}" class="category-label">{{category.i_html | raw}}{{category.category_name}}</label>
+							<label class="category-label" for="{{category.category_id}}">{{category.i_html | raw}}{{category.category_name}}</label>
 						</td>
 					{% endif %}
 					{% if (loop.index % 4 == 0) %}</tr>{% endif %}

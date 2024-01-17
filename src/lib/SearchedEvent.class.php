@@ -79,7 +79,9 @@ class SearchedEvent
             $flg = false;
         }
 
-        if (! $this->option === 0 && $this->option === 1) {
+        if ($this->option === 0 ||$this->option === 1 ||$this->option === 2 ||$this->option === 99) {
+            //do nothing
+        } else {
             $this->err_arr['wallet_id_invalid'] = '有効なオプション値を入力してください。';
             $flg = false;
         }

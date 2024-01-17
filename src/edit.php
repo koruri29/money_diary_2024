@@ -27,6 +27,7 @@ if (empty($_SESSION['user_id'])) {
     exit();
 }
 
+
 if (! isset($_GET['id']) || intval($_GET['id']) < 1) {
     header('Location: top.php');
     exit();
@@ -71,9 +72,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
     exit();
 }
 
+//CSRF対策・二重投稿防止用トークン
+$token = Token::generateToken();
+$_SESSION['token'] = $token;
+
+
 
 //入出金編集
-if (isset($_POST['submit']) && $_POST['submit'] === 'event_register') {
+if (isset($_POST['send']) && $_POST['send'] === 'event_register') {
     switch ($_POST['option']) {
         case 'exchange':
             $option = 2;
@@ -107,10 +113,6 @@ if (isset($_POST['submit']) && $_POST['submit'] === 'event_register') {
         $err_arr = array_merge ($err_arr, $event->getErrArr());
     }
 }
-
-//CSRF対策用トークン
-$token = Token::generateToken();
-$_SESSION['token'] = $token;
 
 //初期値セット
 $preset = [];

@@ -3,14 +3,17 @@
 <div class="wrapper">
 
 	<h2>{{title}}</h2><!-- 会員仮登録 -->
-	
 
-	<form action="" method="post">
+	{% include 'component/error.html.twig' %}
+
+
+	<form name="form" action="" method="post" id="tmp_register">
 		<input type="hidden" name="token" value="{{token}}">
+		<input type="hidden" name="send" value="send_mail">
 		<dl>
-			<dt>メールアドレス</dt><dd><input type="text" name="email"></dd>
+			<dt>メールアドレス</dt><dd><input id="email" type="text" name="email"></dd>
 		</dl>
-		<button class="btn" name="submit" value="send_mail">
+		<button id="tmp_register_btn" class="btn send_btn" name="send" value="send_mail">
 			仮登録メール送信
 		</button>
 	</form>

@@ -1,7 +1,8 @@
 window.onload = ()=> {
-  // URLの取得
   const amount_input = document.getElementById('amount');
-  if (amount_input !== undefined) {
+	console.log(amount_input);
+	alert('test');
+  if (amount_input !== null) {
     
 		//「金額」欄にデフォルトでフォーカスあてる
 		amount_input.focus();
@@ -36,17 +37,21 @@ window.onload = ()=> {
 		
 		//option「収入」選んだら同じカテゴリーが選ばれるようにする
 		//HTML構成変わるとgetElementsByClassNameも変更が必要
-		const outgo_option = document.getElementById('outgo');
-		const income_option = document.getElementById('income');
-		const outgo_radio = document.getElementsByClassName('i_minus')[0];
-		const income_radio = document.getElementsByClassName('i_plus')[0];
-		outgo.addEventListener('click', () => {
-			console.log('true');
-			outgo_radio.checked = true;
+		const outgo = document.getElementById('outgo');
+		const income = document.getElementById('income');
+		const category_outgo = document.getElementsByClassName('i_minus')[0];
+		const category_income = document.getElementsByClassName('i_plus')[0];
+
+		console.log(outgo);
+		outgo.addEventListener('change', () => {
+window.onload = () => {
+			category_outgo.checked = true;
+			amount_input.focus();
 		});
-		income.addEventListener('click', () => {
-			income_radio.checked = true;
-		});
+		income.addEventListener('change', () => {
+			category_income.checked = true;
+			amount_input.focus();
+	});
 	} 
 }
 	

@@ -1,8 +1,5 @@
 <div class="event-list-container">
-	<h2 id="month">{{disp_year}}年{{disp_month}}月の支出</h2>
-	<a href="top.php{{query_prev_month}}">&laquo;前月</a> | 
-	<a href="#">今月</a> | 
-	<a href="top.php{{query_next_month}}">来月&raquo;</a>
+
 	<table>
 		<thead>
 			<tr class="item-row">
@@ -32,9 +29,10 @@
 					{% endif %}
 					<td><a href="edit.php?id={{item.event_id}}"><button class="btn edit">編集</button></a></td>
 					<td>
-						<form action="" method="post">
+						<form name="form_delete" action="" method="post">
 							<input type="hidden" name="event_id" value="{{item.event_id}}">
-							<button class="btn delete" name="submit" value="delete">削除</button>
+							<input type="hidden" name="send" value="delete">
+							<button class="btn send_btn delete" name="send" value="delete">削除</button>
 						</form>
 					</td>
 				</tr>

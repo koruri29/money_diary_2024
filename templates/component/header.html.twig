@@ -11,12 +11,13 @@
 	<header>
 		<div class="container">
 			<div class="header-left">
-				<h1>家計簿アプリ</h1>
+				<a class="logo" href="top.php"><h1>家計簿アプリ</h1></a>
 			</div>
 			<div class="header-right">
 				{% if session_user_name is defined %}
 					<ul>
 						<li>{{session_user_name}}さん ログイン中</li>
+						<li><a href="search.php">検索</a></li>
 						<li><a href="logout.php">ログアウト</a></li>
 					</ul>
 				{% else %}

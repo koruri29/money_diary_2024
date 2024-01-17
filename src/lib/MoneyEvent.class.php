@@ -71,7 +71,7 @@ class MoneyEvent
             $flg = false;
         }
 
-        if (! $this->option === 0 && $this->option === 1) {
+        if ($this->option !== 0 && $this->option !== 1) {
             $this->err_arr['wallet_id_invalid'] = '有効なオプション値を入力してください。';
             $flg = false;
         }
@@ -84,8 +84,8 @@ class MoneyEvent
             $flg = false;
         }
 
-        $date_start = strtotime('1900-01-01');
-        $date_end = strtotime('2100-12-31');
+        $date_start = strtotime('1950-01-01');
+        $date_end = strtotime('2050-12-31');
         if (strtotime($this->date) < $date_start || strtotime($this->date) > $date_end) {
             $this->err_arr['date_invalid'] = '有効な日付を指定してください。';
             $flg = false;

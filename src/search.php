@@ -58,17 +58,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
     exit();
 }
 
+//CSRF対策・二重投稿防止用トークン
+$token = Token::generateToken();
+$_SESSION['token'] = $token;
+
+
 //検索
-if (isset($_POST['submit']) && $_POST['submit'] === 'search') {
+if (isset($_POST['send']) && $_POST['send'] === 'search') {
     switch ($_POST['option']) {
-        case 'exchange':
-            $option = 2;
+        case 'outgo':
+            $option = 0;
             break;
         case 'income':
             $option = 1;
             break;
+        case 'exchange':
+            $option = 2;
+            break;
         default:
-            $option = 0;
+            $option = 99;
             break;
     }
 
@@ -92,10 +100,6 @@ $context['sum'] = Common::h($sum);
 }
 
 
-
-//CSRF対策用トークン
-$token = Token::generateToken();
-$_SESSION['token'] = $token;
 
 
 //入出金の一覧表示用
