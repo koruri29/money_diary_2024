@@ -69,7 +69,7 @@ class TmpUser
         return $flg;
     }
 
-    public static function getTmpUser(PDODatabase $db, string $token) : array
+    public static function getTmpUser(PDODatabase $db, string $token) : array|bool
     {
         $table = ' tmp_users ';
         $column = ' id, email, token, expires ';
@@ -78,8 +78,11 @@ class TmpUser
 
         $res = $db->select($table, $column, $where, $arrVal);
 
-        return $res[0];
-
+        if (empty($res)) {
+            return false;
+        } else {
+            return $res[0];
+        }
     }
 
     public static function deleteTmpUser(PDODatabase $db, int $id) : bool

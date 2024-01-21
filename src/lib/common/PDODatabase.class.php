@@ -24,6 +24,8 @@ class PDODatabase
 
     private array $joins = [];
 
+    private array $sql_errors = [];
+
 
     public function __construct(string $db_host, string $db_user, string $db_pass, string $db_name)
     {
@@ -45,6 +47,7 @@ class PDODatabase
         try {
             $dsn = 'mysql:host=' . $db_host . ';dbname=' . $db_name;
             $dbh = new \PDO($dsn, $db_user, $db_pass, $opt);
+            // $dbh->setAttribute(PDO::MYSQL_ATTR_MULTI_STATEMENTS, false);
             $dbh->query('SET NAMES utf8');
 
         } catch (\PDOException $e) {
@@ -283,8 +286,8 @@ class PDODatabase
      */
     private function catchError(array $errArr = []): void
     {
-        $errMsg = (!empty($errArr[2])) ? $errArr[2] : '';
-        return $errMsg;
+        $errMsg = (! empty($errArr[2])) ? $errArr[2] : '';
+        $this->sql_errors[] = $errMsg;
     }
 
     private function makeLogFile(): string
@@ -312,5 +315,10 @@ class PDODatabase
         $logPath = $this->makeLogFile();
         $logData = sprintf("[SQL_LOG:%s]: %s [%s]\n", date('Y-m-d H:i:s'), $sql, implode(',', $arrVal));
         error_log($logData, 3, $logPath);
+    }
+
+    public function getSqlErrors() : array
+    {
+        return $this->sql_errors;
     }
 }

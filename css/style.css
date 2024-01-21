@@ -120,7 +120,7 @@ dd {
  *-------------------------*/
 .event_form_container {
 	width: 380px;
-	margin: 40px auto;
+	margin: 40px 0;
 }
 .event-form {
 	margin: 0 auto;

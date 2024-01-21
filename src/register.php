@@ -31,13 +31,14 @@ $err_arr = [];
 $msg_arr = [];
 $sql_err_arr = [];
 
+// twig読み込み
 $loader = new \Twig\Loader\FilesystemLoader(Bootstrap::TEMPLATE_DIR);
 $twig = new \Twig\Environment($loader, ['cache' => Bootstrap::CACHE_DIR]);
 $template = 'tmp_register.html.twig';//仮登録画面
 $context = [];
 $context['title'] = '会員仮登録';
 
-//トークンチェック
+// フォームトークンチェック
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] !== $_SESSION['token']) {
     $template = 'token_invalid.html.twig';
     $err_arr['token_invalid'] = '不正なリクエストです。';
@@ -49,8 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
     exit();
 }
 
-
-var_dump($_POST);
 if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkToken()) {//仮登録押下後
     $token = Token::generateToken();
 
@@ -66,6 +65,7 @@ if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkTo
             $context['title'] = '仮登録メール送信';
         } else {
             $msg_arr['red__mail_failed'] = 'メールの送信に失敗しました。';
+            $err_arr = array_merge($err_arr, $mail->getErrArr());
         }
     } else {
         $msg_arr['red__tmp_register_failed'] = '仮登録に失敗しました。';
@@ -88,7 +88,7 @@ if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkTo
             Category::initCategories($db, $user_id);
 
             $tmp_user_id = TmpUser::getTmpUserIdByEmail($db, $_POST['email']);
-            TmpUser::deleteTmpUser($db, $tmp_user_id);
+            TmpUser::deleteTmpUser($db, $_POST['email']);
 
             $db->dbh->commit();
         } catch(PDOException $e) {
@@ -112,16 +112,15 @@ if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkTo
 
 
 
-} elseif (isset($_GET['register']) && $_GET['register'] === 'true') {//仮登録メールからの遷移
+} elseif (isset($_GET['register']) && $_GET['register'] === 'true' && isset($_GET['token'])) {//仮登録メールからの遷移
     $tmp_user_info = TmpUser::getTmpUser($db, $_GET['token']);
 
     if ($tmp_user_info === false || strtotime($tmp_user_info['expires']) < time()) {
-        //
+        $err_arr = array_merge($err_arr, ['red__user_not_found' => 'パラメータが不正です。']);
     } else {
         $template = 'main_register.html.twig';
 
         $context['title'] = '会員本登録';
-        // $context['token'] = $_GET['token'];
         $context['email'] = Common::h($tmp_user_info['email']);
     }
     

@@ -58,7 +58,7 @@ class User
     {
         $table = ' users ';
         $column = ' id, user_name, email, password, user_image ';
-        $where = ' email = ?';
+        $where = ' email = ? ';
         $arr_val = [$email];
 
         $user_info = $db->select($table, $column, $where, $arr_val);

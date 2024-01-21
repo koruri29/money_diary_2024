@@ -23,6 +23,7 @@ $db = new PDODatabase(
 );
 $session = new Session($db);// セッション開始
 
+// ログイン判定
 if (empty($_SESSION['user_id'])) {
     header('Location: index.php');
     exit();
@@ -36,6 +37,7 @@ $err_arr = [];
 $msg_arr = [];
 $is_get_by_month = false;
 
+// twig読み込み
 $loader = new \Twig\Loader\FilesystemLoader(Bootstrap::TEMPLATE_DIR);
 $twig = new \Twig\Environment($loader, ['cache' => Bootstrap::CACHE_DIR]);
 $twig->addExtension(new \Twig\Extra\Intl\IntlExtension());//twigの追加機能(date_format用)
@@ -46,7 +48,7 @@ $context['title'] = '入出金検索';
 
 
 
-//トークンチェック
+// フォームトークンチェック
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] !== $_SESSION['token']) {
     $template = 'token_invalid.html.twig';
     $err_arr['token_invalid'] = '不正なリクエストです。';

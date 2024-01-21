@@ -21,13 +21,14 @@ $db = new PDODatabase(
 );
 $session = new Session($db);// セッション開始
 
+// ログイン判定
 if (empty($_SESSION['user_id'])) {
     header('Location: index.php');
     exit();
 }
 
 
-
+// 初期化
 $category = new Category();
 $category->setDb($db);
 $event_manager = new ManageMoneyEvent($db);
@@ -35,6 +36,8 @@ $event_manager = new ManageMoneyEvent($db);
 $err_arr = [];
 $msg_arr = [];
 
+
+// twig読み込み
 $loader = new \Twig\Loader\FilesystemLoader(Bootstrap::TEMPLATE_DIR);
 $twig = new \Twig\Environment($loader, ['cache' => Bootstrap::CACHE_DIR]);
 $twig->addExtension(new \Twig\Extra\Intl\IntlExtension());//twigの追加機能(date_format用)
@@ -50,7 +53,7 @@ $preset = [];
 $preset['date'] = date('Y-m-j');
 $preset['option'] = 0;
 
-//トークンチェック
+// フォームトークンチェック
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] !== $_SESSION['token']) {
     $template = 'token_invalid.html.twig';
     $err_arr['token_invalid'] = '不正なリクエストです。';
@@ -119,9 +122,7 @@ if (isset($_POST['send']) && $_POST['send'] === 'event_register') {
 
     try {
         $db->dbh->beginTransaction();
-
         $event_manager->registerEvent();
-
         $db->dbh->commit();
     } catch (PDOException $e) {
         $db->dbh->rollBack();
@@ -158,6 +159,7 @@ if (isset($_GET['year']) && is_numeric($_GET['year']) && 1950 <= $_GET['year'] &
 isset($_GET['month']) && is_numeric($_GET['month']) && 1 <= $_GET['month'] && $_GET['month'] <= 12) {
     $year = Common::h(intval($_GET['year']));
     $month = Common::h(intval($_GET['month']));
+
     $context['disp_year'] = $year;
     $context['disp_month'] = $month;
     $context['query_prev_month'] = '?year=' . date('Y', mktime(0, 0, 0, $month - 1, 1, $year)) . '&month=' . date('n', mktime(0, 0, 0, $month - 1, 1, $year));
