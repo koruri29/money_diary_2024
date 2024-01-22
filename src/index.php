@@ -23,6 +23,10 @@ if (! empty($_SESSION['user_id'])) {
     exit();
 }
 
+//CSRF対策・二重投稿防止用トークン
+$token = Token::generateToken();
+$_SESSION['token'] = $token;
+
 $err_arr = [];
 $msg_arr = [];
 

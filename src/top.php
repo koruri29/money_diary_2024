@@ -28,6 +28,8 @@ if (empty($_SESSION['user_id'])) {
     exit();
 }
 
+$context['session_user_name'] = Common::h($_SESSION['user_name']);
+
 
 // 初期化
 $category = new Category();

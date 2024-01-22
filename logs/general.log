@@ -5956,6 +5956,7 @@
     c.icon_color,
     i.html_tag AS i_html,
     i.icon_name FROM  categories c   INNER JOIN  icons i ON i.id = c.icon_id   WHERE  c.user_id = ?      [7]
+<<<<<<< HEAD
 [SQL_LOG:2024-01-17 16:22:58]: SELECT     e.id AS event_id, 
     e.category_id, 
     c.category_name,
@@ -7843,3 +7844,5 @@
     w.icon_color,
     i.html_tag AS i_html,
     i.icon_name FROM  wallets w   INNER JOIN  icons i ON i.id = w.icon_id   WHERE  w.user_id = ?      [1]
+=======
+>>>>>>> 0a6aeaeac79772876a2aceea95933c99297b15f9
