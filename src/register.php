@@ -56,8 +56,8 @@ if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkTo
 
     if (TmpUser::registerTmpUser($db, $_POST['email'], $token)) {//ユーザー仮登録
 
-        // $mail = new SendMail($_POST['email']);
-        $mail = new SendMail();
+        $mail = new SendMail($_POST['email']);
+        // $mail = new SendMail();
 
         if ($mail->send($token)) {
             $msg_arr['green__mail_sent'] = '仮登録メールを送信しました。';

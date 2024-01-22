@@ -100,7 +100,7 @@
 							{% if preset.wallet_id is not defined %}checked{% endif %}>
 							<label class="wallet-label" for="{{wallet.wallet_id}}">{{wallet.i_html | raw}}{{wallet.wallet_name}}</label>
 						</td>
-						{% endif %} #}
+						{% endif %}  #}
 	
 						{# 繰り返しの最初以外 #}
 						{# {% if loop.first == false %}
@@ -112,9 +112,9 @@
 						{% endif %}
 	
 						{% if (loop.index % 4 == 0) %}</tr>{% endif %}4つごとにtr閉じタグ挿入
-					{% endfor %} #}
+					{% endfor %}
 			
-				</table>
+				</table>#}
 	
 			<br>
 	

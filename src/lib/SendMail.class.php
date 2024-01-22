@@ -25,9 +25,7 @@ class SendMail
     private array $errArr = [];
 
 
-    public function __construct(
-        string $emailTo = 'koruri821@yahoo.co.jp',
-    )
+    public function __construct(string $emailTo)
     {
         mb_language( 'Japanese' );
         mb_internal_encoding( 'UTF-8' );
