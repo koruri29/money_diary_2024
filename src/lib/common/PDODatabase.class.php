@@ -258,13 +258,29 @@ class PDODatabase
             return $res;
     }
 
-    public function delete(string $table, int $id) : bool
+    public function delete(string $table, array $delete_val_arr) : bool
     {
-        $sql = 'DELETE FROM ' . $table . ' WHERE id = ?';
-        $arrVal = [$id];
+        $col_arr = [];
+        $arr_val = [];
+        foreach ($delete_val_arr as $col => $val) {
+            $col_arr[] = $col . ' = ? ';
+            $col_arr[] = ' AND ';
+            $arr_val[] = $val;
+            $arr_val[] = ' AND ';
+        }
+        array_pop($col_arr);
+        array_pop($arr_val);
+
+        $preSt = implode(',', $col_arr);
+        $preStVal = implode(',', $arr_val);
+
+        $sql = "DELETE FROM "
+        . $table
+        . " WHERE "
+        . $preSt;
 
         $stmt = $this->dbh->prepare($sql);
-        $res = $stmt->execute($arrVal);
+        $res = $stmt->execute($arr_val);
 
         return $res;
     }

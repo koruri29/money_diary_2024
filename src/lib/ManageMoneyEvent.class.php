@@ -89,7 +89,7 @@ class ManageMoneyEvent
     public static function deleteEvent(PDODatabase $db, int $event_id) : bool
     {
         $table = 'money_events ';
-        $res = $db->delete($table, $event_id);
+        $res = $db->delete($table, ['id' => $event_id]);
 
         return $res;
     }

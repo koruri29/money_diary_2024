@@ -40,7 +40,6 @@ window.onload = ()=> {
 		const category_outgo = document.getElementsByClassName('i_minus')[0];
 		const category_income = document.getElementsByClassName('i_plus')[0];
 
-		console.log(outgo);
 		outgo.addEventListener('change', () => {
 			category_outgo.checked = true;
 			amount_input.focus();

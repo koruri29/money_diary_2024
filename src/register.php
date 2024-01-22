@@ -11,6 +11,7 @@ use lib\Category;
 use lib\ManageUser;
 use lib\SendMail;
 use lib\TmpUser;
+use lib\Wallet;
 use lib\User;
 
 $db = new PDODatabase(
@@ -86,6 +87,8 @@ if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkTo
 
             $user_id = $db->getLastId();
             Category::initCategories($db, $user_id);
+            Wallet::initWallets($db, $user_id);
+
 
             $tmp_user_id = TmpUser::getTmpUserIdByEmail($db, $_POST['email']);
             TmpUser::deleteTmpUser($db, $_POST['email']);

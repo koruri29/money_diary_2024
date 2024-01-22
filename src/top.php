@@ -11,6 +11,7 @@ use lib\common\Token;
 use lib\Category;
 use lib\MoneyEvent;
 use lib\ManageMoneyEvent;
+use lib\Wallet;
 
 
 $db = new PDODatabase(
@@ -35,6 +36,7 @@ $event_manager = new ManageMoneyEvent($db);
 
 $err_arr = [];
 $msg_arr = [];
+$sql_err_arr = [];
 
 
 // twig読み込み
@@ -187,13 +189,16 @@ isset($_GET['month']) && is_numeric($_GET['month']) && 1 <= $_GET['month'] && $_
 //カテゴリ一覧取得
 // $categories = Category::getCategoriesByUserId($db, 1);
 $categories = Category::getCategoriesByUserId($db, $_SESSION['user_id']);
+$wallets = Wallet::getWalletsByUserId($db, $_SESSION['user_id']);
 
 
 $context['msg_arr'] = $msg_arr;
 $context['err_arr'] = $err_arr;
+$context['sql_err_arr'] = $sql_err_arr;
 $context['token'] = $token;
 $context['preset'] = $preset;
 $context['categories'] = Common::wh($categories);
+$context['wallets'] = Common::wh($wallets);
 $context['items'] = Common::wh($items);
 $context['sum'] = Common::h($sum);
 

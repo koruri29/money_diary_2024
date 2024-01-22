@@ -12,6 +12,7 @@ use lib\Category;
 use lib\MoneyEvent;
 use lib\ManageMoneyEvent;
 use lib\SearchedEvent;
+use lib\Wallet;
 use lib\User;
 
 
@@ -108,6 +109,7 @@ $context['sum'] = Common::h($sum);
 $is_get_by_month = false;
 $categories = Category::getCategoriesByUserId($db, $_SESSION['user_id']);
 // $categories = Category::getCategoriesByUserId($db, 1);
+$wallets = Wallet::getWalletsByUserId($db, $_SESSION['user_id']);
 
 //初期値
 $preset = [];
@@ -122,5 +124,6 @@ $context['err_arr'] = $err_arr;
 $context['token'] = $token;
 $context['preset'] = $preset;
 $context['categories'] = Common::wh($categories);
+$context['wallets'] = Common::wh($wallets);
 
 echo $twig->render($template, $context);

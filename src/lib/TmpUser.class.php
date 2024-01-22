@@ -85,11 +85,11 @@ class TmpUser
         }
     }
 
-    public static function deleteTmpUser(PDODatabase $db, int $id) : bool
+    public static function deleteTmpUser(PDODatabase $db, string $email) : bool
     {
         $table = 'tmp_users';
 
-        $res = $db->delete($table, $id);
+        $res = $db->delete($table, ['email' => $email]);
 
         return $res;
     }

@@ -11,6 +11,7 @@ use lib\common\Token;
 use lib\Category;
 use lib\MoneyEvent;
 use lib\ManageMoneyEvent;
+use lib\Wallet;
 
 
 $db = new PDODatabase(
@@ -135,6 +136,7 @@ $preset['other'] = $event->getOther();
 
 $categories = Category::getCategoriesByUserId($db, $_SESSION['user_id']);
 // $categories = Category::getCategoriesByUserId($db, 1);
+$wallets = Wallet::getWalletsByUserId($db, $_SESSION['user_id']);
 
 $context['session_user_name'] = Common::h($_SESSION['user_name']);
 $context['msg_arr'] = $msg_arr;
@@ -142,5 +144,6 @@ $context['err_arr'] = $err_arr;
 $context['token'] = $token;
 $context['preset'] = $preset;
 $context['categories'] = Common::wh($categories);
+$context['wallets'] = Common::wh($wallets);
 
 echo $twig->render($template, $context);
