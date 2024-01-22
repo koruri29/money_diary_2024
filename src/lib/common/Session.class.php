@@ -80,8 +80,11 @@ class Session
      */
     public function checkLogin(string $email, string $password) : bool | User
     {
-        if (empty($email)) $this->err_arr['red__email_empty'] = 'メールアドレスを入力してください。';
-        if (! preg_match(Common::EMAIL_PATTERN, $email))  $this->err_arr['red__password_invalid'] = '有効なメールアドレスをを入力してください。';
+        if (empty($email)) {
+            $this->err_arr['red__email_empty'] = 'メールアドレスを入力してください。';
+        } else if (! preg_match(Common::EMAIL_PATTERN, $email)) {
+            $this->err_arr['red__password_invalid'] = '有効なメールアドレスを入力してください。';
+        }
         if (empty($password)) $this->err_arr['red__password_empty'] = 'パスワードを入力してください。';
 
         if (count($this->err_arr) > 0) return false;
@@ -93,10 +96,9 @@ class Session
         }
         
         if (! password_verify($password, $user->getPassword())) {
-            'ユーザーIDかパスワードが間違っています。';
+            $this->err_arr['red__login_failed'] = 'ユーザーIDかパスワードが間違っています。';
             return false;
         }
-       
 
         return $user;
     }

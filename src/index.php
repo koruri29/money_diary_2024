@@ -15,8 +15,9 @@ $db = new PDODatabase(
     Bootstrap::DB_PASS,
     Bootstrap::DB_NAME,
 );
-$session = new Session($db);
+$session = new Session($db);// セッション開始
 
+// ログイン判定
 if (! empty($_SESSION['user_id'])) {
     header('Location: top.php');
     exit();
@@ -29,14 +30,15 @@ $_SESSION['token'] = $token;
 $err_arr = [];
 $msg_arr = [];
 
+// twig読み込み
 $loader = new \Twig\Loader\FilesystemLoader(Bootstrap::TEMPLATE_DIR);
 $twig = new \Twig\Environment($loader, ['cache' => Bootstrap::CACHE_DIR]);
-$template = 'index.html.twig';//仮登録画面
+$template = 'index.html.twig';//ログイン画面
 $context = [];
 $context['title'] = 'ログイン';
 
 
-//トークンチェック
+// フォームトークンチェック
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] !== $_SESSION['token']) {
     $template = 'token_invalid.html.twig';
     $err_arr['token_invalid'] = '不正なリクエストです。';
@@ -53,7 +55,7 @@ $token = Token::generateToken();
 $_SESSION['token'] = $token;
 
 
-
+// ログイン押下後の処理
 if (isset($_POST['send']) && $_POST['send'] === 'login') {
     if ($user = $session->checkLogin($_POST['email'], $_POST['password'])) {//ログイン認証
         $session->setUserInfo($user);
@@ -70,6 +72,7 @@ if (isset($_POST['send']) && $_POST['send'] === 'login') {
 $context['msg_arr'] = $msg_arr;
 $context['err_arr'] = $err_arr;
 $context['token'] = $token;
+
 
 echo $twig->render($template, $context);
 

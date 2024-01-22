@@ -3,3 +3,8 @@
 		<p class="error">{{error}}</p>
 	{% endfor %}
 </div>
+
+
+	{% for key, s_error in sql_err_arr %}
+		<p class="error">{{s_error}}</p>
+	{% endfor %}

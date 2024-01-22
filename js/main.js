@@ -1,7 +1,5 @@
 window.onload = ()=> {
   const amount_input = document.getElementById('amount');
-	console.log(amount_input);
-	alert('test');
   if (amount_input !== null) {
     
 		//「金額」欄にデフォルトでフォーカスあてる
@@ -42,9 +40,7 @@ window.onload = ()=> {
 		const category_outgo = document.getElementsByClassName('i_minus')[0];
 		const category_income = document.getElementsByClassName('i_plus')[0];
 
-		console.log(outgo);
 		outgo.addEventListener('change', () => {
-window.onload = () => {
 			category_outgo.checked = true;
 			amount_input.focus();
 		});

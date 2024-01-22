@@ -24,6 +24,8 @@ class PDODatabase
 
     private array $joins = [];
 
+    private array $sql_errors = [];
+
 
     public function __construct(string $db_host, string $db_user, string $db_pass, string $db_name)
     {
@@ -45,6 +47,7 @@ class PDODatabase
         try {
             $dsn = 'mysql:host=' . $db_host . ';dbname=' . $db_name;
             $dbh = new \PDO($dsn, $db_user, $db_pass, $opt);
+            // $dbh->setAttribute(PDO::MYSQL_ATTR_MULTI_STATEMENTS, false);
             $dbh->query('SET NAMES utf8');
 
         } catch (\PDOException $e) {
@@ -255,13 +258,29 @@ class PDODatabase
             return $res;
     }
 
-    public function delete(string $table, int $id) : bool
+    public function delete(string $table, array $delete_val_arr) : bool
     {
-        $sql = 'DELETE FROM ' . $table . ' WHERE id = ?';
-        $arrVal = [$id];
+        $col_arr = [];
+        $arr_val = [];
+        foreach ($delete_val_arr as $col => $val) {
+            $col_arr[] = $col . ' = ? ';
+            $col_arr[] = ' AND ';
+            $arr_val[] = $val;
+            $arr_val[] = ' AND ';
+        }
+        array_pop($col_arr);
+        array_pop($arr_val);
+
+        $preSt = implode(',', $col_arr);
+        $preStVal = implode(',', $arr_val);
+
+        $sql = "DELETE FROM "
+        . $table
+        . " WHERE "
+        . $preSt;
 
         $stmt = $this->dbh->prepare($sql);
-        $res = $stmt->execute($arrVal);
+        $res = $stmt->execute($arr_val);
 
         return $res;
     }
@@ -283,8 +302,8 @@ class PDODatabase
      */
     private function catchError(array $errArr = []): void
     {
-        $errMsg = (!empty($errArr[2])) ? $errArr[2] : '';
-        exit('SQLエラーが発生しました。 ' . $errMsg);
+        $errMsg = (! empty($errArr[2])) ? $errArr[2] : '';
+        $this->sql_errors[] = $errMsg;
     }
 
     private function makeLogFile(): string
@@ -312,5 +331,10 @@ class PDODatabase
         $logPath = $this->makeLogFile();
         $logData = sprintf("[SQL_LOG:%s]: %s [%s]\n", date('Y-m-d H:i:s'), $sql, implode(',', $arrVal));
         error_log($logData, 3, $logPath);
+    }
+
+    public function getSqlErrors() : array
+    {
+        return $this->sql_errors;
     }
 }

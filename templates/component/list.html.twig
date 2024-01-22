@@ -16,10 +16,12 @@
 		</thead>
 		<tbody>
 			{% for key, item in items %}
+				{# 入出金の1件分 #}
 				<tr class="item-row">
-					<td>{{item.date | format_datetime('short', 'none')}}</td>
-					<td class="list-other">{{item.other}}</td>
-					<td>{{item.c_html | raw}}{{item.category_name}}</td>
+					<td>{{item.date | format_datetime('short', 'none')}}</td>{# 日付 #}
+					<td class="list-other">{{item.other}}</td>{# 備考 #}
+					<td>{{item.c_html | raw}}{{item.category_name}}</td>{# 支出・収入カテゴリー #}
+					{# 支出か収入かで表示場所を変える #}
 					{% if item.option == 0 %}
 						<td class="list-plus"></td>
 						<td class="list-minus">-{{item.amount | number_format(0, '.', ',')}}</td>
@@ -27,6 +29,8 @@
 						<td class="list-plus">+{{item.amount | number_format(0, '.', ',')}}</td>
 						<td class="list-minus"></td>
 					{% endif %}
+
+					{# 編集・削除ボタン #}
 					<td><a href="edit.php?id={{item.event_id}}"><button class="btn edit">編集</button></a></td>
 					<td>
 						<form name="form_delete" action="" method="post">
@@ -35,6 +39,7 @@
 							<button class="btn send_btn delete" name="send" value="delete">削除</button>
 						</form>
 					</td>
+
 				</tr>
 			{% endfor %}
 		</tbody>

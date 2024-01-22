@@ -11,6 +11,7 @@ use lib\common\Token;
 use lib\Category;
 use lib\MoneyEvent;
 use lib\ManageMoneyEvent;
+use lib\Wallet;
 
 
 $db = new PDODatabase(
@@ -19,9 +20,9 @@ $db = new PDODatabase(
     Bootstrap::DB_PASS,
     Bootstrap::DB_NAME,
 );
-$session = new Session($db);
+$session = new Session($db);// セッション開始
 
-
+// ログイン判定
 if (empty($_SESSION['user_id'])) {
     header('Location: index.php');
     exit();
@@ -50,6 +51,7 @@ $event_manager = new ManageMoneyEvent($db);
 $err_arr = [];
 $msg_arr = [];
 
+// twig読み込み
 $loader = new \Twig\Loader\FilesystemLoader(Bootstrap::TEMPLATE_DIR);
 $twig = new \Twig\Environment($loader, ['cache' => Bootstrap::CACHE_DIR]);
 $twig->addExtension(new \Twig\Extra\Intl\IntlExtension());//twigの追加機能(date_format用)
@@ -60,7 +62,7 @@ $context['title'] = 'アイテム編集';
 
 
 
-//トークンチェック
+// フォームトークンチェック
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] !== $_SESSION['token']) {
     $template = 'token_invalid.html.twig';
     $err_arr['token_invalid'] = '不正なリクエストです。';
@@ -105,12 +107,20 @@ if (isset($_POST['send']) && $_POST['send'] === 'event_register') {
 
     $event_manager->setEvent($event);
 
-    if ($event_manager->updateEvent()) {
+    try {
+        $db->dbh->beginTransaction();
+
+        $event_manager->updateEvent();
+
+        $db->dbh->commit();
+
         header('Location: top.php?edit=true');
         exit();
-    } else {
-        $msg_arr['red__register_failed'] = '入出金の登録に失敗しました。';
+    } catch (PDOException $e) {
+        $db->dbh->rollBack();
+        $sql_err_arr = array_merge($sql_err_arr, $db->getSqlErrors());
         $err_arr = array_merge ($err_arr, $event->getErrArr());
+        $msg_arr['red__register_failed'] = '入出金の登録に失敗しました。';
     }
 }
 
@@ -126,6 +136,7 @@ $preset['other'] = $event->getOther();
 
 $categories = Category::getCategoriesByUserId($db, $_SESSION['user_id']);
 // $categories = Category::getCategoriesByUserId($db, 1);
+$wallets = Wallet::getWalletsByUserId($db, $_SESSION['user_id']);
 
 $context['session_user_name'] = Common::h($_SESSION['user_name']);
 $context['msg_arr'] = $msg_arr;
@@ -133,5 +144,6 @@ $context['err_arr'] = $err_arr;
 $context['token'] = $token;
 $context['preset'] = $preset;
 $context['categories'] = Common::wh($categories);
+$context['wallets'] = Common::wh($wallets);
 
 echo $twig->render($template, $context);
