@@ -56,8 +56,8 @@ if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkTo
 
     if (TmpUser::registerTmpUser($db, $_POST['email'], $token)) {//ユーザー仮登録
 
-        // $mail = new SendMail($_POST['email']);
-        $mail = new SendMail();
+        $mail = new SendMail($_POST['email']);
+        // $mail = new SendMail();
 
         if ($mail->send($token)) {
             $msg_arr['green__mail_sent'] = '仮登録メールを送信しました。';
@@ -74,6 +74,20 @@ if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkTo
 
 
 } elseif (isset($_POST['send']) && $_POST['send'] === 'register') {//本登録押下後
+    //reCAPTCHA認証
+    $recap_response = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=6LeXVFkpAAAAAPlelZdc3R9bTDyaXErc_-jVwnrS&response='. $_POST['g-recaptcha-response']);
+    $recap_response = json_decode($recap_response);
+    
+    if (! $recap_response->success) {
+        $msg_arr['red__recap_invalid'] = '認証に失敗しました。';
+
+        $context['msg_arr'] = $msg_arr;
+        $context['err_arr'] = $err_arr;
+        $context['token'] = $token;
+        
+        echo $twig->render($template, $context);
+    }
+
     //登録済みメールアドレスかどうか
     // if (! User::doesEmailExist($db, $_POST['email'])) {
         $user = new User($_POST['user_name'], $_POST['email'], $_POST['password']);

@@ -53,6 +53,20 @@ $_SESSION['token'] = $token;
 
 // ログイン押下後の処理
 if (isset($_POST['send']) && $_POST['send'] === 'login') {
+    //reCAPTCHA認証
+    $recap_response = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=6LeXVFkpAAAAAPlelZdc3R9bTDyaXErc_-jVwnrS&response='. $_POST['g-recaptcha-response']);
+    $recap_response = json_decode($recap_response);
+
+    if (! $recap_response->success) {
+        $msg_arr['red__recap_invalid'] = '認証に失敗しました。';
+
+        $context['msg_arr'] = $msg_arr;
+        $context['err_arr'] = $err_arr;
+        $context['token'] = $token;
+        
+        echo $twig->render($template, $context);
+    }
+
     if ($user = $session->checkLogin($_POST['email'], $_POST['password'])) {//ログイン認証
         $session->setUserInfo($user);
 

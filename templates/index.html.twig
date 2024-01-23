@@ -8,7 +8,7 @@
 
 	{% include 'component/error.html.twig' %}
 
-	<form name="form" action="" method="post">
+	<form id="recap-form" name="form" action="" method="post">
 		<input type="hidden" name="send" value="login">
 		<dl>
 			<dt>メールアドレス</dt><dd><input type="text" name="email" value="{{email}}"></dd>
@@ -16,10 +16,13 @@
 		<dl>
 			<dt>パスワード</dt><dd><input type="password" name="password"></dd>
 		</dl>
-		<button class="btn send_btn" name="send" value="login">
+		<button class="btn send_btn g-recaptcha" name="send" value="login"
+		data-sitekey="6LeXVFkpAAAAAG3CnnqqDw-CnKZVMGiOTxiuX-gT" data-callback='onSubmit' data-action='submit'>
 			ログイン
 		</button>
 	</form>
+
+	<div class="g-signin2" data-onsuccess="onSignIn"></div>
 
 </div>
 
