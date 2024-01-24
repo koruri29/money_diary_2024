@@ -4,3 +4,5 @@
 /documents/*
 !README.md
 /logs
+/src/admin/.htaccess
+/src/admin/.htpasswd

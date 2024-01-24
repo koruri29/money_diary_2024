@@ -6,6 +6,12 @@ use lib\common\PDODatabase;
 
 class User
 {
+    const ADMIN = 99;
+
+    const REGULAR_USER = 0;
+
+    private int $role;
+
     private int $user_id;
 
     private string $user_name;
@@ -14,8 +20,6 @@ class User
 
     private string $password;
 
-    private string $user_image;
-
     private array $errArr = [];
 
 
@@ -23,13 +27,13 @@ class User
         string $user_name,
         string $email,
         string $password,
-        string $user_image = '',
+        int $role = self::REGULAR_USER, 
     )
     {
         $this->user_name = $user_name;
         $this->email = $email;
         $this->password = $password;
-        $this->user_image = $user_image;
+        $this->role = $role;
 
     }
 
@@ -54,23 +58,44 @@ class User
         return $flg;
     }
 
-    public static function getUserByEmail(PDODatabase $db, string $email) : ?User
+    public static function getUserByEmail(PDODatabase $db, string $email) : User|bool
     {
         $table = ' users ';
-        $column = ' id, user_name, email, password, user_image ';
+        $column = ' id, user_name, email, password, role ';
         $where = ' email = ? ';
         $arr_val = [$email];
 
         $user_info = $db->select($table, $column, $where, $arr_val);
 
-        if (empty($user_info)) return null;
+        if (empty($user_info)) return false;
 
-        if (is_null($user_info[0]['user_image'])) $user_info[0]['user_image'] = '';
         $user = new User(
             $user_info[0]['user_name'],
             $user_info[0]['email'],
             $user_info[0]['password'],
-            $user_info[0]['user_image'],
+            $user_info[0]['role'],
+        );
+        $user->setUserId($user_info[0]['id']);
+
+        return $user;
+    }
+
+    public static function getUserById(PDODatabase $db, int $user_id) : User|bool
+    {
+        $table = ' users ';
+        $column = ' id, user_name, role, email, delete_flg ';
+        $where = ' id = ? ';
+        $arr_val = [$user_id];
+
+        $user_info = $db->select($table, $column, $where, $arr_val);
+
+        if (empty($user_info)) return false;
+
+        $user = new User(
+            $user_info[0]['user_name'],
+            $user_info[0]['email'],
+            '',
+            $user_info[0]['role'],
         );
         $user->setUserId($user_info[0]['id']);
 
@@ -91,6 +116,11 @@ class User
         } else {
             return true;
         }
+    }
+
+    public function getRole() : int
+    {
+        return $this->role;
     }
 
     public function setUserId($user_id) : void
@@ -116,11 +146,6 @@ class User
     public function getPassword() : string
     {
         return $this->password;
-    }
-
-    public function getUserImage() : string
-    {
-        return $this->user_image;
     }
 
     public function getErrArr()
