@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) . '/lib/common/Bootstrap.class.php';
+require_once dirname(__FILE__) . '/../lib/common/Bootstrap.class.php';
 
 use lib\common\Bootstrap;
 use lib\common\Common;
@@ -18,7 +18,7 @@ $db = new PDODatabase(
 $session = new Session($db);// セッション開始
 
 // ログイン判定
-if (! empty($_SESSION['user_id'])) {
+if (! empty($_SESSION['user_id']) && ! empty($_SESSION['admin'])) {
     header('Location: top.php');
     exit();
 }
@@ -29,18 +29,16 @@ $msg_arr = [];
 // twig読み込み
 $loader = new \Twig\Loader\FilesystemLoader(Bootstrap::TEMPLATE_DIR);
 $twig = new \Twig\Environment($loader, ['cache' => Bootstrap::CACHE_DIR]);
-$template = 'index.html.twig';//ログイン画面
+$template = 'index.html.twig';
 $context = [];
-$context['title'] = 'ログイン';
-
+$context['title'] = '管理者ログイン';
+$context['page'] = 'admin';
 
 // フォームトークンチェック
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] !== $_SESSION['token']) {
     $template = 'token_invalid.html.twig';
     $err_arr['token_invalid'] = '不正なリクエストです。';
     $context['err_arr'] = $err_arr;
-    $context['link'] = 'index.php';
-    $context['page'] = 'ログインページ';
 
     echo $twig->render($template, $context);
     exit();
@@ -68,7 +66,7 @@ if (isset($_POST['send']) && $_POST['send'] === 'login') {
         exit();
     }
 
-    if ($user = $session->checkLogin($_POST['email'], $_POST['password'])) {//ログイン認証
+    if ($user = $session->checkLogin($_POST['email'], $_POST['password'], true)) {//ログイン認証
         $session->setUserInfo($user);
 
         header('Location: top.php');
@@ -86,4 +84,3 @@ $context['token'] = $token;
 
 
 echo $twig->render($template, $context);
-

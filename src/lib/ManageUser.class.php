@@ -32,7 +32,6 @@ class ManageUser
             'user_name' => $this->user->getUserName(),
             'email' => $this->user->getEmail(),
             'password' => $password,
-            'user_image' => $this->user->getUserImage(),
         ];
 
         $res = $this->db->insert($table, $insertData);
@@ -42,13 +41,12 @@ class ManageUser
 
     public function updateUser(int $userId) : bool
     {
-        if ($this->user->validateUser())  return false;
+        if ($this->user->getRole() !== User::ADMIN && $this->user->getUserId() !== $userId) return false;
         
         $table = 'users';
         $insertData = [
             'user_name' => $this->user->getUserName(),
             'email' => $this->user->getEmail(),
-            'user_image' => $this->user->getUserImage(),
         ];
         $where = ' id = ? ';
         $arrWhereVal = [$userId];
@@ -60,12 +58,10 @@ class ManageUser
 
     public function deleteUser(int $userId) : bool
     {
+        if ($this->user->getRole() !== User::ADMIN && $this->user->getUserId() !== $userId) return false;
+
         $table = 'users';
-        $insertData = [
-            'user_name' => $this->user->getUserName(),
-            'email' => $this->user->getEmail(),
-            'user_image' => $this->user->getUserImage(),
-        ];
+        $insertData = ['delete_flg' => 1];
         $where = ' id = ? ';
         $arrWhereVal = [$userId];
 
@@ -74,18 +70,19 @@ class ManageUser
         return $res;
     }
 
+    public static function getUserCount()
+    {
+
+    }
 
     public static function getAllUsers(PDODatabase $db) : array
     {
         $table = ' users ';
-        $column = ' id, user_name, email, password, user_image ';
+        $column = ' id, user_name, role, email, password, delete_flg ';
+
+        $db->setLimitOff();
         $users = $db->select($table, $column);
 
         return $users;
     }
-
-    // public function getErrArr()
-    // {
-    //     return $this->err_arr;
-    // }
 }

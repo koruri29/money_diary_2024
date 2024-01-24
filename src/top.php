@@ -92,8 +92,6 @@ if (isset($_POST['send']) && $_POST['send'] === 'delete') {
             $err_arr['red__delete_sql_failed'] = '入出金の削除に失敗しました。';
         }
     }
-
-
 }
 
 //入出金登録時
