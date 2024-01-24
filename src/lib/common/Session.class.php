@@ -78,7 +78,7 @@ class Session
      * @param string $password $_POST['password']
      * @return bool|User ログイン成功時、Userクラスを返す。失敗時、falseを返す。
      */
-    public function checkLogin(string $email, string $password) : bool | User
+    public function checkLogin(string $email, string $password, bool $admin_flg = false) : bool | User
     {
         if (empty($email)) {
             $this->err_arr['red__email_empty'] = 'メールアドレスを入力してください。';
@@ -90,13 +90,19 @@ class Session
         if (count($this->err_arr) > 0) return false;
 
         $user = User::getUserByEmail($this->db, $email);
-        if (is_null($user)) {
+
+        if (! $user) {
             $this->err_arr['red__login_failed'] = 'ユーザーIDかパスワードが間違っています。';
             return false;
         }
         
         if (! password_verify($password, $user->getPassword())) {
             $this->err_arr['red__login_failed'] = 'ユーザーIDかパスワードが間違っています。';
+            return false;
+        }
+
+        if ($admin_flg && $user->getRole() !== User::ADMIN) {
+            $this->err_arr['red__not admin'] = '管理者権限のあるユーザーでログインしてください。';
             return false;
         }
 

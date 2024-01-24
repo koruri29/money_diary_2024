@@ -70,4 +70,26 @@ class Common
         }
         return $words_arr;
     }
+
+    /**
+     * 移動先のページ数と、offsetを返す
+     * ページ数は正の整数になるよう調整する
+     * 
+     * @param int $page $_GET['page']
+     * @param int $per_page_num 1ページ当たりのアイテム数
+     * @param int $item_count 表示したいアイテムの総数
+     * @return array [$page, $offset]
+     */
+    public static function pagination(int $page, int $per_page_num, int $item_count) : array
+    {
+        $max_page = ceil($item_count / $per_page_num);
+        $page = min($page, $max_page);
+
+        $page = intval(self::h($page));
+        if ($page < 1) $page = 1;
+
+        $offset = ($page - 1) * $per_page_num;
+
+        return [$page, $offset];
+    }
 }

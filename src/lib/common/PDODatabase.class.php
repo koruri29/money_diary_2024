@@ -20,7 +20,7 @@ class PDODatabase
 
     private string $offset = '';
     
-    private string $groupby = '';
+    private string $group_by = '';
 
     private array $joins = [];
 
@@ -58,14 +58,14 @@ class PDODatabase
         return $dbh;
     }
 
-    public function select(string $table, string $column = '', string $where = '', array $arrVal = []): array
+    public function select(string $table, string $column = '', string $where = '', array $arr_val = []): array
     {
         $sql = $this->getSql('select', $table, $where, $column);
 // echo '___' . $sql . '<BR>'   ;
-        $this->sqlLogInfo($sql, $arrVal);
+        $this->sqlLogInfo($sql, $arr_val);
 
         $stmt = $this->dbh->prepare($sql);
-        $res = $stmt->execute($arrVal);
+        $res = $stmt->execute($arr_val);
 
         if ($res === false) {
             $this->catchError($stmt->errorInfo());
@@ -91,22 +91,22 @@ class PDODatabase
     {
         switch ($type) {
             case 'select':
-                $columnKey = ($column !== '') ? $column :'*';
+                $column_key = ($column !== '') ? $column :'*';
                 break;
 
             case 'count':
-                $columnKey = 'COUNT(*) AS NUM';
+                $column_key = 'COUNT(*) AS NUM';
                 break;
 
             default:
                 break;
         }
 
-        $whereSql = ($where !== '') ? 'WHERE ' . $where : ' ';
+        $where_sql = ($where !== '') ? 'WHERE ' . $where : ' ';
         $join = implode(' ', $this->joins);
-        $other = $this->groupby . ' ' . $this->order . ' ' . $this->limit . ' ' . $this->offset;
+        $other = $this->group_by . ' ' . $this->order . ' ' . $this->limit . ' ' . $this->offset;
 
-        $sql = 'SELECT ' . $columnKey . 'FROM ' . $table . ' ' . $join . ' ' . $whereSql . ' ' . $other;
+        $sql = 'SELECT ' . $column_key . 'FROM ' . $table . ' ' . $join . ' ' . $where_sql . ' ' . $other;
         return $sql;
     }
 
@@ -123,7 +123,7 @@ class PDODatabase
     
         $this->offset = '';
         
-        $this->groupby = '';
+        $this->group_by = '';
     
         $this->joins = [];
     }
@@ -145,10 +145,10 @@ class PDODatabase
         }
     }
 
-    public function setGroupBy(string $groupby): void
+    public function setGroupBy(string $group_by): void
     {
-        if ($groupby !== '') {
-            $this->groupby = 'GROUP BY ' . $groupby;
+        if ($group_by !== '') {
+            $this->group_by = 'GROUP BY ' . $group_by;
         }
     }
 
@@ -158,36 +158,36 @@ class PDODatabase
     }
 
 
-    public function insert(string $table, array $insertData = []): bool
+    public function insert(string $table, array $insert_data = []): bool
     {
-        $insertDataKey = [];
-        $insertDataVal = [];
+        $insert_data_key = [];
+        $insert_data_val = [];
         $preCnt = [];//プリペアードステートメントのカウント用
 
         $columns = '';
-        $preSt = '';//プリペアードステートメント
+        $pre_st = '';//プリペアードステートメント
 
-        foreach ($insertData as $key => $val) {
-            $insertDataKey[] = $key;
-            $insertDataVal[] = $val;
+        foreach ($insert_data as $key => $val) {
+            $insert_data_key[] = $key;
+            $insert_data_val[] = $val;
             $preCnt[] = '?';
         }
 
-        $columns = implode(',', $insertDataKey);
-        $preSt = implode(',', $preCnt);
+        $columns = implode(',', $insert_data_key);
+        $pre_st = implode(',', $preCnt);
 
         $sql = 'INSERT INTO '
         . $table
         . ' ('
         . $columns
         . ') VALUES ('
-        . $preSt
+        . $pre_st
         . ')';
 
-        $this->sqlLogInfo($sql, $insertDataVal);
+        $this->sqlLogInfo($sql, $insert_data_val);
 // echo $sql;
         $stmt = $this->dbh->prepare($sql);
-        $res = $stmt->execute($insertDataVal);
+        $res = $stmt->execute($insert_data_val);
 
         if ($res === false) {
             $this->catchError($stmt->errorInfo());
@@ -196,29 +196,29 @@ class PDODatabase
         return $res;
     }
 
-    public function repeatInsert(string $table, array $insertDataCol, array $insertDataValArr) :bool
+    public function repeatInsert(string $table, array $insert_data_col, array $insert_data_val_arr) :bool
     {
-        foreach ($insertDataCol as $val) {
+        foreach ($insert_data_col as $val) {
             $preCnt[] = '?';
         }
 
-        $columns = implode(',', $insertDataCol);
-        $preSt = implode(',', $preCnt);
+        $columns = implode(',', $insert_data_col);
+        $pre_st = implode(',', $preCnt);
 
         $sql = 'INSERT INTO '
         . $table
         . ' ('
         . $columns
         . ') VALUES ('
-        . $preSt
+        . $pre_st
         . ')';
 
         $flg = true;
-        foreach ($insertDataValArr as $insertDataVal) {
-            $this->sqlLogInfo($sql, $insertDataVal);
+        foreach ($insert_data_val_arr as $insert_data_val) {
+            $this->sqlLogInfo($sql, $insert_data_val);
             // echo $sql;
             $stmt = $this->dbh->prepare($sql);
-            $res = $stmt->execute($insertDataVal);
+            $res = $stmt->execute($insert_data_val);
             if (! $res) $flg = false;
         }
 
@@ -229,27 +229,27 @@ class PDODatabase
         return $flg;
     }
 
-    public function update(string $table, array $insertData = [], string $where = '', array $arrWhereVal = []): bool
+    public function update(string $table, array $insert_data = [], string $where = '', array $arr_where_val = []): bool
     {
-        $arrPreSt = [];//プリペアードステートメントを配列で準備
+        $arr_pre_st = [];//プリペアードステートメントを配列で準備
 
-        foreach($insertData as $col => $val) {
-            $arrPreSt[] = $col . ' = ? ';
+        foreach($insert_data as $col => $val) {
+            $arr_pre_st[] = $col . ' = ? ';
         }
-        $preSt = implode(',', $arrPreSt);
+        $pre_st = implode(',', $arr_pre_st);
 
         $sql = "UPDATE "
             . $table
             . " SET "
-            . $preSt
+            . $pre_st
             . " WHERE "
             . $where;
         
-            $updateData = array_merge(array_values($insertData), $arrWhereVal);
-            $this->sqlLogInfo($sql, $updateData);
+            $update_data = array_merge(array_values($insert_data), $arr_where_val);
+            $this->sqlLogInfo($sql, $update_data);
 
             $stmt = $this->dbh->prepare($sql);
-            $res = $stmt->execute($updateData);
+            $res = $stmt->execute($update_data);
 
             if ($res === false) {
                 $this->catchError($stmt->errorInfo());
@@ -271,13 +271,13 @@ class PDODatabase
         array_pop($col_arr);
         array_pop($arr_val);
 
-        $preSt = implode(',', $col_arr);
-        $preStVal = implode(',', $arr_val);
+        $pre_st = implode(',', $col_arr);
+        $pre_stVal = implode(',', $arr_val);
 
         $sql = "DELETE FROM "
         . $table
         . " WHERE "
-        . $preSt;
+        . $pre_st;
 
         $stmt = $this->dbh->prepare($sql);
         $res = $stmt->execute($arr_val);
@@ -312,25 +312,25 @@ class PDODatabase
         if (!file_exists($logDir)) {
             mkdir($logDir, 0777);
         }
-        $logPath = $logDir . '/general.log';
-        if (!file_exists($logPath)) {
-            touch($logPath);
+        $log_path = $logDir . '/general.log';
+        if (!file_exists($log_path)) {
+            touch($log_path);
         }
-        return $logPath;
+        return $log_path;
     }
 
     /**
      * SQLとそれにバインドする値をログに記録
      * 
      * @param string $str SQL(プリペアードステートメント)
-     * @param array $arrVal バインドする値
+     * @param array $arr_val バインドする値
      * @return void
      */
-    private function sqlLogInfo(string $sql, array $arrVal = []): void
+    private function sqlLogInfo(string $sql, array $arr_val = []): void
     {
-        $logPath = $this->makeLogFile();
-        $logData = sprintf("[SQL_LOG:%s]: %s [%s]\n", date('Y-m-d H:i:s'), $sql, implode(',', $arrVal));
-        error_log($logData, 3, $logPath);
+        $log_path = $this->makeLogFile();
+        $log_data = sprintf("[SQL_LOG:%s]: %s [%s]\n", date('Y-m-d H:i:s'), $sql, implode(',', $arr_val));
+        error_log($log_data, 3, $log_path);
     }
 
     public function getSqlErrors() : array
