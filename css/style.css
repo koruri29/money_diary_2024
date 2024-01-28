@@ -137,6 +137,15 @@ dd {
 .event-form {
 	margin: 0 auto;
 }
+.grid {
+	display: grid;
+	grid-template-columns: 96px 96px 96px 96px;
+	grid-template-rows: auto;
+	grid-auto-rows: 40 px;
+}
+.grid-itam {
+
+}
 .btn {
 	margin: 2px;
 	padding: 4px 8px;
@@ -240,7 +249,9 @@ dd {
 .edit, .delete {
 	width: 48px;
 }
-
+.sp-other {
+	display: none;
+}
 /*-------------------------
  * search_form.html.twig
  *-------------------------*/
@@ -308,8 +319,11 @@ i {
  * @media
  *-------------------------*/
 @media (max-width: 768px){	
+	.sp-none {
+		display: none;
+	}
 	.sp-br {
-		display: block;
+		display: inline;
 	}
 	.sp-btn-center {
 		text-align: center;
@@ -321,6 +335,17 @@ i {
 	}
 	.event-form-container {
 		margin: 0 20px;
+	}
+
+
+	.grid {
+		grid-template-columns: 96px 96px 96px;
+
+	}
+
+
+	.sp-other {
+		display: inline-block;
 	}
 }
 

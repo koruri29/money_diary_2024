@@ -57,31 +57,27 @@
 	
 			<p style="color: green;">- オプション - </p>
 			{# 支出・収入のカテゴリー #}
-			<table class="categories">
+			<div class="categories grid">
 				{% for key, category in categories %}
-					{% if (loop.index % 4 == 1) %}<tr>{% endif %}{# 4つごとにtrタグ挿入 #}
-
 					{# 繰り返しの最初の項目をチェック状態に #}
 					{# ただしpresetされていたらそちらが優先 #}
 					{% if loop.first %}
-					<td class="item-category">
+					<div class="item-category grid-item">
 						<input class="category-radio {{category.icon_name}}" type="radio" name="category_id" id="{{category.category_id}}"
 						value="{{category.category_id}}" {% if preset.category_id == category.category_id %}checked{% endif %}
 						{% if preset.category_id is not defined %}checked{% endif %}>
 						<label class="category-label" for="{{category.category_id}}">{{category.i_html | raw}}{{category.category_name}}</label>
-					</td>
+					</div>
 					{% endif %}
 
 					{# 繰り返しの最初以外 #}
 					{% if loop.first == false %}
-						<td class="item-category">
+						<div class="item-category grid-item">
 							<input class="category-radio {{category.icon_name}}"  type="radio" name="category_id" id="{{category.category_id}}"
 							value="{{category.category_id}}" {% if preset.category_id == category.category_id %}checked{% endif %}>
 							<label class="category-label" for="{{category.category_id}}">{{category.i_html | raw}}{{category.category_name}}</label>
-						</td>
+						</div>
 					{% endif %}
-
-					{% if (loop.index % 4 == 0) %}</tr>{% endif %}{# 4つごとにtr閉じタグ挿入 #}
 				{% endfor %}
 				
 				<input type="hidden" name="wallet_id" value="1">
@@ -94,27 +90,27 @@
 						{# 繰り返しの最初の項目をチェック状態に #}
 						{# ただしpresetされていたらそちらが優先 #}
 						{# {% if loop.first %}
-						<td class="item-wallet">
+						<div class="item-wallet grid-item">
 							<input class="wallet-radio {{wallet.icon_name}}" type="radio" name="wallet_id" id="{{wallet.wallet_id}}"
 							value="{{wallet.wallet_id}}" {% if preset.wallet_id == wallet.wallet_id %}checked{% endif %}
 							{% if preset.wallet_id is not defined %}checked{% endif %}>
 							<label class="wallet-label" for="{{wallet.wallet_id}}">{{wallet.i_html | raw}}{{wallet.wallet_name}}</label>
-						</td>
+						</div>
 						{% endif %} #}
 	
 						{# 繰り返しの最初以外 #}
 						{# {% if loop.first == false %}
-							<td class="item-wallet">
+							<div class="item-wallet grid-item">
 								<input class="wallet-radio {{wallet.icon_name}}"  type="radio" name="wallet_id" id="{{wallet.wallet_id}}"
 								value="{{wallet.wallet_id}}" {% if preset.wallet_id == wallet.wallet_id %}checked{% endif %}>
 								<label class="wallet-label" for="{{wallet.wallet_id}}">{{wallet.i_html | raw}}{{wallet.wallet_name}}</label>
-							</td>
+							</div>
 						{% endif %}
 	
 						{% if (loop.index % 4 == 0) %}</tr>{% endif %}4つごとにtr閉じタグ挿入
 					{% endfor %} #}
 			
-				</table>
+			</div>
 	
 			<br>
 	

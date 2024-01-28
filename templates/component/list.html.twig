@@ -19,7 +19,7 @@
 				{# 入出金の1件分 #}
 				<tr class="item-row">
 					<td>{{item.date | format_datetime('short', 'none')}}</td>{# 日付 #}
-					<td class="list-other">{{item.other}}</td>{# 備考 #}
+					<td class="list-other sp-none">{{item.other}}</td>{# 備考 #}
 					<td>{{item.c_html | raw}}{{item.category_name}}</td>{# 支出・収入カテゴリー #}
 					{# 支出か収入かで表示場所を変える #}
 					{% if item.option == 0 %}
@@ -29,6 +29,8 @@
 						<td class="list-plus">+{{item.amount | number_format(0, '.', ',')}}</td>
 						<td class="list-minus"></td>
 					{% endif %}
+					<br class="sp-br">
+					<td class="list-other sp-other">{{item.other}}</td>{# 備考 #}
 
 					{# 編集・削除ボタン #}
 					<td><a href="edit.php?id={{item.event_id}}"><button class="btn edit">編集</button></a></td>
