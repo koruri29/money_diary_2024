@@ -34,6 +34,11 @@ h1, h2, h3, h4, p, ul {
 }
 
 
+.sp-br {
+	display: none;
+}
+
+
 .center {
 	display: inline-block;
 	text-align: center;
@@ -302,8 +307,21 @@ i {
 /*-------------------------
  * @media
  *-------------------------*/
- @media (max-width: 768px){
-	
- }
+@media (max-width: 768px){	
+	.sp-br {
+		display: block;
+	}
+	.sp-btn-center {
+		text-align: center;
+	}
+
+
+	.top-wrapper {
+		display: block;
+	}
+	.event-form-container {
+		margin: 0 20px;
+	}
+}
 
  

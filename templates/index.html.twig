@@ -11,15 +11,21 @@
 	<form id="recap-form" name="form" action="" method="post">
 		<input type="hidden" name="send" value="login">
 		<dl>
-			<dt>メールアドレス</dt><dd><input type="text" name="email" value="{{email}}"></dd>
+			<dt>メールアドレス</dt>
+			<br class="sp-br">
+			<dd><input type="text" name="email" value="{{email}}"></dd>
 		</dl>
 		<dl>
-			<dt>パスワード</dt><dd><input type="password" name="password"></dd>
+			<dt>パスワード</dt>
+			<br class="sp-br">
+			<dd><input type="password" name="password"></dd>
 		</dl>
-		<button class="btn send_btn g-recaptcha" name="send" value="login"
-		data-sitekey="6LeXVFkpAAAAAG3CnnqqDw-CnKZVMGiOTxiuX-gT" data-callback='onSubmit' data-action='submit'>
-			ログイン
-		</button>
+		<div class="sp-btn-center">
+			<button class="btn send_btn g-recaptcha" name="send" value="login"
+			data-sitekey="6LeXVFkpAAAAAG3CnnqqDw-CnKZVMGiOTxiuX-gT" data-callback='onSubmit' data-action='submit'>
+				ログイン
+			</button>
+		</div>
 	</form>
 
 	<div class="g-signin2" data-onsuccess="onSignIn"></div>
