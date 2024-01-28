@@ -3,7 +3,9 @@
 namespace lib;
 
 use lib\common\PDODatabase;
+use lib\Category;
 use lib\User;
+use lib\Wallet;
 
 class CSV {
     private $db = null;
@@ -18,7 +20,7 @@ class CSV {
      */
     public function __construct(PDODatabase $db, array $csv_file)
     {
-        if ($this->validateCSV($csv_file)) {
+        if (! $this->validateCSV($csv_file)) {
             throw new \Exception('ファイルの読み込みに失敗しました。エラー：' . implode(',', $this->err_arr));
         }
 
@@ -26,62 +28,99 @@ class CSV {
         $this->spl = new \SplFileObject($csv_file['tmp_name']);
         $this->spl->setFlags(\SplFileObject::READ_CSV);
     }
+
     /**
      * CSVでユーザーを一括登録する
-     * CSV先頭行->user_name,email,password
     */
-    public function registerUser() : bool
+    public function registerUser() : void
     {
+        $this->db->resetClause();
+
         $table = ' users ';
 
-        try {
+        foreach ($this->spl as $line) {
+            if ($line[0] === null) continue;
 
-            $this->db->dbh->beginTransaction();
+            $user_name = $line[0];
+            $email = $line[1];
+            $password = $line[2];
+            
+            if (strpos($user_name, '"') !== false) $user_name = str_replace('"', '', $user_name);// 1行目の0番目要素に””がついてしまうため、回避
+            if (User::doesEmailExist($this->db, $email)) continue;
 
-            foreach ($this->spl as $line) {
-                if ($line[0] === null) continue;
-                $user_name = $line[0];
-                $email = $line[1];
-                $password = $line[2];
-                
-                if (strpos($user_name, '"') !== false) $user_name = str_replace('"', '', $user_name);// 1行目の0番目要素に””がついてしまうため、回避
-                if (User::getUserByEmail($this->db, $email) !== false) continue;
+            $password = password_hash($password, PASSWORD_DEFAULT);
+            
+            $insert_arr = [
+                'user_name' => $user_name,
+                'email' => $email,
+                'password' => $password,
+            ];
 
-                $password = password_hash($password, PASSWORD_DEFAULT);
-                
-                $insert_arr = [
-                    'user_name' => $user_name,
-                    'email' => $email,
-                    'password' => $password,
-                ];
+            $this->db->insert($table, $insert_arr);
 
-                $this->db->insert($table, $insert_arr);
-            }
-
-            $this->db->dbh->commit();
-            return true;
-        } catch (\PDOException $e) {
-            $this->db->dbh->rollBack();
-            $this->err_arr['red__insert_csv_failed'] = '一括登録に失敗しました。';
-            return false;
+            //入出金カテゴリなどの初期化処理
+            $user_id = $this->db->getLastId();
+            Category::initCategories($this->db, $user_id);
+            Wallet::initWallets($this->db, $user_id);
         }
     }
 
     private function validateCSV($csv_file) : bool
-    {        $flg = true;
+    {        
+        $flg = true;
 
         if ($csv_file['error'] === 0 && $csv_file['size'] !== 0) {
             if ($csv_file['size'] > 1048576) {
-                $this->err_arr['red__size_too_large'] = 'アップロードできる画像のサイズは、1MBまでです';
+                $this->err_arr['red__size_too_large'] = 'アップロードできるサイズは、1MBまでです';
                 $flg = false;
             }
-            if (preg_match('/^text\/css$/', mime_content_type($csv_file['tmp_name'])) === 0) {
-                $this->err_arr['red__mime_invalid'] =  'アップロードできる画像の形式は、CSV形式だけです';
+            if (preg_match('/^text\/csv$/', mime_content_type($csv_file['tmp_name'])) === 0) {
+                $this->err_arr['red__mime_invalid'] =  'アップロードできる形式は、CSV形式だけです';
                 $flg = false;
             }
         }
         return $flg;
     }
+
+    /**
+     * ダミーデータ挿入用
+     */
+    public static function insertDummyEvents(PDODatabase $db, array $user_ids) : void
+    {
+        $db->resetClause();
+
+        foreach ($user_ids as $user_id) {
+            //ユーザーごとのカテゴリを取得
+            $table = ' categories ';
+            $column = ' id ';
+            $where = ' user_id = ? ';
+            $arr_val = [$user_id['id']];
+            $db->setLimitOff(2, 0);
+
+            $categories = $db->select($table, $column, $where, $arr_val);
+
+            //財産カテゴリを取得
+            $db->resetClause();
+            $table = ' wallets ';
+            $column = ' id ';
+            $wallets = $db->select($table, $column, $where, $arr_val);
+
+            //入出金登録
+            $table = ' money_events ';
+            $insertData = [
+                'user_id' => $user_id['id'],
+                'category_id' => $categories[0]['id'],
+                'wallet_id' => $wallets[0]['id'],
+                'option' => 0,
+                'amount' => 1500,
+                'date' => '2024-02-28 00:00:00',
+                'other' => 'ダミーデータです。',
+            ];
+            $db->insert($table, $insertData);// 2レコード分追加
+            $db->insert($table, $insertData);
+        }
+    }
+
     public function getErrArr()
     {
         return $this->err_arr;

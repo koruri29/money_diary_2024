@@ -19,7 +19,12 @@
       document.getElementById("recap-form").submit();
     }
  </script>
-	<script src="../js/main.js"></script>
-	<script src="../js/validate.js"></script>
+	{% if page == 'admin' %}
+		<script src="../../js/main.js"></script>
+		<script src="../../js/validate.js"></script>
+	{% else %}
+		<script src="../js/main.js"></script>
+		<script src="../js/validate.js"></script>
+	{% endif %}
 </body>
 </html>
