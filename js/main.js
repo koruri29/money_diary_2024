@@ -1,4 +1,19 @@
 window.onload = ()=> {
+	//ハンバーガーメニュー(SP)
+	if (window.innerWidth <= 768) {
+		const nav = document.getElementsByClassName('nav-sp')[0];
+		$('.hamburger').on('click', () => {
+			$('.nav').toggleClass('nav-sp-show');
+			$('.hamburger').toggleClass('active');
+			$('.sp-nav').fadeToggle('0.5s');
+		});
+		$('.global-nav').on('click', () => {
+			$('.nav').toggleClass('nav-sp-show');
+			$('.hamburger').toggleClass('active');
+			$('.sp-nav').fadeToggle('fast');
+		});
+	}
+
   const amount_input = document.getElementById('amount');
   if (amount_input !== null) {
     
