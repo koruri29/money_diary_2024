@@ -13,6 +13,7 @@ window.onload = ()=> {
 			$('.sp-nav').fadeToggle('fast');
 		});
 	}
+	
 
   const amount_input = document.getElementById('amount');
   if (amount_input !== null) {

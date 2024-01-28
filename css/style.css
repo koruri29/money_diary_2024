@@ -57,12 +57,11 @@ header {
 	line-height: 72px;
 	color: #2f4f4f;
 }
-.container {
-	padding-left: 16px;
-
-}
 .logo {
 	color: #2f4f4f;
+}
+.logo h1 {
+	padding-left: 16px;
 }
 .logo:visited {
 	color: #2f4f4f;
@@ -333,6 +332,10 @@ i {
 	}
 
 
+	.header-container {
+		display: flex;
+    justify-content: space-between;
+	}
 	.header-left {
 		display: inline-block;
 	}
@@ -351,9 +354,10 @@ i {
 		font-size: 24px;
 	}
 	.hamburger{
+		display: inline-block;
 		width: 40px;
 		height: 23px;
-		position: relative;
+		position: fixed;
 		top: 11px;
 		right: 16px
 	}
@@ -377,6 +381,20 @@ i {
 	.hamburger.active span:last-of-type {
 		top: 22px;
 		transform: translateY(2%) rotate(45deg);
+	}
+	.sp-nav {
+		display: none;
+    width: 100%;
+    position: absolute;
+    top: 80px;
+	}
+	.sp-nav ul li {
+		list-style: none;
+	}
+	.sp-nav ul li a {
+		width: 100%;
+		display: block;
+		text-align: center;
 	}
 
 
