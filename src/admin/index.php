@@ -39,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
     $template = 'token_invalid.html.twig';
     $err_arr['token_invalid'] = '不正なリクエストです。';
     $context['err_arr'] = $err_arr;
-    $context['page'] = 'admin';
 
     echo $twig->render($template, $context);
     exit();
@@ -69,6 +68,7 @@ if (isset($_POST['send']) && $_POST['send'] === 'login') {
 
     if ($user = $session->checkLogin($_POST['email'], $_POST['password'], true)) {//ログイン認証
         $session->setUserInfo($user);
+        $_SESSION['admin'] = true;
 
         header('Location: top.php');
         exit();

@@ -70,11 +70,6 @@ class ManageUser
         return $res;
     }
 
-    public static function getUserCount()
-    {
-
-    }
-
     public static function getAllUsers(PDODatabase $db) : array
     {
         $table = ' users ';
@@ -84,5 +79,10 @@ class ManageUser
         $users = $db->select($table, $column);
 
         return $users;
+    }
+
+    public function getUser() : User
+    {
+        return $this->user;
     }
 }

@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
     $err_arr['token_invalid'] = '不正なリクエストです。';
     $context['err_arr'] = $err_arr;
     $context['link'] = 'register.php';
-    $context['page'] = '登録ページ';
+    $context['page_to'] = '登録ページ';
     
     echo $twig->render($template, $context);
     exit();

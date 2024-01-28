@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
     $err_arr['token_invalid'] = '不正なリクエストです。';
     $context['err_arr'] = $err_arr;
     $context['link'] = 'top.php';
-    $context['page'] = 'トップページ';
+    $context['page_to'] = 'トップページ';
     
     echo $twig->render($template, $context);
     exit();

@@ -21,7 +21,7 @@ $db = new PDODatabase(
 $session = new Session($db);// セッション開始
 
 // ログイン判定
-if (empty($_SESSION['user_id']) && empty($_SESSION['admin'])) {
+if (empty($_SESSION['user_id']) && ! $_SESSION['admin']) {
     header('Location: index.php');
     exit();
 }
@@ -51,9 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
     $template = 'token_invalid.html.twig';
     $err_arr['token_invalid'] = '不正なリクエストです。';
     $context['err_arr'] = $err_arr;
-    $context['page'] = 'admin';
     $context['link'] = 'top.php';
-    $context['page'] = '管理画面トップ';
+    $context['page_to'] = '管理画面トップ';
     
     echo $twig->render($template, $context);
     exit();
