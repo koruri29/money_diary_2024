@@ -69,6 +69,7 @@ if (isset($_SERVER['HTTP_REFERER'])) {
     $where_from = basename(substr($_SERVER['HTTP_REFERER'], 0, strcspn($_SERVER['HTTP_REFERER'],'?')));
     if ($where_from === 'edit.php' && isset($_GET['edit']) && $_GET['edit'] === 'true') {
         $msg_arr['green__edit_success'] = 'ユーザーを編集しました。';
+<<<<<<< Updated upstream
     }
 }
 
@@ -87,5 +88,36 @@ if (isset($_POST['send']) && $_POST['edit']) {
         $context['err_arr'] = $err_arr;
         $context['link'] = 'index.php';
         $context['page'] = 'ログインページ';
+=======
+>>>>>>> Stashed changes
     }
+}
+
+
+if (! isset($_GET['id']) || intval($_GET['id']) < 1) {
+    header('Location: ../top.php');
+    exit();
+} else {
+    $user_id = intval($_GET['id']);
+}
+
+
+if (isset($_POST['send']) && $_POST['edit']) {
+    if ($user_manager->getUser()->getRole() !== User::ADMIN) {
+        $err_arr['token_invalid'] = '不正なリクエストです。';
+        $context['err_arr'] = $err_arr;
+        $context['link'] = '../top.php';
+        $context['page'] = 'トップページ';
+
+        exit();
+    }
+
+    $edited_user = new User(
+        $_POST['user_name'],
+        $_POST['email'],
+        $_POST['password'],
+        $_POST['role'],
+    );
+
+    $user_register = new ManageUser($edited_user)
 }
