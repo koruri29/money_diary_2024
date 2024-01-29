@@ -23,14 +23,14 @@
 		<input type="hidden" name="send" value="event_register">
 
 		<div class="event-inputs">
-			<dl>
+			<dl class="dl-input">
 				<dt><label class="input-label" for="date">日付</label></dt>
 				<dd><input type="date" id="date" name="date" value="{{preset.date}}"></dd>
 				<dd><p class="btn yesterday" id="yesterday">昨日</p></dd>
 				<dd><p class="btn today" id="today">今日</p></dd>
 			</dl>
 
-			<dl>
+			<dl class="dl-input">
 				<dt class="input-label">振分</dt>
 				<dd>
 					<label for="outgo">支出</label>
@@ -42,7 +42,7 @@
 				</dd>
 			</dl>
 
-			<dl>
+			<dl class="dl-input">
 				<dt class="required input-label"><label for="amount">金額</label></dt>
 				<dd>
 					<input class="input-amount" id="amount" type="number" min="0" name="amount"
@@ -114,9 +114,9 @@
 	
 			<br>
 	
-			<dl>
+			<dl class="dl-other">
 				<dt><label class="input-label" for="other">備考</label></dt>
-				<dd><textarea class="other-textarea" name="other" id="other" cols="40" rows="4">{{preset.other}}</textarea></dd>
+				<dd><textarea class="other-textarea" name="other" id="other" cols="32" rows="4">{{preset.other}}</textarea></dd>
 			</dl>
 			
 			

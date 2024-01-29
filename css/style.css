@@ -222,7 +222,7 @@ dd {
  * list.html.twig
  *-------------------------*/
 .event-list-container {
-	width: 600px;
+	/* width: 600px; */
 	margin: 20px auto;
 }
 #month {
@@ -332,10 +332,6 @@ i {
 	}
 
 
-	.header-container {
-		display: flex;
-    justify-content: space-between;
-	}
 	.header-left {
 		display: inline-block;
 	}
@@ -357,7 +353,7 @@ i {
 		display: inline-block;
 		width: 40px;
 		height: 23px;
-		position: fixed;
+		position: absolute;
 		top: 11px;
 		right: 16px
 	}
@@ -411,18 +407,63 @@ i {
 	.event-form-container {
 		width: 320px;
 	}
+	.event-register-btn {
+		width: 240px;
+	}
+	.dl-input {
+		width: 280px;
+	}
 	.grid.categories {
+		width: 296px;
 		grid-template-columns: 96px 96px 96px;
 		place-content: center;
 	}
+	.dl-other {
+		width: 80%;
+    margin: 0 auto;
+	}
 
 	.event-list-container {
-		width: 320px;
+		width: fit-content;
 	}
 	.grid.event-list {
 		display: grid;
-		grid-template-columns: 96px  96px 72px 72px;
-	} 
-}
+		grid-template-columns: 80px  80px 64px 64px;
+	}
 
- 
+.search-dl {
+	width: fit-content;
+}
+	#max_date,
+	#max_amount {
+		margin-top: 8px;
+		margin-left: 45px;
+	}
+	.search-categories {
+		margin: 20px auto;
+	}
+	.search-other dt {
+		margin-top: 20px;
+	}
+
+
+	.admin-top-wrapper {
+		text-align: center;
+	}
+
+
+	.user-table {
+		width: 90%;
+		table-layout: fixed;
+		word-wrap: break-word
+	}
+	.sp-member-name {
+		width: 30%;
+	}
+	.sp-member-email {
+		width: 40%;
+	}
+	.sp-table-btn {
+		width: 15%;
+	}
+}

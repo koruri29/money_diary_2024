@@ -1,19 +1,38 @@
-			<nav class="header-right sp-none">
-				{% if session_user_name is defined %}
-					<ul>
-						<li>{{session_user_name}}さん ログイン中</li>
+<nav class="header-right sp-none">
+	{% if session_user_name is defined %}
+		<ul>
+			<li>{{session_user_name}}さん ログイン中</li>
 
-						{% if page == member %}
-							<li><a href="./show.php">ユーザー管理</a></li>
-							<li><a href="../csv.php">CSV登録</a></li>
-							<li><a href="../../logout.php">ログアウト</a></li>
-						{% else %}
-								<li>{{session_user_name}}さん ログイン中</li>
-							<li><a href="./member/show.php">ユーザー管理</a></li>
-							<li><a href="./csv.php">CSV登録</a></li>
-							<li><a href="../logout.php">ログアウト</a></li>
-						{% endif %}
+			{% if page == member %}
+				<li><a href="./show.php">ユーザー管理</a></li>
+				<li><a href="../csv.php">CSV登録</a></li>
+				<li><a href="../../logout.php">ログアウト</a></li>
+			{% else %}
+					<li>{{session_user_name}}さん ログイン中</li>
+				<li><a href="./member/show.php">ユーザー管理</a></li>
+				<li><a href="./csv.php">CSV登録</a></li>
+				<li><a href="../logout.php">ログアウト</a></li>
+			{% endif %}
+		</ul>
+	{% endif %}
+</nav>
 
-					</ul>
-				{% endif %}
-			</nav>
+
+{# SP表示用 #}
+{% if session_user_name is defined %}
+	<div class="sp-name">{{session_user_name}}さん</div>	
+
+	<nav class="sp-nav">
+		{% if session_user_name is defined %}
+			<ul>
+				<li><a href="search.php">検索</a></li>
+				<li><a href="logout.php">ログアウト</a></li>
+			</ul>
+		{% endif %}
+	</nav>
+	
+	<div class="hamburger">
+		<span></span>
+		<span></span>
+	</div>
+{% endif %}

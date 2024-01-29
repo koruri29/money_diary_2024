@@ -16,11 +16,11 @@
 	<table class="user-table" border="1">
 		<thead>
 			<tr>
-				<td>ID</td>
-				<td>権限</td>
+				<td class="sp-none">ID</td>
+				<td class="sp-none">権限</td>
 				<td>ユーザー名</td>
-				<td>メールアドレス</td>
-				<td>削除フラグ</td>
+				<td class="member-email">メールアドレス</td>
+				<td class="sp-none">削除フラグ</td>
 				<td></td>
 				<td></td>
 			</tr>
@@ -29,11 +29,11 @@
 		<tbody>
 			{% for member in members %}
 				<tr class="{% if member.role == constant('lib\\User::ADMIN') %}user-admin{% elseif member.delete_flg != 0 %} user-deleted{% endif %}">
-					<td>{{member.id}}</td>
-					<td>{% if member.role == constant('lib\\User::ADMIN') %}管理者{% endif %}</td>
+					<td class="sp-none">{{member.id}}</td>
+					<td class="sp-none">{% if member.role == constant('lib\\User::ADMIN') %}管理者{% endif %}</td>
 					<td>{{member.user_name}}</td>
-					<td>{{member.email}}</td>
-					<td>
+					<td class="member-email">{{member.email}}</td>
+					<td class="sp-none">
 						{% if member.delete_flg == 1 %}true{% else %}false{% endif %}
 					</td>
 
