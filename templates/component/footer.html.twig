@@ -19,12 +19,8 @@
       document.getElementById("recap-form").submit();
     }
  </script>
-	{% if page == 'admin' %}
-		<script src="../../js/main.js"></script>
-		<script src="../../js/validate.js"></script>
-	{% else %}
-		<script src="../js/main.js"></script>
-		<script src="../js/validate.js"></script>
-	{% endif %}
+	<script src="{{constant(lib\\common\\Bootstrap::APP_URL)}}/js/main.js"></script>
+	<script src="{{constant(lib\\common\\Bootstrap::APP_URL)}}/js/validate.js"></script>
+
 </body>
 </html>

@@ -14,7 +14,7 @@
 	<header class="{% if page is defined and page == 'admin' %} admin-bg-color{% endif %}">
 		<div class="container">
 			<div class="header-left">
-				<a class="logo" href="top.php"><h1>家計簿アプリ</h1></a>
+				<a class="logo" href="{{constant(lib\\common\\Bootstrap::APP_URL)}}/top.php"><h1>家計簿アプリ</h1></a>
 			</div>
 
 			{% if page is defined and page == 'admin' %}
