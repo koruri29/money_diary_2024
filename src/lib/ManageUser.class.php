@@ -41,7 +41,7 @@ class ManageUser
 
     public function updateUser(int $userId) : bool
     {
-        if ($this->user->getRole() !== User::ADMIN && $this->user->getUserId() !== $userId) return false;
+        // if ($this->user->getRole() !== User::ADMIN && $this->user->getUserId() !== $userId) return false;
         
         $table = 'users';
         $insertData = [
@@ -58,7 +58,7 @@ class ManageUser
 
     public function deleteUser(int $userId) : bool
     {
-        if ($this->user->getRole() !== User::ADMIN && $this->user->getUserId() !== $userId) return false;
+        // if ($this->user->getRole() !== User::ADMIN && $this->user->getUserId() !== $userId) return false;
 
         $table = 'users';
         $insertData = ['delete_flg' => 1];

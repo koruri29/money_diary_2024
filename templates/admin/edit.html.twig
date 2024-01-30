@@ -1,0 +1,50 @@
+{% include 'component/header.html.twig' %}
+
+<h2>{{title}}</h2>
+
+{% include 'component/message.html.twig' %}
+
+{% include 'component/error.html.twig' %}
+
+<div class="wrapper">
+	<div class="form-container">
+		<form name="form" method="post">
+			<input type="hidden" name="token" value="{{token}}">
+			<input type="hidden" name="user_id" value="{{preset.user_id}}">
+			<input type="hidden" name="send" value="edit">
+			
+			<dl>
+				<dt>ユーザー名</dt><dd><input id="user_name" type="text" name="user_name" value="{{preset.user_name}}"></dd>
+			</dl>
+			<dl>
+				<dt>メールアドレス</dt><dd><input type="text" name="email" value="{{preset.email}}"></dd>
+			</dl>
+						<dl>
+				<dt>
+					<label for="hange_role">
+						{% if preset.role == {{constant('lib\\User::REGULAR_USER')}} %}
+							管理者にする
+						{% endif %}
+					</label>
+					<input id="change_role" type="checkbox" name="change_role">
+				</dt>
+			</dl>
+			<dl>
+				<dt>
+					<label for="delete_flg">
+						{% if preset.delete_flg == 0 %}
+							削除する
+						{% else %}
+							復元する
+						{% endif %}
+					</label>
+					<input id="delete_flg" type="checkbox">
+				</dt>
+			</dl>
+			<button class="send_btn" name="send" value="edit">更新</button>
+		</form>
+	</div>
+</div>
+
+{% include 'component/footer.html.twig' %}
+

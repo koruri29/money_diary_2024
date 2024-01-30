@@ -28,8 +28,8 @@ if (empty($_SESSION['user_id']) &&  $_SESSION['admin']) {
 
 
 // 初期化
-$admin_user = User::getUserById($db, $_SESSION['user_id']);
-$user_manager = new ManageUser($db, $user);
+// $admin_user = User::getUserById($db, $_SESSION['user_id']);
+// $user_manager = new ManageUser($db, $user);
 $err_arr = [];
 $msg_arr = [];
 $sql_err_arr = [];
@@ -40,7 +40,7 @@ $loader = new \Twig\Loader\FilesystemLoader(Bootstrap::TEMPLATE_DIR);
 $twig = new \Twig\Environment($loader, ['cache' => Bootstrap::CACHE_DIR]);
 $twig->addExtension(new \Twig\Extra\Intl\IntlExtension());//twigの追加機能(date_format用)
 
-$template = '';
+$template = 'admin/edit.html.twig';
 $context = [];
 $context['title'] = '管理画面トップ';
 $context['page'] = 'admin';
@@ -69,7 +69,6 @@ if (isset($_SERVER['HTTP_REFERER'])) {
     $where_from = basename(substr($_SERVER['HTTP_REFERER'], 0, strcspn($_SERVER['HTTP_REFERER'],'?')));
     if ($where_from === 'edit.php' && isset($_GET['edit']) && $_GET['edit'] === 'true') {
         $msg_arr['green__edit_success'] = 'ユーザーを編集しました。';
-<<<<<<< Updated upstream
     }
 }
 
@@ -82,16 +81,14 @@ if (! isset($_GET['id']) || intval($_GET['id']) < 1) {
 }
 
 
-if (isset($_POST['send']) && $_POST['edit']) {
-    if ($user_manager->getUser()->getRole() !== User::ADMIN) {
-        $err_arr['token_invalid'] = '不正なリクエストです。';
-        $context['err_arr'] = $err_arr;
-        $context['link'] = 'index.php';
-        $context['page'] = 'ログインページ';
-=======
->>>>>>> Stashed changes
-    }
-}
+// if (isset($_POST['send']) && $_POST['edit']) {
+//     if ($user_manager->getUser()->getRole() !== User::ADMIN) {
+//         $err_arr['token_invalid'] = '不正なリクエストです。';
+//         $context['err_arr'] = $err_arr;
+//         $context['link'] = 'index.php';
+//         $context['page'] = 'ログインページ';
+//     }
+// }
 
 
 if (! isset($_GET['id']) || intval($_GET['id']) < 1) {
@@ -102,22 +99,48 @@ if (! isset($_GET['id']) || intval($_GET['id']) < 1) {
 }
 
 
-if (isset($_POST['send']) && $_POST['edit']) {
-    if ($user_manager->getUser()->getRole() !== User::ADMIN) {
-        $err_arr['token_invalid'] = '不正なリクエストです。';
-        $context['err_arr'] = $err_arr;
-        $context['link'] = '../top.php';
-        $context['page'] = 'トップページ';
+if (isset($_POST['send']) && $_POST['send'] == '<edit></edit>') {
+    // if ($user_manager->getUser()->getRole() !== User::ADMIN) {
+    //     $err_arr['token_invalid'] = '不正なリクエストです。';
+    //     $context['err_arr'] = $err_arr;
+    //     $context['link'] = '../top.php';
+    //     $context['page'] = 'トップページ';
 
-        exit();
-    }
+    //     exit();
+    // }
 
     $edited_user = new User(
         $_POST['user_name'],
         $_POST['email'],
-        $_POST['password'],
         $_POST['role'],
     );
 
-    $user_register = new ManageUser($edited_user)
+    $user_register = new ManageUser($db, $edited_user);
+
+    try {
+        $db->dbh->beginTransaction();
+        $user_manager->updateUser($user_manager->getUser()->getUserId());
+        $db->dbh->commit();
+
+        $msg_arr['green__user_updated'] = 'ユーザー情報を更新しました。';
+
+    } catch (PDOException $e) {
+        $db->dbh->rollBack();
+        $sql_err_arr = array_merge($sql_err_arr, $db->getSqlErrors());
+        $msg_arr['red__user_update_failed'] = 'ユーザーの更新に失敗しました。';
+    }
+} else {
+    $user = User::getUserById($db, $user_id);
+    
+    $context['preset'] = [
+        'user_id' => Common::h($user->getUserId()),
+        'user_name' => Common::h($user->getUserName()),
+        'email' => Common::h($user->getEmail()),
+        'delete_flg' => Common::h($user->getDeleteFlg()),
+    ];
 }
+
+
+$context['token'] = $token;
+
+echo $twig->render($template, $context);

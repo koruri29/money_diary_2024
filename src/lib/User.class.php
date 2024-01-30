@@ -20,6 +20,8 @@ class User
 
     private string $password;
 
+    private int $delete_flg;
+
     private array $errArr = [];
 
 
@@ -60,6 +62,8 @@ class User
 
     public static function getUserByEmail(PDODatabase $db, string $email) : User|bool
     {
+        $db->resetClause();
+
         $table = ' users ';
         $column = ' id, user_name, email, password, role ';
         $where = ' email = ? ';
@@ -82,6 +86,8 @@ class User
 
     public static function getUserById(PDODatabase $db, int $user_id) : User|bool
     {
+        $db->resetClause();
+        
         $table = ' users ';
         $column = ' id, user_name, role, email, delete_flg ';
         $where = ' id = ? ';
@@ -98,12 +104,15 @@ class User
             $user_info[0]['role'],
         );
         $user->setUserId($user_info[0]['id']);
+        $user->setDeleteFlg($user_info[0]['delete_flg']);
 
         return $user;
     }
 
     public static function doesEmailExist(PDODatabase $db, string $email) : bool
     {
+        $db->resetClause();
+
         $table = 'users';
         $column = ' id ';
         $where = ' email = ? ';
@@ -155,6 +164,16 @@ class User
     public function getPassword() : string
     {
         return $this->password;
+    }
+    
+    public function setDeleteFlg(int $delete_flg) : string
+    {
+        return $this->delete_flg = $delete_flg;
+    }
+        
+    public function getDeleteFlg() : string
+    {
+        return $this->delete_flg;
     }
 
     public function getErrArr()
