@@ -21,8 +21,8 @@ $db = new PDODatabase(
 $session = new Session($db);// セッション開始
 
 // ログイン判定
-if (empty($_SESSION['user_id']) &&  $_SESSION['admin']) {
-    header('Location: index.php');
+if (empty($_SESSION['user_id']) && $_SESSION['admin'] !== true) {
+    header('Location: ../../index.php');
     exit();
 }
 
@@ -42,7 +42,7 @@ $twig->addExtension(new \Twig\Extra\Intl\IntlExtension());//twigの追加機能(
 
 $template = 'admin/edit.html.twig';
 $context = [];
-$context['title'] = '管理画面トップ';
+$context['title'] = 'ユーザー編集';
 $context['page'] = 'admin';
 $context['session_user_name'] = Common::h($_SESSION['user_name']);
 
@@ -72,7 +72,7 @@ if (isset($_SERVER['HTTP_REFERER'])) {
     }
 }
 
-
+// 編集したいユーザーID
 if (! isset($_GET['id']) || intval($_GET['id']) < 1) {
     header('Location: ../top.php');
     exit();
@@ -99,7 +99,7 @@ if (! isset($_GET['id']) || intval($_GET['id']) < 1) {
 }
 
 
-if (isset($_POST['send']) && $_POST['send'] == '<edit></edit>') {
+if (isset($_POST['send']) && $_POST['send'] == 'edit') {
     // if ($user_manager->getUser()->getRole() !== User::ADMIN) {
     //     $err_arr['token_invalid'] = '不正なリクエストです。';
     //     $context['err_arr'] = $err_arr;
@@ -109,25 +109,66 @@ if (isset($_POST['send']) && $_POST['send'] == '<edit></edit>') {
     //     exit();
     // }
 
+    $user_before_edit = User::getUserById($db, $user_id);
+
+        // 「管理者にする」がチェックされていた場合
+        if (isset($_POST['role'])) {
+            $role = User::REGULAR_USER;
+        } else {
+            $role = $user_before_edit->getRole();
+        }
+
+        // 「削除する」がチェックされていた場合
+        if (isset($_POST['delete_flg'])) {
+            $delete_flg = User::DELETE_FLG_ON;
+        } else {
+            $delete_flg = $user_before_edit->getDeleteFlg();
+        }
+
     $edited_user = new User(
         $_POST['user_name'],
         $_POST['email'],
-        $_POST['role'],
+        $role,
+        $delete_flg,
     );
+    $edited_user->setUserId($user_id);
 
     $user_register = new ManageUser($db, $edited_user);
 
     try {
         $db->dbh->beginTransaction();
-        $user_manager->updateUser($user_manager->getUser()->getUserId());
+        $user_register->updateUser();
         $db->dbh->commit();
 
         $msg_arr['green__user_updated'] = 'ユーザー情報を更新しました。';
 
-    } catch (PDOException $e) {
+
+
+    } catch (Exception $e) {
         $db->dbh->rollBack();
         $sql_err_arr = array_merge($sql_err_arr, $db->getSqlErrors());
+        $err_arr = array_merge(
+            $err_arr,
+            $user_register->getUser()->getErrArr(),
+            ['red__exception_msg' => $e->getMessage()]
+        );
         $msg_arr['red__user_update_failed'] = 'ユーザーの更新に失敗しました。';
+    } finally {
+        $context['preset'] = [
+            'user_id' => Common::h($edited_user->getUserId()),
+            'user_name' => Common::h($edited_user->getUserName()),
+            'email' => Common::h($edited_user->getEmail()),
+            'role' => Common::h($edited_user->getRole()),
+            'delete_flg' => Common::h($edited_user->getDeleteFlg()),
+        ];
+        $context['sql_err_arr'] = $sql_err_arr;
+        $context['err_arr'] = $err_arr;
+        $context['msg_arr'] = $msg_arr;
+        $context['token'] = $token;
+
+        echo $twig->render($template, $context);
+        exit();
+        
     }
 } else {
     $user = User::getUserById($db, $user_id);
@@ -136,6 +177,7 @@ if (isset($_POST['send']) && $_POST['send'] == '<edit></edit>') {
         'user_id' => Common::h($user->getUserId()),
         'user_name' => Common::h($user->getUserName()),
         'email' => Common::h($user->getEmail()),
+        'role' => Common::h($user->getRole()),
         'delete_flg' => Common::h($user->getDeleteFlg()),
     ];
 }

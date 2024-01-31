@@ -86,6 +86,10 @@ if (isset($_POST['send']) && $_POST['send'] === 'login') {
         $err_arr = array_merge($err_arr, $session->getErrArr());
         $context['email'] = Common::h($_POST['email']);
     }
+} elseif (isset($_POST['id_token'])) {
+    $_SESSION['user_name'] = $_POST['user_name'];
+    header ('Location: top.php');
+    exit();
 }
 
 

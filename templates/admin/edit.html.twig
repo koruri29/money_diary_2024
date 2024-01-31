@@ -19,16 +19,16 @@
 			<dl>
 				<dt>メールアドレス</dt><dd><input type="text" name="email" value="{{preset.email}}"></dd>
 			</dl>
-						<dl>
-				<dt>
-					<label for="hange_role">
-						{% if preset.role == {{constant('lib\\User::REGULAR_USER')}} %}
-							管理者にする
-						{% endif %}
-					</label>
-					<input id="change_role" type="checkbox" name="change_role">
-				</dt>
-			</dl>
+			<dl>
+			{% if preset.role == constant('lib\\User::REGULAR_USER') %}
+					<dt>
+						<label for="hange_role">
+								管理者にする
+						</label>
+						<input id="change_role" type="checkbox" name="change_role">
+					</dt>
+				</dl>
+			{% endif %}
 			<dl>
 				<dt>
 					<label for="delete_flg">

@@ -10,6 +10,10 @@ class User
 
     const REGULAR_USER = 0;
 
+    const DELETE_FLG_OFF = 0;
+
+    const DELETE_FLG_ON = 1;
+
     private int $role;
 
     private int $user_id;
@@ -30,13 +34,14 @@ class User
         string $email,
         string $password,
         int $role = self::REGULAR_USER, 
+        int $delete_flg = self::DELETE_FLG_OFF,
     )
     {
         $this->user_name = $user_name;
         $this->email = $email;
         $this->password = $password;
         $this->role = $role;
-
+        $this->delete_flg = $delete_flg;
     }
 
     public function validateUser() : bool
@@ -176,6 +181,10 @@ class User
         return $this->delete_flg;
     }
 
+    public function pushErrArr(array $err_arr) : void
+    {
+        $this->errArr = array_merge($this->errArr, $err_arr);
+    }
     public function getErrArr()
     {
         return $this->errArr;
