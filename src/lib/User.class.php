@@ -118,6 +118,15 @@ class User
         }
     }
 
+    public static function getIds(PDODatabase $db) : array
+    {
+        $table = 'users';
+        $column = ' id ';
+
+        return $db->select($table, $column);
+
+    }
+
     public function getRole() : int
     {
         return $this->role;

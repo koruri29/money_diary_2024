@@ -1,14 +1,39 @@
-			<div class="header-right">
-				{% if session_user_name is defined %}
-					<ul>
-						<li>{{session_user_name}}さん ログイン中</li>
-						<li><a href="search.php">検索</a></li>
-						<li><a href="logout.php">ログアウト</a></li>
-					</ul>
-				{% else %}
-					<ul>
-						<li><a href="index.php">ログイン</a></li>
-						<li><a href="register.php">会員登録</a></li>
-					</ul>
-				{% endif %}
-			</div>
+	<nav class="header-right sp-none">
+		{% if session_user_name is defined %}
+			<ul>
+				<li>{{session_user_name}}さん ログイン中</li>
+				<li><a href="search.php">検索</a></li>
+				<li><a href="logout.php">ログアウト</a></li>
+			</ul>
+		{% else %}
+			<ul>
+				<li><a href="index.php">ログイン</a></li>
+				<li><a href="register.php">会員登録</a></li>
+			</ul>
+		{% endif %}
+	</nav>
+
+
+	{# SP表示用 #}
+	{% if session_user_name is defined %}
+		<div class="sp-name">{{session_user_name}}さん</div>	
+	{% endif %}
+	
+	<nav class="sp-nav">
+		{% if session_user_name is defined %}
+			<ul>
+				<li><a href="search.php">検索</a></li>
+				<li><a href="logout.php">ログアウト</a></li>
+			</ul>
+		{% else %}
+			<ul>
+				<li><a href="index.php">ログイン</a></li>
+				<li><a href="register.php">会員登録</a></li>
+			</ul>
+		{% endif %}
+	</nav>
+
+	<div class="hamburger">
+		<span></span>
+		<span></span>
+	</div>

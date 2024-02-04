@@ -12,7 +12,7 @@
 </head>
 <body>
 	<header class="{% if page is defined and page == 'admin' %} admin-bg-color{% endif %}">
-		<div class="container">
+		<div class="header-container">
 			<div class="header-left">
 				<a class="logo" href="top.php"><h1>家計簿アプリ</h1></a>
 			</div>
@@ -22,6 +22,8 @@
 			{% else %}
 				{% include 'component/header_right.html.twig' %}
 			{% endif %}
+
+
 
 		</div>
 	</header>

@@ -39,9 +39,6 @@ $template = 'tmp_register.html.twig';//仮登録画面
 $context = [];
 $context['title'] = '会員仮登録';
 
-echo 'OK', $_SESSION['token'], '<br>';
-echo '???', $_POST['token'], '<br>';
-var_dump($_SESSION);
 // フォームトークンチェック
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] !== $_SESSION['token']) {
     $template = 'token_invalid.html.twig';
@@ -53,12 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
     echo $twig->render($template, $context);
     exit();
 }
-
-//CSRF対策・二重投稿防止用トークン
-$token = Token::generateToken();
-$_SESSION['token'] = $token;
-
-
 
 if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkToken()) {//仮登録押下後
     $token = Token::generateToken();
@@ -153,6 +144,10 @@ if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkTo
     
 }
 
+
+//CSRF対策・二重投稿防止用トークン
+$token = Token::generateToken();
+$_SESSION['token'] = $token;
 
 
 $context['msg_arr'] = $msg_arr;
