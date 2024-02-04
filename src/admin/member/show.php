@@ -25,8 +25,8 @@ $db = new PDODatabase(
 $session = new Session($db);// セッション開始
 
 // ログイン判定
-if (empty($_SESSION['user_id']) && empty($_SESSION['admin'])) {
-    header('Location: index.php');
+if (empty($_SESSION['user_id']) && ! $_SESSION['admin'] !== true) {
+    header('Location: ../../index.php');
     exit();
 }
 

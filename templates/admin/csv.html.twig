@@ -1,0 +1,44 @@
+{% include 'component/header.html.twig' %}
+
+
+<div class="wrapper">
+
+	{# メッセージ表示 #}
+	{% include 'component/message.html.twig' %}
+	
+	<h2>{{title}}</h2>{# 入出金登録or検索 #}
+	
+	{% include 'component/error.html.twig' %}
+
+	<h3>CSVユーザー登録</h3>
+	<form action="" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="token" value="{{token}}">
+		<input type="hidden" name="send" value="csv_user_register">
+
+		<input type="file" name="csv">
+		<button id="user-csv-register-btn" class="btn send_btn" name="send" value="csv_user_register">登録</button>
+	</form>
+
+	<br>
+	<br>
+
+	<h3>全ユーザーへダミーデータ挿入</h3>
+	<form name="form" action="" method="post">
+		<input type="hidden" name="token" value="{{token}}">
+		<input type="hidden" name="send" value="csv_event_register">
+		<button id="dummy_data_btn" class="btn send_btn" name="send" value="csv_event_register">登録</button>
+	</form>
+</div>
+
+<script>
+	const dummy_data_btn = document.getElementById('dummy_data_btn');
+	dummy_data_btn.addEventListener('click', (e) => {
+		e.preventDefault;
+		console.log("OK");
+		if (confirm('全ユーザーに入出金2件を登録します。よろしいですか？')){
+			form.submit();
+		}
+	})
+</script>
+{% include 'component/footer.html.twig' %}
+

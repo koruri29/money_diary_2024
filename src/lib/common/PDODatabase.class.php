@@ -185,7 +185,7 @@ class PDODatabase
         . ')';
 
         $this->sqlLogInfo($sql, $insert_data_val);
-// echo $sql;
+
         $stmt = $this->dbh->prepare($sql);
         $res = $stmt->execute($insert_data_val);
 
@@ -329,7 +329,7 @@ class PDODatabase
     private function sqlLogInfo(string $sql, array $arr_val = []): void
     {
         $log_path = $this->makeLogFile();
-        $log_data = sprintf("[SQL_LOG:%s]: %s [%s]\n", date('Y-m-d H:i:s'), $sql, implode(',', $arr_val));
+    $log_data = sprintf("[SQL_LOG:%s]: %s [%s]\n", date('Y-m-d H:i:s'), $sql, 'test'/*implode(',', $arr_val)*/);
         error_log($log_data, 3, $log_path);
     }
 

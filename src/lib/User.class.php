@@ -10,6 +10,10 @@ class User
 
     const REGULAR_USER = 0;
 
+    const DELETE_FLG_OFF = 0;
+
+    const DELETE_FLG_ON = 1;
+
     private int $role;
 
     private int $user_id;
@@ -20,6 +24,8 @@ class User
 
     private string $password;
 
+    private int $delete_flg;
+
     private array $errArr = [];
 
 
@@ -28,13 +34,14 @@ class User
         string $email,
         string $password,
         int $role = self::REGULAR_USER, 
+        int $delete_flg = self::DELETE_FLG_OFF,
     )
     {
         $this->user_name = $user_name;
         $this->email = $email;
         $this->password = $password;
         $this->role = $role;
-
+        $this->delete_flg = $delete_flg;
     }
 
     public function validateUser() : bool
@@ -60,6 +67,8 @@ class User
 
     public static function getUserByEmail(PDODatabase $db, string $email) : User|bool
     {
+        $db->resetClause();
+
         $table = ' users ';
         $column = ' id, user_name, email, password, role ';
         $where = ' email = ? ';
@@ -82,6 +91,8 @@ class User
 
     public static function getUserById(PDODatabase $db, int $user_id) : User|bool
     {
+        $db->resetClause();
+        
         $table = ' users ';
         $column = ' id, user_name, role, email, delete_flg ';
         $where = ' id = ? ';
@@ -98,12 +109,15 @@ class User
             $user_info[0]['role'],
         );
         $user->setUserId($user_info[0]['id']);
+        $user->setDeleteFlg($user_info[0]['delete_flg']);
 
         return $user;
     }
 
     public static function doesEmailExist(PDODatabase $db, string $email) : bool
     {
+        $db->resetClause();
+
         $table = 'users';
         $column = ' id ';
         $where = ' email = ? ';
@@ -116,6 +130,15 @@ class User
         } else {
             return true;
         }
+    }
+
+    public static function getIds(PDODatabase $db) : array
+    {
+        $table = 'users';
+        $column = ' id ';
+
+        return $db->select($table, $column);
+
     }
 
     public function getRole() : int
@@ -147,7 +170,21 @@ class User
     {
         return $this->password;
     }
+    
+    public function setDeleteFlg(int $delete_flg) : string
+    {
+        return $this->delete_flg = $delete_flg;
+    }
+        
+    public function getDeleteFlg() : string
+    {
+        return $this->delete_flg;
+    }
 
+    public function pushErrArr(array $err_arr) : void
+    {
+        $this->errArr = array_merge($this->errArr, $err_arr);
+    }
     public function getErrArr()
     {
         return $this->errArr;

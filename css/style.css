@@ -88,7 +88,7 @@ main {
 .wrapper {
 	width: fit-content;
 	min-height: calc(100vh - 72px - 100px);
-	margin: 40px auto 0;
+	margin: 40px auto;
 }
 h2 {
 	font-size: 16px;
@@ -305,3 +305,5 @@ i {
  @media (max-width: 768px){
 	
  }
+
+ 

@@ -68,6 +68,7 @@ if (isset($_POST['send']) && $_POST['send'] === 'login') {
 
     if ($user = $session->checkLogin($_POST['email'], $_POST['password'], true)) {//ログイン認証
         $session->setUserInfo($user);
+        $_SESSION['admin'] = true;
 
         header('Location: top.php');
         exit();

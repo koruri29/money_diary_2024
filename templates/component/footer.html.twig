@@ -6,20 +6,23 @@
 	<script>
 		function onSignIn(googleUser) {
   		var id_token = googleUser.getAuthResponse().id_token;
+			var user_name = googleUser.getAuthResponse().name;
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST', 'https://yourbackend.example.com/tokensignin');
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 			xhr.onload = function() {
 				console.log('Signed in as: ' + xhr.responseText + ' and token is: ' + id_token);
 			};
-			{# xhr.send('idtoken=' + id_token); #}
+			xhr.send('id_token=' + id_token + '&user_name=' + user_name);
+			window.location.href = 'index.php';
 		}
 
     function onSubmit(token) {
       document.getElementById("recap-form").submit();
     }
  </script>
-	<script src="../js/main.js"></script>
-	<script src="../js/validate.js"></script>
+	<script src="{{constant('lib\\common\\Bootstrap::APP_URL')}}js/main.js"></script>
+	<script src="{{constant('lib\\common\\Bootstrap::APP_URL')}}js/validate.js"></script>
+
 </body>
 </html>

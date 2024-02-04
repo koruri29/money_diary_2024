@@ -39,17 +39,23 @@ class ManageUser
         return $res;
     }
 
-    public function updateUser(int $userId) : bool
+    public function updateUser() : bool
     {
-        if ($this->user->getRole() !== User::ADMIN && $this->user->getUserId() !== $userId) return false;
+        // if ($this->user->getRole() !== User::ADMIN && $this->user->getUserId() !== $userId) return false;
+
+        if (User::doesEmailExist($this->db, $this->user->getEmail())) {
+            throw new \Exception ('すでに登録されているメールアドレスです。');
+        }
         
         $table = 'users';
         $insertData = [
             'user_name' => $this->user->getUserName(),
             'email' => $this->user->getEmail(),
+            'role' => $this->user->getRole(),
+            'delete_flg' => $this->user->getDeleteFlg(),
         ];
         $where = ' id = ? ';
-        $arrWhereVal = [$userId];
+        $arrWhereVal = [$this->user->getUserId()];
 
         $res = $this->db->update($table, $insertData, $where, $arrWhereVal);
 
@@ -58,7 +64,7 @@ class ManageUser
 
     public function deleteUser(int $userId) : bool
     {
-        if ($this->user->getRole() !== User::ADMIN && $this->user->getUserId() !== $userId) return false;
+        // if ($this->user->getRole() !== User::ADMIN && $this->user->getUserId() !== $userId) return false;
 
         $table = 'users';
         $insertData = ['delete_flg' => 1];
@@ -70,11 +76,6 @@ class ManageUser
         return $res;
     }
 
-    public static function getUserCount()
-    {
-
-    }
-
     public static function getAllUsers(PDODatabase $db) : array
     {
         $table = ' users ';
@@ -84,5 +85,10 @@ class ManageUser
         $users = $db->select($table, $column);
 
         return $users;
+    }
+
+    public function getUser() : User
+    {
+        return $this->user;
     }
 }
