@@ -36,30 +36,29 @@
 
 
 		<div class="categories grid search-categories">
-			<div>
 				<div class="item-category grid-item">
 					<input class="category-radio"  type="radio" name="category_id" id="unselected" checked>
 					<label class="category-label" for="unselected"><i class="fa-solid fa-question"></i>未選択</label>
 				</div>
 			{% for key, category in categories %}
-				{% if (loop.index % 4) == 0 %}<div>{% endif %}
 					<div class="item-category grid-item">
 						<input class="category-radio"  type="radio" name="category_id" id="{{category.category_id}}"
 						value="{{category.category_id}}" {% if preset.category_id == category.category_id %}checked{% endif %}>
 						<label class="category-label" for="{{category.category_id}}">{{category.i_html | raw}}{{category.category_name}}</label>
 					</div>
-				{% if (loop.index % 4) == 3 %}</div>{% endif %}
 			{% endfor %}
 			
 		</div>
 
 		<input type="hidden" name="wallet_id" value="1">
 
-		<dl class="dl-other search-other">
-			<dt><label class="input-label" for="other">備考</label></dt>
-			<dd><textarea class="other-textarea" name="other" id="other" cols="32" rows="4">{{preset.other}}</textarea></dd>
-		</dl>
 	</div>
+
+	
+	<dl class="dl-other search-other">
+		<dt><label class="input-label" for="other">備考</label></dt>
+		<dd><textarea class="other-textarea" name="other" id="other" cols="32" rows="4">{{preset.other}}</textarea></dd>
+	</dl>
 
 	<button class="btn send_btn search-btn" name="send" value="search">検索</button>
 

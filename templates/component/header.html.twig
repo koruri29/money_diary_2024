@@ -6,7 +6,7 @@
 	<script src="https://kit.fontawesome.com/5f5276d353.js" crossorigin="anonymous"></script>
 	<script src="https://www.google.com/recaptcha/api.js"></script>
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
-	<meta name="google-signin-client_id" content="579777969105-a637qp2snf8leq3blunsmot0pjrftcdb.apps.googleusercontent.com">
+	<meta name="google-signin-client_id" content="579777969105-a637qp2snf8leq3blunsmot0pjrftcdb.apps.	googleusercontent.com">
 	<link rel="stylesheet" href="{{constant('lib\\common\\Bootstrap::APP_URL')}}css/style.css">
 	<title>{{title}} | 家計簿アプリ</title>
 </head>
@@ -14,7 +14,9 @@
 	<header class="{% if page is defined and page == 'admin' %} admin-bg-color{% endif %}">
 		<div class="header-container">
 			<div class="header-left">
-				<a class="logo" href="{{constant('lib\\common\\Bootstrap::APP_URL')}}top.php"><h1>家計簿アプリ</h1></a>
+				<a class="logo" href="{{constant('lib\\common\\Bootstrap::APP_URL')}}src/{% if page == 'admin' %}admin/{% endif %}top.php">
+					<h1>家計簿アプリ</h1>
+				</a>
 			</div>
 
 			{% if page is defined and page == 'admin' %}
@@ -22,9 +24,6 @@
 			{% else %}
 				{% include 'component/header_right.html.twig' %}
 			{% endif %}
-
-
-
 		</div>
 	</header>
 

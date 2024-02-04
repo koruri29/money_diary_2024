@@ -32,8 +32,9 @@ window.onload = ()=> {
 			const month = date.getMonth() + 1;
 			const day = date.getDate() - 1;
 		
+			full_day = String(day).padStart(2, '0');
 			full_month = String(month).padStart(2, '0');
-			date_input.value = year + '-' + full_month + '-' + day;
+			date_input.value = year + '-' + full_month + '-' + full_day;
 		});
 		
 		const today = document.getElementById('today');
@@ -45,7 +46,8 @@ window.onload = ()=> {
 			const day = date.getDate();
 		
 			full_month = String(month).padStart(2, '0');
-			date_input.value = year + '-' + full_month + '-' + day;
+			full_day = String(day).padStart(2, '0');
+			date_input.value = year + '-' + full_month + '-' + full_day;
 		});
 		
 		

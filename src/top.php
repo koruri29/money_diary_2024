@@ -26,7 +26,7 @@ $session = new Session($db);// セッション開始
 if (empty($_SESSION['user_id'])) {
     header('Location: index.php');
     exit();
-} elseif ($_SESSION['admin']) {
+} elseif (isset($_SESSION['admin']) && $_SESSION['admin']) {
     header('Location: ./admin/index.php');
     exit();
 }
@@ -57,7 +57,7 @@ $context['session_user_name'] = Common::h($_SESSION['user_name']);
 
 //入力フォーム初期値
 $preset = [];
-$preset['date'] = date('Y-m-j');
+$preset['date'] = date('Y-m-d');
 $preset['option'] = 0;
 
 // フォームトークンチェック
@@ -98,6 +98,8 @@ if (isset($_POST['send']) && $_POST['send'] === 'delete') {
         }
     }
 }
+
+
 
 //入出金登録時
 if (isset($_POST['send']) && $_POST['send'] === 'event_register') {
@@ -184,7 +186,6 @@ isset($_GET['month']) && is_numeric($_GET['month']) && 1 <= $_GET['month'] && $_
     $items = $event_manager->getEvents($_SESSION['user_id'], true);
     $sum = $event_manager->getSum($_SESSION['user_id'], $is_get_by_month);
 }
-
 
 
 

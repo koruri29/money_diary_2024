@@ -28,7 +28,7 @@ $session = new Session($db);// セッション開始
 if (empty($_SESSION['user_id'])) {
     header('Location: index.php');
     exit();
-} elseif ($_SESSION['admin']) {
+} elseif (isset($_SESSION['admin']) && $_SESSION['admin']) {
     header('Location: ./admin/index.php');
     exit();
 }
