@@ -33,6 +33,8 @@ if (empty($_SESSION['user_id'])) {
     exit();
 }
 
+
+//初期化
 $category = new Category();
 $category->setDb($db);
 $event_manager = new ManageMoneyEvent($db);
@@ -40,6 +42,7 @@ $event_manager = new ManageMoneyEvent($db);
 $err_arr = [];
 $msg_arr = [];
 $is_get_by_month = false;
+
 
 // twig読み込み
 $loader = new \Twig\Loader\FilesystemLoader(Bootstrap::TEMPLATE_DIR);
@@ -49,7 +52,6 @@ $twig->addExtension(new \Twig\Extra\Intl\IntlExtension());//twigの追加機能(
 $template = 'search.html.twig';
 $context = [];
 $context['title'] = '入出金検索';
-
 
 
 // フォームトークンチェック
@@ -86,6 +88,7 @@ if (isset($_POST['send']) && $_POST['send'] === 'search') {
             break;
     }
 
+    //検索したい入出金イベントをインスタンス化
     $s_event = new SearchedEvent(
         $_SESSION['user_id'],
         intval($_POST['category_id']),
@@ -97,29 +100,28 @@ if (isset($_POST['send']) && $_POST['send'] === 'search') {
         $_POST['max_date'],
         $_POST['other'],
     );
-
-$items = $event_manager->searchEvents($s_event);
-$context['items'] = Common::wh($items);
-
-$sum = $event_manager->getSearchedSum($s_event);
-$context['sum'] = Common::h($sum);
+    //入出金アイテム取得
+    $items = $event_manager->searchEvents($s_event);
+    $context['items'] = Common::wh($items);
+    //合計金額取得
+    $sum = $event_manager->getSearchedSum($s_event);
+    $context['sum'] = Common::h($sum);
 }
 
 
 
 
-//入出金の一覧表示用
+//入力フォームのアイコン用
 $is_get_by_month = false;
 $categories = Category::getCategoriesByUserId($db, $_SESSION['user_id']);
 // $categories = Category::getCategoriesByUserId($db, 1);
 $wallets = Wallet::getWalletsByUserId($db, $_SESSION['user_id']);
 
-//初期値
+
+//テンプレート表示
 $preset = [];
 $preset['date'] = date('Y-m-j');
 $preset['option'] = 0;
-
-
 
 $context['session_user_name'] = Common::h($_SESSION['user_name']);
 $context['msg_arr'] = $msg_arr;

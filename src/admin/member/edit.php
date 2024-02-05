@@ -142,8 +142,6 @@ if (isset($_POST['send']) && $_POST['send'] == 'edit') {
 
         $msg_arr['green__user_updated'] = 'ユーザー情報を更新しました。';
 
-
-
     } catch (Exception $e) {
         $db->dbh->rollBack();
         $sql_err_arr = array_merge($sql_err_arr, $db->getSqlErrors());
@@ -170,6 +168,8 @@ if (isset($_POST['send']) && $_POST['send'] == 'edit') {
         exit();
         
     }
+
+//POST送信時以外(最初にページ遷移したとき)
 } else {
     $user = User::getUserById($db, $user_id);
     

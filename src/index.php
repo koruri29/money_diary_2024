@@ -27,8 +27,10 @@ if (! empty($_SESSION['user_id'])) {
 $token = Token::generateToken();
 $_SESSION['token'] = $token;
 
+
 $err_arr = [];
 $msg_arr = [];
+
 
 // twig読み込み
 $loader = new \Twig\Loader\FilesystemLoader(Bootstrap::TEMPLATE_DIR);
@@ -80,8 +82,8 @@ if (isset($_POST['send']) && $_POST['send'] === 'login') {
         echo $twig->render($template, $context);
         exit();
     }
-
-    if ($user = $session->checkLogin($_POST['email'], $_POST['password'])) {//ログイン認証
+    //reCAPTCHA通った場合の認証
+    if ($user = $session->checkLogin($_POST['email'], $_POST['password'])) {
         $session->setUserInfo($user);
 
         header('Location: top.php');
@@ -90,6 +92,8 @@ if (isset($_POST['send']) && $_POST['send'] === 'login') {
         $err_arr = array_merge($err_arr, $session->getErrArr());
         $context['email'] = Common::h($_POST['email']);
     }
+
+//Googleログイン連携の場合(未動作)
 } elseif (isset($_POST['id_token'])) {
     $_SESSION['user_name'] = $_POST['user_name'];
     header ('Location: top.php');
@@ -97,6 +101,7 @@ if (isset($_POST['send']) && $_POST['send'] === 'login') {
 }
 
 
+//テンプレート表示
 $context['msg_arr'] = $msg_arr;
 $context['err_arr'] = $err_arr;
 $context['token'] = $token;

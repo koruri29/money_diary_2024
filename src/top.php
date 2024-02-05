@@ -89,7 +89,6 @@ if (isset($_POST['send']) && $_POST['send'] === 'delete') {
             ManageMoneyEvent::deleteEvent($db, intval($_POST['event_id']));
             $msg_arr['green__delete_success'] = '入出金を削除しました。';
 
-
             $db->dbh->commit();
         } catch (PDOException $e) {
             $db->dbh->rollBack();
@@ -98,7 +97,6 @@ if (isset($_POST['send']) && $_POST['send'] === 'delete') {
         }
     }
 }
-
 
 
 //入出金登録時
@@ -157,7 +155,6 @@ if (isset($_SERVER['HTTP_REFERER'])) {
 }
 
 
-
 //入出金の一覧表示用
 $is_get_by_month = true;
 // $items = $event_manager->getEvents(1, $is_get_by_month);
@@ -186,7 +183,6 @@ isset($_GET['month']) && is_numeric($_GET['month']) && 1 <= $_GET['month'] && $_
     $items = $event_manager->getEvents($_SESSION['user_id'], true);
     $sum = $event_manager->getSum($_SESSION['user_id'], $is_get_by_month);
 }
-
 
 
 

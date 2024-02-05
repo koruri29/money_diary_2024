@@ -31,7 +31,7 @@ if (empty($_SESSION['user_id'])) {
     exit();
 }
 
-
+//編集する入出金IDを取得
 if (! isset($_GET['id']) || intval($_GET['id']) < 1) {
     header('Location: top.php');
     exit();
@@ -47,12 +47,14 @@ if ($event === null) {
 }
 
 
+//初期化
 $category = new Category();
 $category->setDb($db);
 $event_manager = new ManageMoneyEvent($db);
 
 $err_arr = [];
 $msg_arr = [];
+
 
 // twig読み込み
 $loader = new \Twig\Loader\FilesystemLoader(Bootstrap::TEMPLATE_DIR);
@@ -85,6 +87,7 @@ $_SESSION['token'] = $token;
 
 //入出金編集
 if (isset($_POST['send']) && $_POST['send'] === 'event_register') {
+    //入金or出金を判定
     switch ($_POST['option']) {
         case 'exchange':
             $option = 2;
@@ -96,7 +99,7 @@ if (isset($_POST['send']) && $_POST['send'] === 'event_register') {
             $option = 0;
             break;
     }
-
+    //入出金イベントのインスタンス化＆登録
     $event = new MoneyEvent(
         $_SESSION['user_id'],
         intval($_POST['category_id']),
@@ -127,15 +130,14 @@ if (isset($_POST['send']) && $_POST['send'] === 'event_register') {
     }
 }
 
-//初期値セット
+
+//テンプレート表示
 $preset = [];
 $preset['date'] = date('Y-m-d', strtotime($event->getDate()));
 $preset['amount'] = $event->getAmount();
 $preset['option'] = $event->getOption();
 $preset['category_id'] = $event->getCategoryId();
 $preset['other'] = $event->getOther();
-
-
 
 $categories = Category::getCategoriesByUserId($db, $_SESSION['user_id']);
 // $categories = Category::getCategoriesByUserId($db, 1);

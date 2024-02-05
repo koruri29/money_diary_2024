@@ -20,6 +20,7 @@
 		}
 	}
 
+	//仮登録画面
 	if (document.getElementById('tmp_register_btn') !== null) {
 		const email_input = document.getElementById('email');
 
@@ -46,6 +47,8 @@
 				document.form.submit();
 			}
 		});
+
+		//本登録画面
 	} else if (document.getElementById('main_register_btn') !== null) {
 		const user_name_input = document.getElementById('user_name');
 
@@ -71,6 +74,7 @@
 			}
 		});
 
+		//入出金登録画面(ログイン後トップ画面)
 	} else if (document.getElementById('event-register-btn') !== null) {
 		const date_input = document.getElementById('date');
 		const options = document.getElementsByName('option');

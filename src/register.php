@@ -28,9 +28,11 @@ if (! empty($_SESSION['user_id'])) {
     exit();
 }
 
+
 $err_arr = [];
 $msg_arr = [];
 $sql_err_arr = [];
+
 
 // twig読み込み
 $loader = new \Twig\Loader\FilesystemLoader(Bootstrap::TEMPLATE_DIR);
@@ -51,7 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
     exit();
 }
 
-if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkToken()) {//仮登録押下後
+
+//仮登録押下後
+if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkToken()) {
     $token = Token::generateToken();
 
     if (TmpUser::registerTmpUser($db, $_POST['email'], $token)) {//ユーザー仮登録
@@ -73,7 +77,8 @@ if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkTo
     }
 
 
-} elseif (isset($_POST['send']) && $_POST['send'] === 'register') {//本登録押下後
+//本登録押下後
+} elseif (isset($_POST['send']) && $_POST['send'] === 'register') {
     //reCAPTCHA認証
     $recap_response = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=6LeXVFkpAAAAAPlelZdc3R9bTDyaXErc_-jVwnrS&response='. $_POST['g-recaptcha-response']);
     $recap_response = json_decode($recap_response);
@@ -129,8 +134,8 @@ if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkTo
     // }
 
 
-
-} elseif (isset($_GET['register']) && $_GET['register'] === 'true' && isset($_GET['token'])) {//仮登録メールからの遷移
+//仮登録メールからの遷移
+} elseif (isset($_GET['register']) && $_GET['register'] === 'true' && isset($_GET['token'])) {
     $tmp_user_info = TmpUser::getTmpUser($db, $_GET['token']);
 
     if ($tmp_user_info === false || strtotime($tmp_user_info['expires']) < time()) {
