@@ -43,9 +43,11 @@ class ManageUser
     {
         // if ($this->user->getRole() !== User::ADMIN && $this->user->getUserId() !== $userId) return false;
 
-        if (User::doesEmailExist($this->db, $this->user->getEmail())) {
+        $existing_user = User::getUserByEmail($this->db, $this->user->getEmail());
+        if ($existing_user->getUserId() !== $this->user->getUserId()) {
             throw new \Exception ('すでに登録されているメールアドレスです。');
         }
+
         
         $table = 'users';
         $insertData = [
