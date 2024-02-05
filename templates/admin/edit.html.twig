@@ -17,7 +17,7 @@
 				<dt>ユーザー名</dt><dd><input id="user_name" type="text" name="user_name" value="{{preset.user_name}}"></dd>
 			</dl>
 			<dl>
-				<dt>メールアドレス</dt><dd><input type="text" name="email" value="{{preset.email}}"></dd>
+				<dt>メールアドレス</dt><dd><input id="email" type="text" name="email" value="{{preset.email}}"></dd>
 			</dl>
 			<dl>
 			{% if preset.role == constant('lib\\User::REGULAR_USER') %}
@@ -41,7 +41,7 @@
 					<input id="delete_flg" type="checkbox">
 				</dt>
 			</dl>
-			<button class="send_btn" name="send" value="edit">更新</button>
+			<button id="user_edit_btn" class="send_btn" name="send" value="edit">更新</button>
 		</form>
 	</div>
 </div>

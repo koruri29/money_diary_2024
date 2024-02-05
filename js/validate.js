@@ -19,6 +19,34 @@
 			elem_parent.removeChild(elem_parent.firstChild);
 		}
 	}
+	
+	function validateEmail(email) {
+		let errors = [];
+		if (email === '') {
+			errors.push ('メールアドレスを入力してください。');
+		} else if (! EMAIL_PATTERN.test(email)) {
+			errors.push('有効なメールアドレスを入力してください。');
+		}
+		if (email.length > 100) {
+			errors.push('メールアドレスは100文字以内で入力してください。');
+		}
+
+		return errors;
+	}
+
+	function validateUserName(user_name) {
+		let errors = [];
+
+		if (user_name === '') {
+			errors.push('ユーザー名を入力してください。')
+		}
+		if (user_name.length > 50) {
+			errors.push('ユーザー名は50文字以内で入力してください。');
+		}
+
+		return errors;
+	}
+
 
 	//仮登録画面
 	if (document.getElementById('tmp_register_btn') !== null) {
@@ -31,14 +59,7 @@
 			deleteErrors(div_errors);
 
 			let errors = [];
-			if (email_input.value === '') {
-				errors.push ('メールアドレスを入力してください。');
-			} else if (! EMAIL_PATTERN.test(email_input.value)) {
-				errors.push('有効なメールアドレスを入力してください。');
-			}
-			if (email_input.value.length > 100) {
-				errors.push('メールアドレスは100文字以内で入力してください。');
-			}
+			errors.push(validateEmail(email_input.value));
 
 			if (errors.length > 0) {
 				showErrors(errors);
@@ -59,12 +80,7 @@
 			deleteErrors(div_errors);
 
 			let errors = [];
-			if (user_name_input.value === '') {
-				errors.push('ユーザー名を入力してください。')
-			}
-			if (user_name_input.value.length > 50) {
-				errors.push('ユーザー名は50文字以内で入力してください。');
-			}
+			errors.push(validateUserName(user_name_input.value));
 
 			if (errors.length > 0) {
 				showErrors(errors);
@@ -122,8 +138,29 @@
 				document.form.submit();
 			}
 		});
+
+	//ユーザー管理画面
+	} else if(document.getElementById('user_edit_btn') !== null) {
+		const user_name_input = document.getElementById('user_name');
+		const email_input = document.getElementById('email');
+
+		send_btn.addEventListener('click', (e) => {
+			e.preventDefault();
+			send_btn.disabled = true;
+
+			deleteErrors(div_errors);
+
+			let errors = [];
+			errors.push(validateEmail(email_input.value));
+			errors.push(validateUserName(user_name_input.value));
+
+			if (errors.length > 0) {
+				showErrors(errors);
+				send_btn.disabled = false;
+			} else {
+				document.form.submit();
+			}
+		});
+
 	}
-
-
-
 // }
