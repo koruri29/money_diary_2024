@@ -25,21 +25,21 @@
 - フォーム送信やメール認証にトークンを埋め込み、CSRF対策を実装した。
 
 ## ディレクトリ構成
-└─money_diary
+└─money_diary<br>
     ├─conifg          ：（未使用）<br>
-    ├─css             ：CSファイル <br>
+    ├─css<br>
     ├─images          ：（未使用）<br>
-    ├─js              ：JavaScriptソースファイル<br>
+    ├─js<br>
     ├─logs            ：SQLログ<br>
     ├─src             ：PHPソースファイル<br>
     │  ├─admin        ：管理画面<br>
-    │  │  └─member    ：ユーザー管理<br>
+    │  │  └─member<br>
     │  └─lib          ：クラスファイル<br>
     │      └─common   ：PDOラッパークラスなど<br>
     ├─templates       ：twigテンプレート<br>
-    │  ├─admin        ：管理画面テンプレート<br>
-    │  └─component    ：コンポーネント<br>
-    └─vendor          ：パッケージ<br>
+    │  ├─admin<br>
+    │  └─component<br>
+    └─vendor<br>
 
 ## 主なページ
 - register.php - 登録ページ
