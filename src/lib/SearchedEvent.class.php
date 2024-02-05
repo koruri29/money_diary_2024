@@ -14,30 +14,30 @@ class SearchedEvent
 
     private int $wallet_id;
 
-    private int $option;
+    private int $option;// 収入or支出
 
-    private int $min_amount;
+    private int $min_amount;// 最小金額
 
-    private int $max_amount;
+    private int $max_amount;// 最大金額
 
     private string $min_date;
 
     private string $max_date;
 
-    private string $other;
+    private string $other;// 備考
 
     private array $err_arr = [];
 
     public function __construct(
-        $user_id,
-        $category_id,
-        $wallet_id,
-        $option,
-        $min_amount,
-        $max_amount,
-        $min_date,
-        $max_date,
-        $other,  
+        int $user_id,
+        int $category_id,
+        int $wallet_id,
+        int $option,
+        int $min_amount,
+        int $max_amount,
+        string $min_date,
+        string $max_date,
+        string $other,  
     )
     {
         $this->user_id = $user_id;
@@ -164,7 +164,7 @@ class SearchedEvent
         return $this->other;
     }
     
-    public function getErrArr()
+    public function getErrArr() : array
     {
         return $this->err_arr;
     }

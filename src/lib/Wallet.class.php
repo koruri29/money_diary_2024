@@ -33,7 +33,9 @@ class Wallet
 
         return $wallets;
     }
-
+    /**
+     * 新規ユーザー登録時の、ユーザーに紐づいたカテゴリ登録
+     */
     public static function initWallets(PDODatabase $db, int $user_id) : bool {
         $table = ' wallets ';
         $insertDataCol = [

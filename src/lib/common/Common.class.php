@@ -72,7 +72,7 @@ class Common
     }
 
     /**
-     * 移動先のページ数と、offsetを返す
+     * ページネーションにおいて、移動先のページ数と、offsetを返す
      * ページ数は正の整数になるよう調整する
      * 
      * @param int $page $_GET['page']

@@ -121,7 +121,7 @@ class CSV {
         }
     }
 
-    public function getErrArr()
+    public function getErrArr() : array
     {
         return $this->err_arr;
     }

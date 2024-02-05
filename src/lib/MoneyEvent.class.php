@@ -14,24 +14,24 @@ class MoneyEvent
 
     private int $wallet_id;
 
-    private int $option;
+    private int $option;// 収入or支出
 
-    private int $amount;
+    private int $amount;// 金額
 
     private string $date;
 
-    private string $other;
+    private string $other;// 備考
 
     private array $err_arr = [];
 
     public function __construct(
-        $user_id,
-        $category_id,
-        $wallet_id,
-        $option,
-        $amount,
-        $date,
-        $other,  
+        int $user_id,
+        int $category_id,
+        int $wallet_id,
+        int $option,
+        int $amount,
+        string $date,
+        string $other,  
     )
     {
         $this->user_id = $user_id;

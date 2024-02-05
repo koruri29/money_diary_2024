@@ -49,16 +49,16 @@ class User
         $flg = true;
 
         if (empty($this->user_name)) {
-            $this->errArr['username_empty'] = 'ユーザー名を入力してください。';
+            $this->errArr['red__username_empty'] = 'ユーザー名を入力してください。';
             $flg = false;
         } elseif (mb_strlen($this->user_name) > 50) {
-            $this->errArr['username_too_long'] = 'ユーザー名は50文字以内で入力してください。';
+            $this->errArr['red__username_too_long'] = 'ユーザー名は50文字以内で入力してください。';
             $flg = false;
         }
 
 
         if (empty($this->password)) {
-            $this->errArr['password_empty'] = 'パスワードを入力してください。';
+            $this->errArr['red__password_empty'] = 'パスワードを入力してください。';
             $flg = false;
         }
 
@@ -185,7 +185,7 @@ class User
     {
         $this->errArr = array_merge($this->errArr, $err_arr);
     }
-    public function getErrArr()
+    public function getErrArr() : array
     {
         return $this->errArr;
     }

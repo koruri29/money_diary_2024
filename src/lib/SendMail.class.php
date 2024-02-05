@@ -4,7 +4,7 @@ namespace lib;
 
 class SendMail
 {
-    private string $emailFrom;
+    private string $emailFrom = 'test@example.com';
 
     private string $emailTo;
     
@@ -30,7 +30,6 @@ class SendMail
         mb_language( 'Japanese' );
         mb_internal_encoding( 'UTF-8' );
 
-        $this->emailFrom = 'eighthwonder_getthenack@yahoo.co.jp';
         $this->emailTo = $emailTo;
         $this->nameFrom = mb_encode_mimeheader('家計簿アプリ運営');
         $this->replyTo = mb_encode_mimeheader('家計簿アプリ運営');
@@ -150,7 +149,7 @@ class SendMail
         $this->nameTo = $nameTo;
     }
 
-    public function getErrArr()
+    public function getErrArr() : array
     {
         return $this->errArr;
     }

@@ -21,11 +21,6 @@ class Category
     private string $icon_color;
 
 
-    // public function __construct(PDODatabase $db)
-    // {
-    //     $this->$db = $db;
-    // }
-
     public static function getCategoriesByUserId (PDODatabase $db, int $user_id) : array
     {
         $db->resetClause();
@@ -53,6 +48,9 @@ class Category
         return $categories;
     }
 
+    /**
+     * 新規ユーザー登録時の、ユーザーに紐づいたカテゴリ登録
+     */
     public static function initCategories(PDODatabase $db, int $user_id) : bool {
         $table = ' categories ';
         $insertDataCol = [
@@ -80,7 +78,7 @@ class Category
         return $res;
     }
 
-    public function setDb(PDODatabase $db)
+    public function setDb(PDODatabase $db) : void
     {
         $this->db = $db;
     }

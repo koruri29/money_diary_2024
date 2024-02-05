@@ -11,25 +11,7 @@ use lib\common\Token;
 
 class TmpUser
 {
-    // private $db;
-
-    // private int $tmp_user_id;
-
-    // private string $email;
-
-    // private string $token;
-
-    // private string $expires;
-
-    private static array $err_arr = [];
-
-    // private array $msg_arr = [];
-
-
-    // public function __construct(PDODatabase $db)
-    // {
-    //     $this->db = $db;
-    // }
+    private static array $err_arr = []; 
 
     public static function registerTmpUser(PDODatabase $db, string $email, string $token) : bool
     {
@@ -56,13 +38,13 @@ class TmpUser
         $pattern = Common::EMAIL_PATTERN;
 
         if (empty($email)) {
-            self::$err_arr['email_empty'] = 'メールアドレスを入力してください。';
+            self::$err_arr['red__email_empty'] = 'メールアドレスを入力してください。';
             $flg = false;
         } elseif (! preg_match($pattern, $email)) {
-            self::$err_arr['email_invalid'] = '有効なメールアドレスを入力してください。';
+            self::$err_arr['red__email_invalid'] = '有効なメールアドレスを入力してください。';
             $flg = false;
         } elseif (mb_strlen($email) > 100) {
-            self::$err_arr['email_too_long'] = 'メールアドレスは100文字以内で入力してください。';
+            self::$err_arr['red__email_too_long'] = 'メールアドレスは100文字以内で入力してください。';
             $flg = false;
         }
 
@@ -106,7 +88,7 @@ class TmpUser
         return $res[0]['id'];
     }
 
-    public static function getErrArr()
+    public static function getErrArr() : array
     {
         return self::$err_arr;
     }

@@ -10,7 +10,7 @@ class Session
 {
     private $db = null;
     
-    private $err_arr = [];
+    private array $err_arr = [];
 
     public function __construct(PDODatabase $db)
     {
