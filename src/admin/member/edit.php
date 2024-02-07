@@ -113,7 +113,7 @@ if (isset($_POST['send']) && $_POST['send'] == 'edit') {
 
         // 「管理者にする」がチェックされていた場合
         if (isset($_POST['role'])) {
-            $role = User::REGULAR_USER;
+            $role = User::ADMIN;
         } else {
             $role = $user_before_edit->getRole();
         }
@@ -128,16 +128,17 @@ if (isset($_POST['send']) && $_POST['send'] == 'edit') {
     $edited_user = new User(
         $_POST['user_name'],
         $_POST['email'],
+        '',
         $role,
         $delete_flg,
     );
     $edited_user->setUserId($user_id);
 
-    $user_register = new ManageUser($db, $edited_user);
+    $user_manager = new ManageUser($db, $edited_user);
 
     try {
         $db->dbh->beginTransaction();
-        $user_register->updateUser();
+        $user_manager->updateUser();
         $db->dbh->commit();
 
         $msg_arr['green__user_updated'] = 'ユーザー情報を更新しました。';
@@ -147,17 +148,17 @@ if (isset($_POST['send']) && $_POST['send'] == 'edit') {
         $sql_err_arr = array_merge($sql_err_arr, $db->getSqlErrors());
         $err_arr = array_merge(
             $err_arr,
-            $user_register->getUser()->getErrArr(),
+            $user_manager->getUser()->getErrArr(),
             ['red__exception_msg' => $e->getMessage()]
         );
         $msg_arr['red__user_update_failed'] = 'ユーザーの更新に失敗しました。';
     } finally {
         $context['preset'] = [
             'user_id' => Common::h($edited_user->getUserId()),
-            'user_name' => Common::h($edited_user->getUserName()),
-            'email' => Common::h($edited_user->getEmail()),
-            'role' => Common::h($edited_user->getRole()),
-            'delete_flg' => Common::h($edited_user->getDeleteFlg()),
+            'user_name' => Common::h($_POST['user_name']),
+            'email' => Common::h($_POST['email']),
+            'role' => $role,
+            'delete_flg' => $delete_flg,
         ];
         $context['sql_err_arr'] = $sql_err_arr;
         $context['err_arr'] = $err_arr;

@@ -39,8 +39,7 @@
 
 		if (user_name === '') {
 			errors.push('ユーザー名を入力してください。')
-		}
-		if (user_name.length > 50) {
+		} else if (user_name.length > 50) {
 			errors.push('ユーザー名は50文字以内で入力してください。');
 		}
 
@@ -59,7 +58,7 @@
 			deleteErrors(div_errors);
 
 			let errors = [];
-			errors.push(validateEmail(email_input.value));
+			errors = errors.concat(validateEmail(email_input.value));
 
 			if (errors.length > 0) {
 				showErrors(errors);
@@ -80,7 +79,7 @@
 			deleteErrors(div_errors);
 
 			let errors = [];
-			errors.push(validateUserName(user_name_input.value));
+			errors = errors.concat(validateUserName(user_name_input.value));
 
 			if (errors.length > 0) {
 				showErrors(errors);
@@ -151,8 +150,8 @@
 			deleteErrors(div_errors);
 
 			let errors = [];
-			errors.push(validateEmail(email_input.value));
-			errors.push(validateUserName(user_name_input.value));
+			errors = errors.concat(validateEmail(email_input.value));
+			errors = errors.concat(validateUserName(user_name_input.value));
 
 			if (errors.length > 0) {
 				showErrors(errors);

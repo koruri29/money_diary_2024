@@ -191,7 +191,7 @@ isset($_GET['month']) && is_numeric($_GET['month']) && 1 <= $_GET['month'] && $_
 $categories = Category::getCategoriesByUserId($db, $_SESSION['user_id']);
 $wallets = Wallet::getWalletsByUserId($db, $_SESSION['user_id']);
 
-
+//テンプレート表示
 $context['msg_arr'] = $msg_arr;
 $context['err_arr'] = $err_arr;
 $context['sql_err_arr'] = $sql_err_arr;

@@ -22,7 +22,7 @@ class ManageUser
     public function registerUser(): bool
     {
         //バリデーション
-        if (! $this->user->validateUser()) return false;
+        if (! $this->user->validateUserRegister()) return false;
 
         $password = $this->user->getPassword();
         $password = password_hash($password, PASSWORD_DEFAULT);
@@ -45,9 +45,16 @@ class ManageUser
 
         $existing_user = User::getUserByEmail($this->db, $this->user->getEmail());
         if ($existing_user->getUserId() !== $this->user->getUserId()) {
-            throw new \Exception ('すでに登録されているメールアドレスです。');
+            throw new \Exception('すでに登録されているメールアドレスです。');
         }
 
+        if (! $this->user->isEmailSet()) {
+            throw new \Exception('メールアドレスが入力されていません。');
+        }
+
+        if (! $this->user->validateUserName()) {
+            throw new \Exception('ユーザー名が正しくありません。');
+        }
         
         $table = 'users';
         $insertData = [

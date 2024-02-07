@@ -44,7 +44,21 @@ class User
         $this->delete_flg = $delete_flg;
     }
 
-    public function validateUser() : bool
+    public function validateUserRegister() : bool
+    {
+        $flg = true;
+
+        if (! $this->validateUserName()) $flg = false;
+
+        if (empty($this->password)) {
+            $this->errArr['red__password_empty'] = 'パスワードを入力してください。';
+            $flg = false;
+        }
+
+        return $flg;
+    }
+
+    public function validateUserName() : bool
     {
         $flg = true;
 
@@ -56,9 +70,15 @@ class User
             $flg = false;
         }
 
+        return $flg;
+    }
 
-        if (empty($this->password)) {
-            $this->errArr['red__password_empty'] = 'パスワードを入力してください。';
+    public function isEmailEmpty() : bool
+    {
+        $flg = true;
+
+        if (! empty($this->email)) {
+            $this->errArr['red__email_empty'] = 'メールアドレスを入力してください。';
             $flg = false;
         }
 
