@@ -18,16 +18,7 @@ $db = new PDODatabase(
 $session = new Session($db);// セッション開始
 
 // ログイン判定
-if (! empty($_SESSION['user_id'])) {
-    if (isset($_SESSION['admin']) && $_SESSION['admin']) {
-        header('Location: top.php');
-        exit();
-    } else {
-        header('Location: ../top.php');
-        exit();
-    }
-
-}
+require_once 'is_login.php';
 
 $err_arr = [];
 $msg_arr = [];
