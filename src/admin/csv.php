@@ -21,10 +21,7 @@ $db = new PDODatabase(
 $session = new Session($db);// セッション開始
 
 // ログイン判定
-if (empty($_SESSION['user_id']) && ! $_SESSION['admin'] !== true) {
-    header('Location: ../index.php');
-    exit();
-}
+require_once 'is_login.php';
 
 
 // 初期化
@@ -70,8 +67,6 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
         $mode = 1;
     } elseif ($_POST['send'] === 'csv_event_register') {
         $mode = 2;
-    } else {
-        $mode = 0;
     }
 
     switch ($mode){
