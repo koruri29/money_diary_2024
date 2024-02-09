@@ -271,7 +271,9 @@ dd {
 /*-------------------------
  * admin
  *-------------------------*/
-.font-large {
+.a-admin-top {
+	display: inline-block;
+	margin: 16px;
 	font-size: large;
 }
 .user-table {

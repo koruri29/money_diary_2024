@@ -1,12 +1,16 @@
 {% include 'component/header.html.twig' %}
 
-<h2>{{title}}</h2>
-
-{% include 'component/message.html.twig' %}
-
-{% include 'component/error.html.twig' %}
 
 <div class="wrapper">
+	<h2>{{title}}</h2>
+	
+	
+	{% include 'component/message.html.twig' %}
+	
+
+	{% include 'component/error.html.twig' %}
+	
+
 	<div class="form-container">
 		<form name="form" method="post">
 			<input type="hidden" name="token" value="{{token}}">
