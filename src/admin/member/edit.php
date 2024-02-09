@@ -112,7 +112,7 @@ if (isset($_POST['send']) && $_POST['send'] == 'edit') {
     $user_before_edit = User::getUserById($db, $user_id);
 
         // 「管理者にする」がチェックされていた場合
-        if (isset($_POST['role'])) {
+        if (isset($_POST['change_role'])) {
             $role = User::ADMIN;
         } else {
             $role = $user_before_edit->getRole();

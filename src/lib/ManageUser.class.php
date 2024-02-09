@@ -58,7 +58,7 @@ class ManageUser
             throw new \Exception('ユーザー名が正しくありません。');
         }
         
-        $table = 'users';
+        $table = ' users ';
         $insertData = [
             'user_name' => $this->user->getUserName(),
             'email' => $this->user->getEmail(),

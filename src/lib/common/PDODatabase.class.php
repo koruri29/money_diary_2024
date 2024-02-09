@@ -247,7 +247,8 @@ class PDODatabase
         
             $update_data = array_merge(array_values($insert_data), $arr_where_val);
             $this->sqlLogInfo($sql, $update_data);
-
+echo $sql;
+var_dump($update_data);
             $stmt = $this->dbh->prepare($sql);
             $res = $stmt->execute($update_data);
 
