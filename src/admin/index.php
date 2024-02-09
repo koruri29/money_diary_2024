@@ -18,9 +18,15 @@ $db = new PDODatabase(
 $session = new Session($db);// セッション開始
 
 // ログイン判定
-if (! empty($_SESSION['user_id']) && ! empty($_SESSION['admin'])) {
-    header('Location: top.php');
-    exit();
+if (! empty($_SESSION['user_id'])) {
+    if (isset($_SESSION['admin']) && $_SESSION['admin']) {
+        header('Location: top.php');
+        exit();
+    } else {
+        header('Location: ../top.php');
+        exit();
+    }
+
 }
 
 $err_arr = [];

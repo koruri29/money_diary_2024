@@ -78,7 +78,7 @@ class User
         $db->resetClause();
 
         $table = ' users ';
-        $column = ' id, user_name, email, password, role ';
+        $column = ' id, user_name, email, password, role, delete_flg ';
         $where = ' email = ? ';
         $arr_val = [$email];
 
@@ -91,6 +91,7 @@ class User
             $user_info[0]['email'],
             $user_info[0]['password'],
             $user_info[0]['role'],
+            $user_info[0]['delete_flg'],
         );
         $user->setUserId($user_info[0]['id']);
 

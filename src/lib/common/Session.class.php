@@ -83,13 +83,15 @@ class Session
         if (empty($email)) {
             $this->err_arr['red__email_empty'] = 'メールアドレスを入力してください。';
         } else if (! preg_match(Common::EMAIL_PATTERN, $email)) {
-            $this->err_arr['red__password_invalid'] = '有効なメールアドレスを入力してください。';
+            $this->err_arr['red__email_invalid'] = '有効なメールアドレスを入力してください。';
         }
         if (empty($password)) $this->err_arr['red__password_empty'] = 'パスワードを入力してください。';
 
         if (count($this->err_arr) > 0) return false;
 
+
         $user = User::getUserByEmail($this->db, $email);
+
 
         if (! $user) {
             $this->err_arr['red__login_failed'] = 'ユーザーIDかパスワードが間違っています。';
@@ -101,9 +103,21 @@ class Session
             return false;
         }
 
-        if ($admin_flg && $user->getRole() !== User::ADMIN) {
-            $this->err_arr['red__not admin'] = '管理者権限のあるユーザーでログインしてください。';
+        if (intval($user->getDeleteFlg()) === User::DELETE_FLG_ON) {
+            $this->err_arr['red__login_failed'] = 'ユーザーIDかパスワードが間違っています。';
             return false;
+        }
+
+        if ($admin_flg) {
+            if ($user->getRole() !== User::ADMIN) {
+            $this->err_arr['red__login_failed'] = 'ユーザーIDかパスワードが間違っています。';
+                return false;
+            }
+        } else {
+            if ($user->getRole() === User::ADMIN) {
+                $this->err_arr['red__login_failed'] = 'ユーザーIDかパスワードが間違っています。';
+                return false;
+            }
         }
 
         return $user;

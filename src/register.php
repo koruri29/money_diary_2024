@@ -23,10 +23,7 @@ $db = new PDODatabase(
 $session = new Session($db);// セッション開始
 
 //ログイン判定
-if (! empty($_SESSION['user_id'])) {
-    header('Location: top.php');
-    exit();
-}
+require_once 'is_login.php';
 
 
 $err_arr = [];

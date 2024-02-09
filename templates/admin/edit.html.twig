@@ -34,10 +34,10 @@
 					<label for="delete_flg">
 						{% if preset.delete_flg == 0 %}
 							削除する
-							<input id="delete_flg" type="checkbox" value="delete_on">
+							<input id="delete_flg" type="checkbox" name="delete_flg" value="delete_on">
 						{% else %}
 							復元する
-							<input id="delete_flg" type="checkbox" value="delete_off">
+							<input id="delete_flg" type="checkbox" name="delete_flg" value="delete_off">
 						{% endif %}
 					</label>
 					

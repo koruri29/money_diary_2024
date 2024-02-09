@@ -23,13 +23,7 @@ $db = new PDODatabase(
 $session = new Session($db);// セッション開始
 
 // ログイン判定
-if (empty($_SESSION['user_id'])) {
-    header('Location: index.php');
-    exit();
-} elseif (isset($_SESSION['admin']) && $_SESSION['admin']) {
-    header('Location: ./admin/index.php');
-    exit();
-}
+require_once 'is_login.php';
 
 $context['session_user_name'] = Common::h($_SESSION['user_name']);
 

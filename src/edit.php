@@ -23,13 +23,7 @@ $db = new PDODatabase(
 $session = new Session($db);// セッション開始
 
 // ログイン判定
-if (empty($_SESSION['user_id'])) {
-    header('Location: index.php');
-    exit();
-} elseif (isset($_SESSION['admin']) && $_SESSION['admin']) {
-    header('Location: ./admin/index.php');
-    exit();
-}
+require_once 'is_login.php';
 
 //編集する入出金IDを取得
 if (! isset($_GET['id']) || intval($_GET['id']) < 1) {

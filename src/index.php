@@ -18,10 +18,7 @@ $db = new PDODatabase(
 $session = new Session($db);// セッション開始
 
 // ログイン判定
-if (! empty($_SESSION['user_id'])) {
-    header('Location: top.php');
-    exit();
-}
+require_once 'is_login.php';
 
 //CSRF対策・二重投稿防止用トークン
 $token = Token::generateToken();
@@ -82,6 +79,7 @@ if (isset($_POST['send']) && $_POST['send'] === 'login') {
         echo $twig->render($template, $context);
         exit();
     }
+    
     //reCAPTCHA通った場合の認証
     if ($user = $session->checkLogin($_POST['email'], $_POST['password'])) {
         $session->setUserInfo($user);

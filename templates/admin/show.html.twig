@@ -28,7 +28,7 @@
 
 		<tbody>
 			{% for member in members %}
-				<tr class="{% if member.role == constant('lib\\User::ADMIN') %}user-admin{% elseif member.delete_flg != 0 %} user-deleted{% endif %}">
+				<tr class="{% if member.delete_flg != 0 %}user-deleted{% elseif member.role == constant('lib\\User::ADMIN') %} user-admin{% endif %}">
 					<td class="sp-none">{{member.id}}</td>
 					<td class="sp-none">{% if member.role == constant('lib\\User::ADMIN') %}管理者{% endif %}</td>
 					<td>{{member.user_name}}</td>

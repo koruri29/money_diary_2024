@@ -21,10 +21,7 @@ $db = new PDODatabase(
 $session = new Session($db);// セッション開始
 
 // ログイン判定
-if (empty($_SESSION['user_id']) && $_SESSION['admin'] !== true) {
-    header('Location: ../../index.php');
-    exit();
-}
+require_once '../is_login.php';
 
 
 // 初期化
