@@ -44,11 +44,13 @@ class ManageUser
         // if ($this->user->getRole() !== User::ADMIN && $this->user->getUserId() !== $userId) return false;
 
         $existing_user = User::getUserByEmail($this->db, $this->user->getEmail());
-        if ($existing_user->getUserId() !== $this->user->getUserId()) {
+        if (User::doesEmailExist($this->db, $this->user->getEmail()) &&
+        $existing_user->getUserId() !== $this->user->getUserId()) {
+            echo '!!!';
             throw new \Exception('すでに登録されているメールアドレスです。');
         }
 
-        if (! $this->user->isEmailSet()) {
+        if (empty($this->user->getEmail())) {
             throw new \Exception('メールアドレスが入力されていません。');
         }
 

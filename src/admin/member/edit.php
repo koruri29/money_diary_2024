@@ -120,7 +120,11 @@ if (isset($_POST['send']) && $_POST['send'] == 'edit') {
 
         // 「削除する」がチェックされていた場合
         if (isset($_POST['delete_flg'])) {
-            $delete_flg = User::DELETE_FLG_ON;
+            if ($_POST['delete_flg'] === 'delete_on') {
+                $delete_flg = User::DELETE_FLG_ON;
+            } else {
+                $delete_flg = User::DELETE_FLG_OFF;
+            }
         } else {
             $delete_flg = $user_before_edit->getDeleteFlg();
         }

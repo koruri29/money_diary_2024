@@ -73,18 +73,6 @@ class User
         return $flg;
     }
 
-    public function isEmailEmpty() : bool
-    {
-        $flg = true;
-
-        if (! empty($this->email)) {
-            $this->errArr['red__email_empty'] = 'メールアドレスを入力してください。';
-            $flg = false;
-        }
-
-        return $flg;
-    }
-
     public static function getUserByEmail(PDODatabase $db, string $email) : User|bool
     {
         $db->resetClause();

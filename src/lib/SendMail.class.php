@@ -4,7 +4,7 @@ namespace lib;
 
 class SendMail
 {
-    private string $emailFrom = 'test@example.com';
+    private string $emailFrom;
 
     private string $emailTo;
     
@@ -25,11 +25,14 @@ class SendMail
     private array $errArr = [];
 
 
-    public function __construct(string $emailTo)
+    public function __construct(
+        string $emailTo
+    )
     {
         mb_language( 'Japanese' );
         mb_internal_encoding( 'UTF-8' );
 
+        $this->emailFrom = '';
         $this->emailTo = $emailTo;
         $this->nameFrom = mb_encode_mimeheader('家計簿アプリ運営');
         $this->replyTo = mb_encode_mimeheader('家計簿アプリ運営');
@@ -37,7 +40,7 @@ class SendMail
 
     public function send($token) : bool
     {
-        if ($this->validateMail()) {
+        if ($this->validateEmail()) {
             $this->setSubject();
             $this->setMessage($token);
             $this->setHeaders();
@@ -60,7 +63,7 @@ class SendMail
         }
     }
 
-    private function validateMail(): bool
+    private function validateEmail(): bool
     {
         $pattern = '/^[a-zA-Z0-9_+-]+(.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/';
         $flg = true;
@@ -110,7 +113,7 @@ class SendMail
 
     private function setMessage($token) : void
     {
-        $url = 'http://localhost/DT_2024/money_diary/src/register.php';
+        $url = 'http://localhost/DT_2024/money_diary_2024/src/register.php';
         $message = <<<MAIL
             家計簿アプリへの登録ありがとうございます。
             仮登録を受付いたしました。
@@ -149,7 +152,7 @@ class SendMail
         $this->nameTo = $nameTo;
     }
 
-    public function getErrArr() : array
+    public function getErrArr()
     {
         return $this->errArr;
     }
