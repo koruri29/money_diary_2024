@@ -19,7 +19,7 @@
 			elem_parent.removeChild(elem_parent.firstChild);
 		}
 	}
-	
+
 	function validateEmail(email) {
 		let errors = [];
 		if (email === '') {
@@ -116,7 +116,7 @@
 			}
 			//金額
 			if (! isNaN(amount_input.value) && amount_input.value <= 0) {
-				errors.push('金額は正の整数で入力してください')
+				errors.push('金額は正の整数で入力してください。')
 			}
 			//カテゴリー選択
 			let is_category_checked = false;

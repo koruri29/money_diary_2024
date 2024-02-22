@@ -7,19 +7,19 @@ class SendMail
     private string $emailFrom;
 
     private string $emailTo;
-    
+
     private string $nameFrom;
-    
+
     private string $nameTo;
-    
+
     private string $replyTo;
-    
+
     private string $subject;
 
     private string $message;
-    
+
     private array $headers = [];
-    
+
     private string $organization;
 
     private array $errArr = [];
@@ -32,7 +32,7 @@ class SendMail
         mb_language( 'Japanese' );
         mb_internal_encoding( 'UTF-8' );
 
-        $this->emailFrom = '';
+        $this->emailFrom = 'eighthwomder_getthenack@yahoo.co.jp';
         $this->emailTo = $emailTo;
         $this->nameFrom = mb_encode_mimeheader('家計簿アプリ運営');
         $this->replyTo = mb_encode_mimeheader('家計簿アプリ運営');
@@ -77,7 +77,7 @@ class SendMail
         }
         if (empty($this->emailTo)) {
             $this->errArr['emailFrom_empty '] = '宛先メールアドレスが設定されていません';
-            $flg = false;   
+            $flg = false;
         } elseif (! preg_match($pattern, $this->emailFrom)) {
             $this->errArr['emailFrom_invalid '] = '宛先メールアドレスの形式が不正です';
             $flg = false;

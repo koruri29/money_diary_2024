@@ -9,7 +9,7 @@ use lib\User;
 class Session
 {
     private $db = null;
-    
+
     private array $err_arr = [];
 
     public function __construct(PDODatabase $db)
@@ -31,7 +31,7 @@ class Session
         $_SESSION = [];
         session_destroy();
     }
-    
+
     public function checkToken() : bool
     {
         if ($_SESSION['token'] === $_POST['token']) {
@@ -72,7 +72,7 @@ class Session
 
     /**
      * ログイン認証
-     * 
+     *
      * @param User $user
      * @param string $email $_POST['email']
      * @param string $password $_POST['password']
@@ -97,7 +97,7 @@ class Session
             $this->err_arr['red__login_failed'] = 'ユーザーIDかパスワードが間違っています。';
             return false;
         }
-        
+
         if (! password_verify($password, $user->getPassword())) {
             $this->err_arr['red__login_failed'] = 'ユーザーIDかパスワードが間違っています。';
             return false;

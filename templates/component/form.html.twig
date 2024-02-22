@@ -5,18 +5,18 @@
 {# category #}
 
 <div class="event-form-container">
-	
+
 	{# メッセージ表示 #}
 	{% include 'component/message.html.twig' %}
-	
-	
+
+
 	<h2>{{title}}</h2>{# 入出金登録or検索 #}
-	
-	
+
+
 	{% include 'component/error.html.twig' %}
-	
-	
-	
+
+
+
 	<form name="form" action="" method="post" class="event-form">
 
 		<input type="hidden" name="token" value="{{token}}">
@@ -50,11 +50,11 @@
 				</dd>
 			</dl>
 
-	
+
 			<button id="event-register-btn" class="btn send_btn event-register-btn" name="send" value="event_register">登録</button>
 			{# <input class="btn event-register-btn" type="send" name="send" value="登録"> #}
-	
-	
+
+
 			<p style="color: green;">- オプション - </p>
 			{# 支出・収入のカテゴリー #}
 			<div class="categories grid">
@@ -62,7 +62,7 @@
 					{# 繰り返しの最初の項目をチェック状態に #}
 					{# ただしpresetされていたらそちらが優先 #}
 					{% if loop.first %}
-					<div class="item-category grid-item">
+					<div class="item-category grid-item outgo">
 						<input class="category-radio {{category.icon_name}}" type="radio" name="category_id" id="{{category.category_id}}"
 						value="{{category.category_id}}" {% if preset.category_id == category.category_id %}checked{% endif %}
 						{% if preset.category_id is not defined %}checked{% endif %}>
@@ -70,23 +70,28 @@
 					</div>
 					{% endif %}
 
+
 					{# 繰り返しの最初以外 #}
 					{% if loop.first == false %}
-						<div class="item-category grid-item">
+						{% if loop.index == 2 %}
+							<div class="item-category grid-item income hidden">
+						{% else %}
+							<div class="item-category grid-item">
+						{% endif %}
 							<input class="category-radio {{category.icon_name}}"  type="radio" name="category_id" id="{{category.category_id}}"
 							value="{{category.category_id}}" {% if preset.category_id == category.category_id %}checked{% endif %}>
 							<label class="category-label" for="{{category.category_id}}">{{category.i_html | raw}}{{category.category_name}}</label>
 						</div>
 					{% endif %}
 				{% endfor %}
-				
+
 				<input type="hidden" name="wallet_id" value="1">
 
 							{# 支出・収入のカテゴリー #}
 					{# <table class="wallets">
 						{% for key, wallet in wallets %}
 							{% if (loop.index % 4 == 1) %}<tr>{% endif %}4つごとにtrタグ挿入 #}
-		
+
 							{# 繰り返しの最初の項目をチェック状態に #}
 							{# ただしpresetされていたらそちらが優先 #}
 							{# {% if loop.first %}
@@ -97,7 +102,7 @@
 								<label class="wallet-label" for="{{wallet.wallet_id}}">{{wallet.i_html | raw}}{{wallet.wallet_name}}</label>
 							</div>
 							{% endif %} #}
-		
+
 							{# 繰り返しの最初以外 #}
 							{# {% if loop.first == false %}
 								<div class="item-wallet grid-item">
@@ -106,23 +111,22 @@
 									<label class="wallet-label" for="{{wallet.wallet_id}}">{{wallet.i_html | raw}}{{wallet.wallet_name}}</label>
 								</div>
 							{% endif %}
-		
+
 							{% if (loop.index % 4 == 0) %}</tr>{% endif %}4つごとにtr閉じタグ挿入
 						{% endfor %}#}
-			
+
 				</div>
-	
+
 			<br>
-	
+
 			<dl class="dl-other">
 				<dt><label class="input-label" for="other">備考</label></dt>
 				<dd><textarea class="other-textarea" name="other" id="other" cols="32" rows="4">{{preset.other}}</textarea></dd>
 			</dl>
-			
-			
+
+
 		</div>
-	
-	
+
+
 	</form>
 </div>
-	

@@ -13,15 +13,15 @@ window.onload = ()=> {
 			$('.sp-nav').fadeToggle('fast');
 		});
 	}
-	
+
 
   const amount_input = document.getElementById('amount');
   if (amount_input !== null) {
-    
+
 		//「金額」欄にデフォルトでフォーカスあてる
 		amount_input.focus();
-		
-		
+
+
 		//「昨日」・「今日」ボタンクリックで本日の1日前の日付に変更
 		const date_input = document.getElementById('date');
 		const yesterday = document.getElementById('yesterday');
@@ -31,12 +31,12 @@ window.onload = ()=> {
 			const year = date.getFullYear();
 			const month = date.getMonth() + 1;
 			const day = date.getDate() - 1;
-		
+
 			full_day = String(day).padStart(2, '0');
 			full_month = String(month).padStart(2, '0');
 			date_input.value = year + '-' + full_month + '-' + full_day;
 		});
-		
+
 		const today = document.getElementById('today');
 		today.addEventListener('click', (e) => {
 			e.preventDefault();
@@ -44,31 +44,34 @@ window.onload = ()=> {
 			const year = date.getFullYear();
 			const month = date.getMonth() + 1;
 			const day = date.getDate();
-		
+
 			full_month = String(month).padStart(2, '0');
 			full_day = String(day).padStart(2, '0');
 			date_input.value = year + '-' + full_month + '-' + full_day;
 		});
-		
-		
+
+
 		//option「収入」選んだら同じカテゴリーが選ばれるようにする
 		//HTML構成変わるとgetElementsByClassNameも変更が必要
-		const outgo = document.getElementById('outgo');
-		const income = document.getElementById('income');
-		const category_outgo = document.getElementsByClassName('i_minus')[0];
-		const category_income = document.getElementsByClassName('i_plus')[0];
+		const option_outgo = document.getElementById('outgo');
+		const option_income = document.getElementById('income');
+		const radio_outgo = document.getElementsByClassName('i_minus')[0];
+		const radio_income = document.getElementsByClassName('i_plus')[0];
+		const div_outgo = document.querySelector('.outgo');
+		const div_income = document.querySelector('.income');
 
-		outgo.addEventListener('change', () => {
-			category_outgo.checked = true;
+
+		option_outgo.addEventListener('change', () => {
+			radio_outgo.checked = true;
+			div_income.classList.add('hidden');
+			div_outgo.classList.remove('hidden');
 			amount_input.focus();
 		});
-		income.addEventListener('change', () => {
-			category_income.checked = true;
+		option_income.addEventListener('change', () => {
+			radio_income.checked = true;
+			div_outgo.classList.add('hidden');
+			div_income.classList.remove('hidden');
 			amount_input.focus();
 	});
-	} 
+	}
 }
-	
-	
-	
-	

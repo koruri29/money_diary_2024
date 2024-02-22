@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
     $context['err_arr'] = $err_arr;
     $context['link'] = 'top.php';
     $context['page_to'] = 'トップページ';
-    
+
     echo $twig->render($template, $context);
     exit();
 }
@@ -121,7 +121,7 @@ if (isset($_POST['send']) && $_POST['send'] === 'event_register') {
 
     try {
         $db->dbh->beginTransaction();
-        $event_manager->registerEvent();
+        $res = $event_manager->registerEvent();
         $db->dbh->commit();
     } catch (PDOException $e) {
         $db->dbh->rollBack();
@@ -130,7 +130,11 @@ if (isset($_POST['send']) && $_POST['send'] === 'event_register') {
         $msg_arr['red__register_failed'] = '入出金の登録に失敗しました。';
     }
 
-    $msg_arr['green__register_success'] = '入出金を登録しました。';
+    if ($res) {
+        $msg_arr['green__register_success'] = '入出金を登録しました。';
+    } else {
+        $msg_arr['red__register_failed'] = '入出金の登録に失敗しました。';
+    }
 
 
     $preset['date'] = Common::h($_POST['date']);
