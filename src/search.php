@@ -36,6 +36,8 @@ $event_manager = new ManageMoneyEvent($db);
 $err_arr = [];
 $msg_arr = [];
 $is_get_by_month = false;
+$preset = [];// 検索条件の初期値
+$preset['option'] = 0;
 
 
 // twig読み込み
@@ -55,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
     $context['err_arr'] = $err_arr;
     $context['link'] = 'top.php';
     $context['page_to'] = 'トップページ';
-    
+
     echo $twig->render($template, $context);
     exit();
 }
@@ -100,6 +102,17 @@ if (isset($_POST['send']) && $_POST['send'] === 'search') {
     //合計金額取得
     $sum = $event_manager->getSearchedSum($s_event);
     $context['sum'] = Common::h($sum);
+
+
+    // 検索条件の保持
+    echo $_POST['min_date'];
+    $preset['min_date'] = trim(Common::h($_POST['min_date']));
+    $preset['max_date'] = Common::h($_POST['max_date']);
+    $preset['min_amount'] = Common::h($_POST['min_amount']);
+    $preset['max_amount'] = Common::h($_POST['max_amount']);
+    $preset['option'] = Common::h($_POST['option']);
+    $preset['category_id'] = Common::h($_POST['category_id']);
+    $preset['wallet'] = Common::h($_POST['wallet_id']);
 }
 
 
@@ -113,10 +126,6 @@ $wallets = Wallet::getWalletsByUserId($db, $_SESSION['user_id']);
 
 
 //テンプレート表示
-$preset = [];
-$preset['date'] = date('Y-m-j');
-$preset['option'] = 0;
-
 $context['session_user_name'] = Common::h($_SESSION['user_name']);
 $context['msg_arr'] = $msg_arr;
 $context['err_arr'] = $err_arr;
