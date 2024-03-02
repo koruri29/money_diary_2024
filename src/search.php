@@ -105,14 +105,14 @@ if (isset($_POST['send']) && $_POST['send'] === 'search') {
 
 
     // 検索条件の保持
-    echo $_POST['min_date'];
-    $preset['min_date'] = trim(Common::h($_POST['min_date']));
+    $preset['min_date'] = Common::h($_POST['min_date']);
     $preset['max_date'] = Common::h($_POST['max_date']);
     $preset['min_amount'] = Common::h($_POST['min_amount']);
     $preset['max_amount'] = Common::h($_POST['max_amount']);
     $preset['option'] = Common::h($_POST['option']);
     $preset['category_id'] = Common::h($_POST['category_id']);
     $preset['wallet'] = Common::h($_POST['wallet_id']);
+    $preset['other'] = Common::h($_POST['other']);
 }
 
 

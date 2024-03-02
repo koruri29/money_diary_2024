@@ -74,4 +74,19 @@ window.onload = ()=> {
 			amount_input.focus();
 	});
 	}
+
+	const search_clear_btn = document.getElementById('search_clear');
+	if (search_clear_btn !== null) {
+		search_clear_btn.addEventListener('click', e => {
+			e.preventDefault();
+
+			document.getElementById('min_date').value = null;
+			document.getElementById('max_date').value = null;
+			document.getElementById('min_amount').value = null;
+			document.getElementById('max_amount').value = null;
+			document.getElementById('all_events').checked = true;
+			document.getElementById('unselected').checked = true;
+			document.getElementById('other').value = null;
+		});
+	}
 }
