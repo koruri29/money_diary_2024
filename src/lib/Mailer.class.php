@@ -28,9 +28,6 @@ class Mailer
 
     public function __construct(PHPMailer $mail,)
     {
-        mb_language( 'Japanese' );
-        mb_internal_encoding( 'UTF-8' );
-
         $this->mail = $mail;
     }
 
@@ -42,11 +39,10 @@ class Mailer
 
         try {
             //Charset, encoding
-            $mail->CharSet  = 'iso-2022-jp';
-            $mail->Encoding = '7bit';
+            $this->mail->CharSet  = 'UTF-8';
+            $this->mail->Encoding = '7bit';
 
             //Server settings
-            $this->mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
             $this->mail->isSMTP();                                            //Send using SMTP
             $this->mail->Host       = Bootstrap::SMTP_SERVER;                     //Set the SMTP server to send through
             $this->mail->SMTPAuth   = Bootstrap::SMTP_AUTH;                                   //Enable SMTP authentication
@@ -65,6 +61,7 @@ class Mailer
             $this->mail->Body    = $this->message;
 
         } catch (Exception $e) {
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
     }
 
@@ -106,7 +103,7 @@ class Mailer
 
     private function setMessage($token) : void
     {
-        $url = 'http://localhost/DT_2024/money_diary_2024/src/register.php';
+        $url = 'http://localhost/DT_2024/money_diary/src/register.php';
         $message = <<<MAIL
             家計簿アプリへの登録ありがとうございます。
             仮登録を受付いたしました。

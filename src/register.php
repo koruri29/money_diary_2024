@@ -85,6 +85,10 @@ if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkTo
     if (! $recap_response->success) {
         $msg_arr['red__recap_invalid'] = '認証に失敗しました。';
 
+        //CSRF対策・二重投稿防止用トークン
+        $token = Token::generateToken();
+        $_SESSION['token'] = $token;
+
         $context['msg_arr'] = $msg_arr;
         $context['err_arr'] = $err_arr;
         $context['token'] = $token;
