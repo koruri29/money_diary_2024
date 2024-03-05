@@ -40,7 +40,16 @@ $context = [];
 $context['title'] = '会員仮登録';
 
 // フォームトークンチェック
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] !== $_SESSION['token']) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && ! isset($_POST['token'])) {
+    $template = 'token_invalid.html.twig';
+    $err_arr['token_invalid'] = '不正なリクエストです。';
+    $context['err_arr'] = $err_arr;
+    $context['link'] = 'register.php';
+    $context['page_to'] = '登録ページ';
+
+    echo $twig->render($template, $context);
+    exit();
+} else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] !== $_SESSION['token']) {
     $template = 'token_invalid.html.twig';
     $err_arr['token_invalid'] = '不正なリクエストです。';
     $context['err_arr'] = $err_arr;
