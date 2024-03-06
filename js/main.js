@@ -29,9 +29,14 @@ window.onload = ()=> {
 		yesterday.addEventListener('click', (e) => {
 			e.preventDefault();
 			const date_root = new Date();
-			const year = date_root.getFullYear();
-			const month = date_root.getMonth() + 1;
-			const date = date_root.getDate() - 1;
+			let year = date_root.getFullYear();
+			let month = date_root.getMonth();
+			let date = date_root.getDate() - 1;
+
+			const yesterday = new Date(year, month, date);
+			year = yesterday.getFullYear();
+			month = yesterday.getMonth() + 1;
+			date = yesterday.getDate();
 
 			const full_date = String(date).padStart(2, '0');
 			const full_month = String(month).padStart(2, '0');
