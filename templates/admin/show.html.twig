@@ -2,10 +2,10 @@
 
 
 <div class="wrapper">
-	
+
 	<h2>{{title}}</h2>
 
-	
+
 	{% include 'component/message.html.twig' %}
 
 	{% include 'component/error.html.twig' %}
@@ -39,7 +39,7 @@
 
 					<td><a href="./edit.php?id={{member.id}}"><button class="btn edit">編集</button></a></td>
 					<td>
-						<form name="form_delete" action="" method="post">
+						<form name="delete_form" action="" method="post">
 							<input type="hidden" name="user_id" value="{{member.id}}">
 							<input type="hidden" name="send" value="delete">
 							<button class="btn send_btn delete" name="send" value="delete">削除</button>

@@ -14,7 +14,7 @@ class CSV {
 
     /**
      * コンストラクタ
-     * 
+     *
      * @param PDODatabase $db
      * @param string $csv_file $_FILES['name']を渡す
      */
@@ -32,11 +32,12 @@ class CSV {
     /**
      * CSVでユーザーを一括登録する
     */
-    public function registerUser() : void
+    public function registerUser() : int
     {
         $this->db->resetClause();
 
         $table = ' users ';
+        $i = 0;
 
         foreach ($this->spl as $line) {
             if ($line[0] === null) continue;
@@ -44,12 +45,12 @@ class CSV {
             $user_name = $line[0];
             $email = $line[1];
             $password = $line[2];
-            
+
             if (strpos($user_name, '"') !== false) $user_name = str_replace('"', '', $user_name);// 1行目の0番目要素に””がついてしまうため、回避
             if (User::doesEmailExist($this->db, $email)) continue;
 
             $password = password_hash($password, PASSWORD_DEFAULT);
-            
+
             $insert_arr = [
                 'user_name' => $user_name,
                 'email' => $email,
@@ -62,11 +63,14 @@ class CSV {
             $user_id = $this->db->getLastId();
             Category::initCategories($this->db, $user_id);
             Wallet::initWallets($this->db, $user_id);
+
+            $i++;
         }
+        return $i;
     }
 
     private function validateCSV($csv_file) : bool
-    {        
+    {
         $flg = true;
 
         if ($csv_file['error'] === 0 && $csv_file['size'] !== 0) {
@@ -90,6 +94,9 @@ class CSV {
         $db->resetClause();
 
         foreach ($user_ids as $user_id) {
+            $user = User::getUserById($db, $user_id['id']);
+            if ($user->getRole() === USER::ADMIN) continue;
+
             //ユーザーごとのカテゴリを取得
             $table = ' categories ';
             $column = ' id ';
@@ -103,7 +110,11 @@ class CSV {
             $db->resetClause();
             $table = ' wallets ';
             $column = ' id ';
+            $db->setLimitOff(2, 0);
+
             $wallets = $db->select($table, $column, $where, $arr_val);
+
+            $date = date('Y-m-d');
 
             //入出金登録
             $table = ' money_events ';
@@ -113,7 +124,7 @@ class CSV {
                 'wallet_id' => $wallets[0]['id'],
                 'option' => 0,
                 'amount' => 1500,
-                'date' => '2024-02-28 00:00:00',
+                'date' => $date . ' 00:00:00',
                 'other' => 'ダミーデータです。',
             ];
             $db->insert($table, $insertData);// 2レコード分追加
