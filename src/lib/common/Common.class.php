@@ -9,7 +9,7 @@ class Common
     /**
      * 文字列or1次元配列のサニタイズ
      * 2次元配列の場合はCommon::wh()を使用
-     * 
+     *
      * @param string|array $before サニタイズ前
      * @return string|array $after サニタイズ後
      */
@@ -35,7 +35,7 @@ class Common
 
     /**
      * 二重配列の場合のサニタイズ
-     * 
+     *
      * @param array $w_array 二重配列
      * @return array サニタイズ後の配列
      */
@@ -52,7 +52,7 @@ class Common
 
     /**
      * 検索ワードをSQL用に整形する
-     * 
+     *
      * @param string $words $_POST['searched_words']
      * @return array $words_arr
      */
@@ -74,7 +74,7 @@ class Common
     /**
      * ページネーションにおいて、移動先のページ数と、offsetを返す
      * ページ数は正の整数になるよう調整する
-     * 
+     *
      * @param int $page $_GET['page']
      * @param int $per_page_num 1ページ当たりのアイテム数
      * @param int $item_count 表示したいアイテムの総数
