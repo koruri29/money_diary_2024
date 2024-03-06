@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['to
     $context['err_arr'] = $err_arr;
     $context['link'] = 'top.php';
     $context['page_to'] = '管理画面トップ';
-    
+
     echo $twig->render($template, $context);
     exit();
 }
@@ -76,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
                 $csv = new CSV($db, $_FILES['csv']);
             } catch (\Exception $e) {
                 $err_arr['red__csv_read_failed'] = $e->getMessage();
-    
+
                 $context['err_arr'] = $err_arr;
                 $context['token'] = $token;
                 echo $twig->render($template, $context);
@@ -85,10 +85,10 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
             // 登録処理
             try {
                 $db->dbh->beginTransaction();
-                $csv->registerUser();
+                $register_count = $csv->registerUser();
                 $db->dbh->commit();
 
-                $msg_arr['green__user_registered'] = 'ユーザー登録が完了しました。';
+                $msg_arr['green__user_registered'] = $register_count . '件のユーザー登録が完了しました。';
             } catch(PDOException $e) {
                 $db->dbh->rollBack();
                 $sql_err_arr = array_merge($sql_err_arr, $db->getSqlErrors());
@@ -96,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
                 $msg_arr['red__register_failed'] = 'ユーザー登録に失敗しました。';
             }
             break;
-        
+
         case 2:
             $ids = User::getIds($db);
             try {

@@ -14,7 +14,7 @@ class CSV {
 
     /**
      * コンストラクタ
-     * 
+     *
      * @param PDODatabase $db
      * @param string $csv_file $_FILES['name']を渡す
      */
@@ -32,11 +32,12 @@ class CSV {
     /**
      * CSVでユーザーを一括登録する
     */
-    public function registerUser() : void
+    public function registerUser() : int
     {
         $this->db->resetClause();
 
         $table = ' users ';
+        $i = 0;
 
         foreach ($this->spl as $line) {
             if ($line[0] === null) continue;
@@ -44,12 +45,12 @@ class CSV {
             $user_name = $line[0];
             $email = $line[1];
             $password = $line[2];
-            
+
             if (strpos($user_name, '"') !== false) $user_name = str_replace('"', '', $user_name);// 1行目の0番目要素に””がついてしまうため、回避
             if (User::doesEmailExist($this->db, $email)) continue;
 
             $password = password_hash($password, PASSWORD_DEFAULT);
-            
+
             $insert_arr = [
                 'user_name' => $user_name,
                 'email' => $email,
@@ -62,11 +63,14 @@ class CSV {
             $user_id = $this->db->getLastId();
             Category::initCategories($this->db, $user_id);
             Wallet::initWallets($this->db, $user_id);
+
+            $i++;
         }
+        return $i;
     }
 
     private function validateCSV($csv_file) : bool
-    {        
+    {
         $flg = true;
 
         if ($csv_file['error'] === 0 && $csv_file['size'] !== 0) {
