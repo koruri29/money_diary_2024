@@ -94,6 +94,9 @@ class CSV {
         $db->resetClause();
 
         foreach ($user_ids as $user_id) {
+            $user = User::getUserById($db, $user_id['id']);
+            if ($user->getRole() === USER::ADMIN) continue;
+
             //ユーザーごとのカテゴリを取得
             $table = ' categories ';
             $column = ' id ';
@@ -107,7 +110,11 @@ class CSV {
             $db->resetClause();
             $table = ' wallets ';
             $column = ' id ';
+            $db->setLimitOff(2, 0);
+
             $wallets = $db->select($table, $column, $where, $arr_val);
+
+            $date = date('Y-m-d');
 
             //入出金登録
             $table = ' money_events ';
@@ -117,7 +124,7 @@ class CSV {
                 'wallet_id' => $wallets[0]['id'],
                 'option' => 0,
                 'amount' => 1500,
-                'date' => '2024-02-28 00:00:00',
+                'date' => $date . ' 00:00:00',
                 'other' => 'ダミーデータです。',
             ];
             $db->insert($table, $insertData);// 2レコード分追加
