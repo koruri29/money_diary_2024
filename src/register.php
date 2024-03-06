@@ -39,26 +39,32 @@ $template = 'tmp_register.html.twig';//仮登録画面
 $context = [];
 $context['title'] = '会員仮登録';
 
+var_dump( session_status() === PHP_SESSION_ACTIVE);
+// var_dump($_POST);
+var_dump($_SESSION);
 // フォームトークンチェック
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && ! isset($_POST['token'])) {
-    $template = 'token_invalid.html.twig';
-    $err_arr['token_invalid'] = '不正なリクエストです。';
-    $context['err_arr'] = $err_arr;
-    $context['link'] = 'register.php';
-    $context['page_to'] = '登録ページ';
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (! isset($_POST['token']) || ! isset($_SESSION['token'])) {
+        $template = 'token_invalid.html.twig';
+        $err_arr['token_invalid'] = '不正なリクエストです。';
+        $context['err_arr'] = $err_arr;
+        $context['link'] = 'register.php';
+        $context['page_to'] = '登録ページ';
 
-    echo $twig->render($template, $context);
-    exit();
-} else if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['token']) && $_POST['token'] !== $_SESSION['token']) {
-    $template = 'token_invalid.html.twig';
-    $err_arr['token_invalid'] = '不正なリクエストです。';
-    $context['err_arr'] = $err_arr;
-    $context['link'] = 'register.php';
-    $context['page_to'] = '登録ページ';
+        echo $twig->render($template, $context);
+        exit();
+    } elseif ($_POST['token'] !== $_SESSION['token']) {
+        $template = 'token_invalid.html.twig';
+        $err_arr['token_invalid'] = '不正なリクエストです。';
+        $context['err_arr'] = $err_arr;
+        $context['link'] = 'register.php';
+        $context['page_to'] = '登録ページ';
 
-    echo $twig->render($template, $context);
-    exit();
+        echo $twig->render($template, $context);
+        exit();
+    }
 }
+
 
 
 //仮登録押下後
@@ -165,6 +171,7 @@ if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkTo
 //CSRF対策・二重投稿防止用トークン
 $token = Token::generateToken();
 $_SESSION['token'] = $token;
+echo $_SESSION['token'];
 
 
 $context['msg_arr'] = $msg_arr;
