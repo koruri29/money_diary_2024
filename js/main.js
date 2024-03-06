@@ -77,18 +77,16 @@ window.onload = ()=> {
 
 	//削除ボタンがある画面（一般TOP、検索、adminユーザー一覧）
 	const delete_btns = document.getElementsByClassName('delete');
+	const forms = document.getElementsByName('delete_form');
 
 	if (delete_btns.length > 0) {
-		for (let delete_btn of delete_btns) {
-			let i = 0;
-			let form = document.getElementsByName('delete_form' + i);
-			delete_btn.addEventListener('click', (e) => {
+		for (let i = 0; i < delete_btns.length; i++) {
+			delete_btns[i].addEventListener('click', (e) => {
 				e.preventDefault();
 				if (confirm('アイテムを削除してよろしいですか？')) {
-					form[0].submit();
+					forms[i].submit();
 				}
 			});
-			i++;
 		}
 	}
 }
