@@ -270,6 +270,15 @@ dd {
 	width: 120px;
 	height: 40px;
 }
+.search-form-btns {
+	display: flex;
+	justify-content: center;
+	margin: 0 auto;
+}
+.search-form-btns>.btn {
+	margin-left: 8px;
+	margin-right: 8px;
+}
 
 /*-------------------------
  * admin
@@ -436,9 +445,9 @@ i {
 		grid-template-columns: 80px  80px 64px 64px;
 	}
 
-.search-dl {
-	width: fit-content;
-}
+	.search-dl {
+		width: fit-content;
+	}
 	#max_date,
 	#max_amount {
 		margin-top: 8px;
@@ -450,6 +459,7 @@ i {
 	.search-other dt {
 		margin-top: 20px;
 	}
+
 
 
 	.admin-top-wrapper {

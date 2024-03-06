@@ -9,28 +9,28 @@
 	<div class="event-inputs">
 		<dl class="dl-input search-dl">
 			<dt><label class="input-label" for="min_date">日付</label></dt>
-			<dd><input type="date" id="min_date" name="min_date"> ～ </dd>
-			<dd><input type="date" id="max_date" name="max_date"></dd>
+			<dd><input type="date" id="min_date" name="min_date" value="{{preset.min_date}}"> ～ </dd>
+			<dd><input type="date" id="max_date" name="max_date" value="{{preset.max_date}}></dd>
 			<dd><p class="btn prev-month" id="prev_month">前月</p></dd>
 			<dd><p class="btn this-month" id="this_month">今月</p></dd>
 		</dl>
 
 		<dl class="dl-input search-dl">
 			<label class="input-label" for="min_amount">金額</label>
-			<input id="min_amount" type="number" min="0" name="min_amount">
+			<input id="min_amount" type="number" min="0" name="min_amount" value="{{preset.min_amount}}">
 			～
-			<input id="max_amount" type="number" min="0" name="max_amount">
+			<input id="max_amount" type="number" min="0" name="max_amount" value="{{preset.max_amount}}">
 		</dl>
 
 		<dl class="dl-input">
 			<dd>
 				<dt class="input-label">振分</dt>
 				<label for="all_events">すべて</label>
-				<input type="radio" name="option" value="all_events" id="all_events" checked>
+				<input type="radio" name="option" value="all_events" id="all_events" {% if not preset.option %}checked{% elseif preset.option == "all_events" %}checked{% endif %}>
 				<label for="outgo">支出</label>
-				<input type="radio" name="option" value="outgo" id="outgo">
+				<input type="radio" name="option" value="outgo" id="outgo" {% if preset.option == 'outgo' %}checked{% endif %}>
 				<label for="income">収入</label>
-				<input type="radio" name="option" value="income" id="income">
+				<input type="radio" name="option" value="income" id="income" {% if preset.option == 'income' %}checked{% endif %}>
 				{# <label for="exchange">振替</label>
 				<input type="radio" name="option" value="exchange" id="exchange"> #}
 			</dd>
@@ -62,7 +62,11 @@
 		<dd><textarea class="other-textarea" name="other" id="other" cols="32" rows="4">{{preset.other}}</textarea></dd>
 	</dl>
 
-	<button class="btn send_btn search-btn" name="send" value="search">検索</button>
+	<div class="search-form-btns">
+		<button class="btn send_btn search-btn" name="send" value="search">検索</button>
+		<button class="btn send_btn search-btn" id="search_clear">条件クリア</button>
+	</div>
+
 
 </form>
 </div>
