@@ -18,7 +18,7 @@ class ManageUser
         $this->db = $db;
         $this->user = $user;
     }
-    
+
     public function registerUser(): bool
     {
         //バリデーション
@@ -57,7 +57,7 @@ class ManageUser
         if (! $this->user->validateUserName()) {
             throw new \Exception('ユーザー名が正しくありません。');
         }
-        
+
         $table = ' users ';
         $insertData = [
             'user_name' => $this->user->getUserName(),
@@ -93,6 +93,16 @@ class ManageUser
         $column = ' id, user_name, role, email, password, delete_flg ';
 
         $db->setLimitOff();
+        $users = $db->select($table, $column);
+
+        return $users;
+    }
+
+
+    public static function getAllUsersForCSV(PDODatabase $db) : array
+    {
+        $table = ' users ';
+        $column = ' id, user_name, role, email, delete_flg, created_at, updated_at ';
         $users = $db->select($table, $column);
 
         return $users;
