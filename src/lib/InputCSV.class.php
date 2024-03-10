@@ -2,14 +2,22 @@
 
 namespace lib;
 
+use Google\Service\FirebaseRules\FunctionCall;
 use lib\common\PDODatabase;
 use lib\Category;
+use lib\common\Bootstrap;
 use lib\User;
 use lib\Wallet;
+use Twig\Node\Expression\FunctionExpression;
 
-class CSV {
+class InputCSV
+{
+
+
     private $db = null;
+
     private $spl = null;
+
     private array $err_arr = [];
 
     /**
