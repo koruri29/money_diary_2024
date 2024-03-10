@@ -61,7 +61,7 @@ CREATE TABLE categories (
 	created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 		ON UPDATE CURRENT_TIMESTAMP,
-	FOREIGN KEY user_on_category (user_id) REFERENCES users(id),
+	FOREIGN KEY user_on_category (user_id) REFERENCES users(id) ON DELETE CASCADE,
 	FOREIGN KEY categorys_icon (icon_id) REFERENCES icons(id)
 );
 
@@ -78,7 +78,7 @@ CREATE TABLE wallets (
 	created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 		ON UPDATE CURRENT_TIMESTAMP,
-	FOREIGN KEY user_on_wallets (user_id) REFERENCES users (id),
+	FOREIGN KEY user_on_wallets (user_id) REFERENCES users (id) ON DELETE CASCADE,
 	FOREIGN KEY wallets_icon (icon_id) REFERENCES icons (id)
 );
 

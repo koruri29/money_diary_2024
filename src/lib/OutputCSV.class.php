@@ -46,7 +46,7 @@ class OutputCSV
         while (ob_get_level()) { ob_end_clean(); }
 
         //-- 出力
-        echo readfile($filepath);
+        readfile($filepath);
         // echo file_get_contents($filepath);
 
         exit;
@@ -92,7 +92,6 @@ class OutputCSV
         }
         fclose($fp);
 
-        echo 'kokomade';
         return $filepath;
     }
 
