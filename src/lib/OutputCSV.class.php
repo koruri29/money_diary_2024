@@ -107,4 +107,8 @@ class OutputCSV
         return $file_dir . $filename . '.csv';
     }
 
+    public function getErrArr() : array
+    {
+        return $this->err_arr;
+    }
 }

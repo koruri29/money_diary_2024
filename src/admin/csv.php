@@ -121,7 +121,13 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
             $users = ManageUser::getAllUsersForCSV($db);
             $csv = new OutputCSV($db);
             $filepath = $csv->createCSV($users, OutputCSV::OUTPUT_USERS);
-            $csv->downloadCSV($filepath);
+            if ($filepath !== false) {
+                $csv->downloadCSV($filepath);
+            } else {
+                $err_arr = array_merge($err_arr, $csv->getErrArr());
+                $msg_arr['red__csv_output_failed'] = 'CSVファイルの作成に失敗しました。';
+            }
+            break;
     }
 }
 
