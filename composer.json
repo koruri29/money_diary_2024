@@ -3,6 +3,7 @@
         "twig/twig": "^3.0",
         "twig/intl-extra": "^3.8",
         "twig/extra-bundle": "^3.8",
-        "google/apiclient": "^2.15"
+        "google/apiclient": "^2.15",
+        "phpmailer/phpmailer": "^6.9"
     }
 }
