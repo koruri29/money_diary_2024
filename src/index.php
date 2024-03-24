@@ -75,11 +75,11 @@ if (isset($_POST['send']) && $_POST['send'] === 'login') {
         $context['msg_arr'] = $msg_arr;
         $context['err_arr'] = $err_arr;
         $context['token'] = $token;
-        
+
         echo $twig->render($template, $context);
         exit();
     }
-    
+
     //reCAPTCHA通った場合の認証
     if ($user = $session->checkLogin($_POST['email'], $_POST['password'])) {
         $session->setUserInfo($user);
@@ -93,9 +93,27 @@ if (isset($_POST['send']) && $_POST['send'] === 'login') {
 
 //Googleログイン連携の場合(未動作)
 } elseif (isset($_POST['id_token'])) {
-    $_SESSION['user_name'] = $_POST['user_name'];
-    header ('Location: top.php');
-    exit();
+    // echo "i'm here!";
+    define('CLIENT_ID', '579777969105-a637qp2snf8leq3blunsmot0pjrftcdb.apps.googleusercontent.com');
+    define('THE_AUTHORIZATION_CODE', '4/0AeaYSHCu949m1uq7LF__mnwebrQfFVQc4jdjVL2iD83Dq2jW7200kvRKidvggD3028T9gw');
+
+    $client = new Google_Client(['client_id' => CLIENT_ID]);  // Specify the CLIENT_ID of the app that accesses the backend
+    $token = $client->fetchAccessTokenWithAuthCode("THE_AUTHORIZATION_CODE");
+    var_dump($token);
+    // $payload = $client->verifyIdToken($token['id_token']);
+    $payload = $client->verifyIdToken('ya29.a0Ad52N3-B3wLn1gx3Ofp5yxoxbHpe81l7dPAgtgdCVonP9zyupKcFJS5TzQNZRUM8USJjFhKG-ZGA-Z_qHFdV0k75kE5eLTQUjArjZ4ZizIKHMplaTARVJfc-4w4rIvPrL1ogosz35Cr4lIncz9MbwUA0aZp7sAtW2FRHaCgYKAYoSARASFQHGX2MiZah5ufXfl18GUNL4FWUNFw0171');
+    if ($payload) {
+        $userid = $payload['sub'];
+        // If request specified a G Suite domain:
+        //$domain = $payload['hd'];
+        $_SESSION['user_name'] = $payload['name'];
+        $_SESSION['user_id'] = $userid;
+        echo 'ok';
+        header ('Location: top.php');
+        exit();
+    } else {
+        $msg_arr['red__google_login_failed'] = 'Googleログインに失敗しました。';
+    }
 }
 
 
@@ -106,4 +124,3 @@ $context['token'] = $token;
 
 
 echo $twig->render($template, $context);
-
