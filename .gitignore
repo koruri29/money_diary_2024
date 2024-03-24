@@ -8,3 +8,4 @@
 /src/admin/.htpasswd
 /csv
 /documents/CSV_data
+/node_modules
