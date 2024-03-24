@@ -26,21 +26,21 @@
 
 ## ディレクトリ構成
 ```
-└─money_diary<br>
-    ├─config          ：（未使用）<br>
-    ├─css<br>
-    ├─images          ：（未使用）<br>
-    ├─js<br>
-    ├─logs            ：SQLログ<br>
-    ├─src             ：PHPソースファイル<br>
-    │  ├─admin        ：管理画面<br>
-    │  │  └─member<br>
-    │  └─lib          ：クラスファイル<br>
-    │      └─common   ：PDOラッパークラスなど<br>
-    ├─templates       ：twigテンプレート<br>
-    │  ├─admin<br>
-    │  └─component<br>
-    └─vendor<br>
+└─money_diary
+    ├─config          ：（未使用）
+    ├─css
+    ├─images          ：（未使用）
+    ├─js
+    ├─logs            ：SQLログ
+    ├─src             ：PHPソースファイル
+    │  ├─admin        ：管理画面
+    │  │  └─member
+    │  └─lib          ：クラスファイル
+    │      └─common   ：PDOラッパークラスなど
+    ├─templates       ：twigテンプレート
+    │  ├─admin
+    │  └─component
+    └─vendor
 ```
 
 ## 主なページ
