@@ -39,9 +39,6 @@ $template = 'tmp_register.html.twig';//仮登録画面
 $context = [];
 $context['title'] = '会員仮登録';
 
-var_dump( session_status() === PHP_SESSION_ACTIVE);
-// var_dump($_POST);
-var_dump($_SESSION);
 // フォームトークンチェック
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (! isset($_POST['token']) || ! isset($_SESSION['token'])) {
@@ -94,7 +91,7 @@ if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkTo
 //本登録押下後
 } elseif (isset($_POST['send']) && $_POST['send'] === 'register') {
     //reCAPTCHA認証
-    $recap_response = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=6LeXVFkpAAAAAPlelZdc3R9bTDyaXErc_-jVwnrS&response='. $_POST['g-recaptcha-response']);
+    $recap_response = file_get_contents(Bootstrap::RECAPTCHA . $_POST['g-recaptcha-response']);
     $recap_response = json_decode($recap_response);
 
     if (! $recap_response->success) {
@@ -171,7 +168,7 @@ if (isset($_POST['send']) && $_POST['send'] === 'send_mail' && $session->checkTo
 //CSRF対策・二重投稿防止用トークン
 $token = Token::generateToken();
 $_SESSION['token'] = $token;
-echo $_SESSION['token'];
+
 
 
 $context['msg_arr'] = $msg_arr;
